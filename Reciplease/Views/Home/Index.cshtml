@@ -1,0 +1,44 @@
+﻿@model Reciplease.Models.HomeContent
+
+@{
+	ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+	<h1>Reciplease</h1>
+	<p class="lead">Shop for your next meal.</p>
+</div>
+
+
+<link rel="stylesheet" href="css/style2.css">
+
+@*Iterate over recipes to display them*@
+@foreach ( Reciplease.Models.Recipe recipe in Model.RecipesToDisplay.recipes )
+{
+	<div class="row">
+		<div class="recipe-card">
+			<aside>
+				<a href="@Url.Action("Recipe", new { id = recipe.id })" class="button">
+					<span class="icon icon-play">
+						<img width="600" src=@recipe.image alt=@recipe.title onerror="this.onerror=null;this.src='/Content/images/no-photo.jpg'" ; />
+					</span>
+				</a>
+			</aside>
+
+			<article>
+				<h2>@recipe.title</h2>
+				<p>Ready In: @recipe.readyInMinutes</p>
+				<p>Servings: @recipe.servings</p>
+				@*
+						Perhaps having the ingredients listed is too much on the card
+						@foreach ( Reciplease.Models.Ingredient ingredient in @recipe.extendedIngredients )
+					{
+						<ul>
+							<li>@ingredient.name</li>
+						</ul>
+					}*@
+			</article>
+			
+		</div>
+	</div>
+}

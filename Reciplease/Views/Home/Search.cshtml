@@ -1,0 +1,56 @@
+﻿@model Reciplease.Models.HomeContent
+
+@{
+	ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+
+<div id="user-profile-data">
+	@using ( Html.BeginForm( FormMethod.Post ) )
+	{
+		<div class="section">
+			<button class="button-cancel" id="btnClose" name="btnSubmit" value="close"><i class='fa fa-times'></i> Close</button>
+		</div>
+		<div class="section">
+			<input type="text" id="query" name="SearchQuery" />
+		</div>
+	}
+	<!--Anything to display?-->
+
+	@if ( HttpContext.Current.Request.HttpMethod == "POST" )
+	{
+		@*Iterate over recipes to display them*@
+		foreach ( Reciplease.Models.Result recipe in Model.SearchResults.results )
+		{
+			<aside>
+				<a href="@Url.Action("Recipe", new { id = recipe.id })">
+					<span class="icon icon-play">
+						<img width="600" src="https://spoonacular.com/recipeImages/@recipe.image" alt=@recipe.title onerror="this.onerror = null; this.src = '/Content/images/no-photo.jpg'" ; />
+					</span>
+				</a>
+			</aside>
+
+			<article>
+				<h2>@recipe.title</h2>
+				<p>Ready In: @recipe.readyInMinutes</p>
+
+			</article>
+		}
+
+		using ( Html.BeginForm( FormMethod.Post ) )
+		{
+
+
+			<input type='text' hidden name="hquery" value=@Model.searchItems.query />
+			<input type='text' hidden name="hintolerances" value=@Model.searchItems.intolerances />
+			<input type='text' hidden name="hdiets" value=@Model.searchItems.diets />
+			<input type='text' hidden name="hcuisine" value=@Model.searchItems.cuisine />
+			<input type='text' hidden name="hingredients" value=@Model.searchItems.ingredients />
+			<input type='text' hidden name="htype" value=@Model.searchItems.type />
+			<input type='text' hidden name="hindex" value=@Model.searchItems.index />
+			<input type="submit" value="Next Page" />
+
+		}
+	}
+</div>

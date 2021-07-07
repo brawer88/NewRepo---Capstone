@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Reciplease</title>
+    @Styles.Render("Reciplease/Reciplease/Views/Home/style.css")
+    @Scripts.Render("Reciplease/Reciplease/Scripts/modernizr-2.8.3.js")
+</head>
+<body>
+	<nav id="sidebar">
+		<div class="custom-menu">
+			<button type="button" id="sidebarCollapse" class="btn btn-primary">
+				<i class="fa fa-bars"></i>
+				<span class="sr-only">Toggle Menu</span>
+			</button>
+		</div>
+
+		<h1 class="logo">@Html.ActionLink( "Home", "Search", "Favorites", "My Cart","Profile", "Account Settings"  )</h1>
+		<ul class="list-unstyled components mb-5">
+			<li class="active">
+				<a href="#"><span class="fa fa-home mr-3"></span> Homepage</a>
+			</li>
+			<li>
+				<a href="#"><span class="fa fa-search mr-3"></span> Search</a>
+			</li>
+			<li>
+				<a href="#"><span class="fa fa-paper-plane-o mr-3"></span> Recently Viewed</a>
+			</li>
+			<li>
+				<a href="#"><span class="fa fa-shopping-cart mr-3"></span> My Cart</a>
+			</li>
+			<li>
+				<a href="#"><span class="fa fa-user mr-3"></span> My Account</a>
+			</li>
+			<li>
+				<a href="#"><span class="fa fa-user mr-3"></span>Account Settings</a>
+			</li>
+		</ul>
+
+	</nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Reciplease</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("Reciplease/Reciplease/Scripts/jquery-3.3.1.js")
+    @Scripts.Render("Reciplease/Reciplease/Scripts/bootstrap.js")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

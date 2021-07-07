@@ -1,0 +1,5 @@
+@model Reciplease.Models.User
+@{
+	ViewBag.Title = "Edit User Information";
+}
+<h2>@ViewBag.Title</h2>
