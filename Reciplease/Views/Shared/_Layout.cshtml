@@ -1,11 +1,12 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Reciplease</title>
-    @Styles.Render("Reciplease/Reciplease/Views/Home/style.css")
-    @Scripts.Render("Reciplease/Reciplease/Scripts/modernizr-2.8.3.js")
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title - Reciplease</title>
+	@*@Styles.Render("Reciplease/Reciplease/Views/Home/style.css")
+		@Scripts.Render("Reciplease/Reciplease/Scripts/modernizr-2.8.3.js")*@
+	@Styles.Render( "~/Content/css" )
 </head>
 <body>
 	<nav id="sidebar">
@@ -16,7 +17,7 @@
 			</button>
 		</div>
 
-		<h1 class="logo">@Html.ActionLink( "Home", "Search", "Favorites", "My Cart","Profile", "Account Settings"  )</h1>
+		@*<h1 class="logo">@Html.ActionLink( "Home", "Search", "Favorites", "My Cart","Profile", "Account Settings"  )</h1>*@
 		<ul class="list-unstyled components mb-5">
 			<li class="active">
 				<a href="#"><span class="fa fa-home mr-3"></span> Homepage</a>
