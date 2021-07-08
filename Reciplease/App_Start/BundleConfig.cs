@@ -25,7 +25,7 @@ namespace Reciplease {
 					  "~/Content/bootstrap.css",
 					  "~/Content/site.css",
 					  "~/Content/style.css",
-					  "~/Content/style2.css",
+					  "~/Content/profile.css",
 					  "~/Content/cartstyle.css",
 					  "~/Content/util1.css" ) );
 		}
