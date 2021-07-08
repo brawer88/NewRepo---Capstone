@@ -27,7 +27,7 @@ namespace Reciplease.Models {
 		public List<Ingredient> extendedIngredients { get; set; }
 		[JsonProperty( "nutrition" )]
 		public Nutrition nutrition { get; set; }
-
+		public ActionTypes ActionType = ActionTypes.NoType;
 
 		// return sorted and fractionized ingredients
 		public List<Ingredient> GetFractionizedIngredients( ) {
@@ -131,5 +131,16 @@ namespace Reciplease.Models {
 		[JsonProperty( "unit" )]
 		public string unit { get; set; }
 	}
+
+
+	public enum ActionTypes {
+		NoType = 0,
+		InsertSuccessful = 1,
+		UpdateSuccessful = 2,
+		DuplicateID = 4,
+		Unknown = 5,
+		RequiredFieldsMissing = 6
+	}
+
 
 }

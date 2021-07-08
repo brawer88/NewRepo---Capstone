@@ -15,9 +15,6 @@ namespace Reciplease.Controllers {
 
 			Database db = new Database();
 
-			db.TestDBConnection( );
-
-
 			Models.HomeContent h = new Models.HomeContent
 			{
 				// get recipes to display
@@ -25,6 +22,9 @@ namespace Reciplease.Controllers {
 
 				// get the user object when we set up users
 			};
+
+			h.User = new Models.User( );
+			h.User = h.User.GetUserSession( );
 
 			return View( h );
 		}

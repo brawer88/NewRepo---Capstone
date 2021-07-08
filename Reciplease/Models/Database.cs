@@ -87,13 +87,15 @@ namespace Reciplease.Models {
 			{
 				SqlConnection cn = null;
 				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
-				SqlCommand cm = new SqlCommand( "INSERT_USER", cn );
+				SqlCommand cm = new SqlCommand( "uspAddNewUser", cn );
 				int intReturnValue = -1;
 
-				SetParameter( ref cm, "@uid", u.UID, SqlDbType.BigInt, Direction: ParameterDirection.Output );
-				SetParameter( ref cm, "@user_id", u.UserID, SqlDbType.NVarChar );
-				SetParameter( ref cm, "@password", u.Password, SqlDbType.NVarChar );
-
+				SetParameter( ref cm, "@intUserID", u.UID, SqlDbType.BigInt, Direction: ParameterDirection.Output );
+				SetParameter( ref cm, "@strUsername", u.UserID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strPassword", u.Password, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strEmail", u.Email, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strFirstName", u.FirstName, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strLastName", u.LastName, SqlDbType.NVarChar );
 				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
 
 				cm.ExecuteReader( );
@@ -103,19 +105,97 @@ namespace Reciplease.Models {
 
 				switch ( intReturnValue )
 				{
-					case 1: // new user created
-						u.UID = (long)cm.Parameters["@uid"].Value;
+					case 0: // new user created
+						u.UID = (long)cm.Parameters["@intUserID"].Value;
 						return User.ActionTypes.InsertSuccessful;
-					case -1:
-						return User.ActionTypes.DuplicateEmail;
-					case -2:
+					case 1:
 						return User.ActionTypes.DuplicateUserID;
+					case 2:
+						return User.ActionTypes.DuplicateEmail;
 					default:
 						return User.ActionTypes.Unknown;
 				}
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
+
+
+		public User Login( User u ) {
+			try
+			{
+				SqlConnection cn = new SqlConnection( );
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlDataAdapter da = new SqlDataAdapter( "uspLogin", cn );
+				DataSet ds;
+				User newUser = null;
+				da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+				SetParameter( ref da, "@strUsername", u.UserID, SqlDbType.NVarChar );
+				SetParameter( ref da, "@strPassword", u.Password, SqlDbType.NVarChar );
+
+
+				try
+				{
+					ds = new DataSet( );
+					da.Fill( ds );
+					if ( ds.Tables.Count > 0 )
+					{
+						newUser = new User( );
+						DataRow dr = ds.Tables[0].Rows[0];
+						newUser.UID = (int)dr["intUserID"];
+						newUser.UserID = u.UserID;
+						newUser.Password = u.Password;
+						newUser.FirstName = (string)dr["strFirstName"];
+						newUser.LastName = (string)dr["strLastName"];
+						newUser.Email = (string)dr["strEmail"];
+					}
+				}
+				catch ( Exception ex ) { throw new Exception( ex.Message ); }
+				finally
+				{
+					CloseDBConnection( ref cn );
+				}
+				return newUser; //alls well in the world
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
+
+		public User.ActionTypes UpdateUser( User u ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "UPDATE_USER", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@uid", u.UID, SqlDbType.BigInt );
+				SetParameter( ref cm, "@user_id", u.UserID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@password", u.Password, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@email", u.Email, SqlDbType.NVarChar );
+
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.Int, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+
+				switch ( intReturnValue )
+				{
+					case 0: //new updated
+						return User.ActionTypes.UpdateSuccessful;
+					case 1:
+						return User.ActionTypes.DuplicateUserID;
+					case 2:
+						return User.ActionTypes.DuplicateEmail;
+					default:
+						return User.ActionTypes.Unknown;
+				}
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
 
 		public void TestDBConnection() {
 			bool blnResult = true;
@@ -135,5 +215,6 @@ namespace Reciplease.Models {
 				System.Diagnostics.Debug.WriteLine( "Db Connection failed" );
 			}
 		}
+
 	}
 }
