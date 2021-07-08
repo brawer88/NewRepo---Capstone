@@ -38,6 +38,7 @@ IF OBJECT_ID('VRecipeRatings')					IS NOT NULL DROP VIEW VRecipeRatings
 
 IF OBJECT_ID('uspAddNewUser')					IS NOT NULL DROP PROCEDURE uspAddNewUser
 IF OBJECT_ID('uspLogin')						IS NOT NULL DROP PROCEDURE uspLogin
+IF OBJECT_ID('uspRateRecipe')					IS NOT NULL DROP PROCEDURE uspRateRecipe
 
                                                                                                                                                                                                                                                                                                                                                                                                 
 -- --------------------------------------------------------------------------------
@@ -86,14 +87,6 @@ CREATE TABLE TIngredients
 	,strIngredientName	VARCHAR(50)			NOT NULL
 	,CONSTRAINT TIngredients_PK PRIMARY KEY ( intIngredientID )
 )
-
---CREATE TABLE TRecipeIngredientShoppingLists
---(
---	 intRecipeIngredientShoppingListID		INTEGER IDENTITY	NOT NULL
---	,intRecipeIngredientID					INTEGER				NOT NULL
---	,intShoppingListID						INTEGER				NOT NULL
---	,CONSTRAINT TRecipeIngredientShoppingLists_PK PRIMARY KEY ( intRecipeIngredientShoppingListID )
---)
 
 CREATE TABLE TShoppingList
 (
@@ -161,8 +154,6 @@ CREATE TABLE TMeasurementUnits
 -- -	-----								------						---------
 -- 1	TUserFavorites						TUsers						intUserID
 -- 2	TUserFavorites						TRecipes					intRecipeID
--------- 5	TRecipeIngredientsShoppingLists		TRecipeIngredients			intRecipeIngredientsID			
--------- 6	TRecipeIngredientsShoppingLists		TShoppingList				intShoppingListID
 -- 5	TShoppingList						TUsers						intUserID
 -- 6	TShoppingList						TRecipeIngredients			intRecipeIngredientID
 -- 3	TRecipeIngredients					TRecipes					intRecipeID
@@ -186,20 +177,11 @@ FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 ALTER TABLE TUserFavorites ADD CONSTRAINT TUserFavorites_TRecipes_FK
 FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 
--------- 5
---------ALTER TABLE TRecipeIngredientShoppingLists ADD CONSTRAINT TRecipeIngredientsShoppingLists_TRecipeIngredients_FK
---------FOREIGN KEY ( intRecipeIngredientID ) REFERENCES TRecipeIngredients ( intRecipeIngredientID )
-
----------- 6
---------ALTER TABLE TRecipeIngredientShoppingLists ADD CONSTRAINT TRecipeIngredientsShoppingLists_TShoppingList_FK
---------FOREIGN KEY ( intShoppingListID ) REFERENCES TShoppingList ( intShoppingListID )
-
 ALTER TABLE TShoppingList ADD CONSTRAINT TShoppingList_TUsers_FK
 FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 
 ALTER TABLE TShoppingList ADD CONSTRAINT TShoppingList_TRecipeIngredients_FK
 FOREIGN KEY ( intRecipeIngredientID ) REFERENCES TRecipeIngredients ( intRecipeIngredientID )
-
 
 -- 3
 ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TRecipes_FK
@@ -228,10 +210,6 @@ FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 -- 10
 ALTER TABLE TRatings ADD CONSTRAINT TRatings_TRecipe_FK
 FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
-
--- 11
---ALTER TABLE TUsers ADD CONSTRAINT TUsers_TShoppingList_FK
---FOREIGN KEY ( intShoppingListID ) REFERENCES TShoppingList ( intShoppingListID )
 
 -- 12
 ALTER TABLE TLast10 ADD CONSTRAINT TLast10_TUsers_FK
@@ -351,13 +329,6 @@ VALUES						 (1,1,1)
 							,(5,1,5)
 							,(6,1,6)
 
---INSERT INTO TRecipeIngredientShoppingLists( intRecipeIngredientID, intShoppingListID )
--- VALUES				 (1, 1)
---						,(2, 1)
---						,(3, 1)
---						,(4, 1)
---						,(5, 1)
---						,(6, 1)
 
 
 -- --------------------------------------------------------------------------------------------
@@ -615,13 +586,82 @@ BEGIN TRANSACTION
 	
 COMMIT TRANSACTION
 
+
+
 --GO
 --DECLARE @strUserName as VARCHAR(50) = ''
 --DECLARE @strPassword as VARCHAR(50) = ''
 --DECLARE @int		as int
 --EXECUTE @int = uspLogin 'Falcawn', 'reciplease1'
 --PRINT @int
-GO 
+
+-- --------------------------------------------------------------------------------------------
+
+GO
+
+Create Procedure uspRateRecipe
+				 @intUserID			as INTEGER OUTPUT
+				,@intTasteID		as INTEGER OUTPUT
+				,@intDifficultyID	as INTEGER OUTPUT
+				,@intRecipeID		as INTEGER OUTPUT
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION	
+	DECLARE @Exists as INTEGER = 0
+	DECLARE @intRatingID as INTEGER = 0
+
+	DECLARE ifExists CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TRatings WHERE @intUserID = intUserID AND @intRecipeID = intRecipeID -- checks if user has rated this recipe yet
+
+		OPEN ifExists
+
+		FETCH FROM ifExists
+		INTO @Exists
+		
+		CLOSE ifExists
+	
+		IF @Exists = 1
+			BEGIN
+				COMMIT
+				RETURN @Exists
+				--SELECT * FROM TRatings WHERE @intUserID = intUserID AND @intRecipeID = intRecipeID
+			END
+		ELSE IF @Exists = 0
+			BEGIN
+				
+				-- Gets next RatingID
+				SELECT @intRatingID = MAX(intRatingID) + 1
+				FROM TRatings (TABLOCKX) -- Locks table till end of transaction
+
+				-- Defaults to 1 if no Users
+				SELECT @intRatingID = COALESCE ( @intRatingID, 1)
+				
+				INSERT INTO TRatings (intRatingID, intUserID, intDifficultyID, intTasteID, intRecipeID)
+				VALUES				 (@intRatingID, @intUserID, @intDifficultyID, @intTasteID, @intRecipeID)
+
+				COMMIT
+				RETURN @Exists
+
+			END
+COMMIT TRANSACTION
+
+GO
+
+--DECLARE @Exists as INTEGER
+--SELECT * FROM VRecipeRatings
+--EXECUTE @Exists = uspRateRecipe 1, 5, 5, 2
+--SELECT * FROM VRecipeRatings
+--PRINT @Exists
+
+-- --------------------------------------------------------------------------------------------
+
+
+
+
+
+-- --------------------------------------------------------------------------------------------
 
 
 
