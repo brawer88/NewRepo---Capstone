@@ -72,6 +72,8 @@ namespace Reciplease.Controllers {
 			return View( h );
 		}
 
+
+
 		public ActionResult Recipe(  ) {
 			Models.HomeContent h = new Models.HomeContent
 			{
