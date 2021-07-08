@@ -38,8 +38,8 @@ IF OBJECT_ID('VRecipeRatings')					IS NOT NULL DROP VIEW VRecipeRatings
 
 IF OBJECT_ID('uspAddNewUser')					IS NOT NULL DROP PROCEDURE uspAddNewUser
 IF OBJECT_ID('uspLogin')						IS NOT NULL DROP PROCEDURE uspLogin
-IF OBJECT_ID('uspRateRecipe')					IS NOT NULL DROP PROCEDURE uspRateRecipe
-
+IF OBJECT_ID('uspRateRecipe')					IS NOT NULL DROP PROCEDURE uspRateRecipe 
+IF OBJECT_ID('uspUpdateUser')					IS NOT NULL DROP PROCEDURE uspUpdateUser
                                                                                                                                                                                                                                                                                                                                                                                                 
 -- --------------------------------------------------------------------------------
 -- Step #1: Create Tables
@@ -65,7 +65,8 @@ CREATE TABLE TRecipes
 	,intServings		INTEGER				NOT NULL
 	,strCuisines		VARCHAR(255)		
 	,strDiets			VARCHAR(255)		
-	,strDishTypes		VARCHAR(255)		
+	,strDishTypes		VARCHAR(255)
+	,strNutrition		VARCHAR(3000)		
 	,intUserID			INTEGER				
 	,CONSTRAINT TRecipes_PK PRIMARY KEY ( intRecipeID )
 )
@@ -543,57 +544,16 @@ SET XACT_ABORT ON
 
 BEGIN TRANSACTION
 
-	DECLARE @UserNameExists as INTEGER
-	DECLARE @PasswordMatches as INTEGER
-
-	DECLARE ifUserNameExists CURSOR LOCAL FOR
-	SELECT COUNT(1) FROM TUsers WHERE strUserName = @strUsername -- Returns 1 if username exists, 0 if it doesn't
-
-		OPEN ifUserNameExists
-
-		FETCH FROM ifUserNameExists
-		INTO @UserNameExists
-
-		CLOSE ifUserNameExists
-
-	DECLARE ifPasswordMatchesUser CURSOR LOCAL FOR
-	SELECT COUNT(1) FROM TUsers WHERE strUserName = @strUsername AND strPassword = @strPassword -- Returns 1 if password matches username, 0 if it doesn't
-
-		OPEN ifPasswordMatchesUser
-
-		FETCH FROM ifPasswordMatchesUser
-		INTO @PasswordMatches
-
-		CLOSE ifPasswordMatchesUser
-	
-	IF @UserNameExists = 1
-		BEGIN
-			IF @PasswordMatches = 1
-				BEGIN
-					SELECT * From TUsers WHERE @strUsername = strUserName AND @strPassword = strPassword
-					COMMIT
-					RETURN 1 -- Returns 1 and selects User Info if username and password match
-				END
-			ELSE
-				BEGIN
-					COMMIT
-					RETURN -1 -- Returns -1 if password doesnt match username
-				END
-		END
-	ELSE
-		COMMIT
-		RETURN 0 -- returns 0 if Username doesnt exist
+	-- Returns entire table if user exists, returns nothing if they don't exist
+	SELECT * FROM TUsers WHERE @strUsername = strUserName AND @strPassword = strPassword
 	
 COMMIT TRANSACTION
 
 
 
 --GO
---DECLARE @strUserName as VARCHAR(50) = ''
---DECLARE @strPassword as VARCHAR(50) = ''
---DECLARE @int		as int
---EXECUTE @int = uspLogin 'Falcawn', 'reciplease1'
---PRINT @int
+
+--EXECUTE uspLogin 'Falcawn', 'reciplease1'
 
 -- --------------------------------------------------------------------------------------------
 
@@ -626,7 +586,6 @@ BEGIN TRANSACTION
 			BEGIN
 				COMMIT
 				RETURN @Exists
-				--SELECT * FROM TRatings WHERE @intUserID = intUserID AND @intRecipeID = intRecipeID
 			END
 		ELSE IF @Exists = 0
 			BEGIN
@@ -657,9 +616,71 @@ GO
 
 -- --------------------------------------------------------------------------------------------
 
+Create Procedure uspUpdateUser
+			 @intUserID			as INTEGER OUTPUT
+			,@strFirstName		as VARCHAR(50) OUTPUT
+			,@strLastName		as VARCHAR(50) OUTPUT
+			,@strEmail			as VARCHAR(50) OUTPUT
+			,@strPassword		as VARCHAR(50) OUTPUT
+			,@strUsername		as VARCHAR(50) OUTPUT
 
+AS
+SET XACT_ABORT ON
 
+BEGIN TRANSACTION
 
+	DECLARE @UserNameExists INTEGER
+	DECLARE @EmailExists	INTEGER
+
+	-- Returns 1 if username exists, 0 if it doesn't
+	DECLARE ifUserNameExists CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TUsers WHERE strUserName = @strUsername AND intUserID != @intUserID -- Returns 1 if username exists, 0 if it doesn't
+
+		OPEN ifUserNameExists
+
+		FETCH FROM ifUserNameExists
+		INTO @UserNameExists
+
+		CLOSE ifUserNameExists
+
+	DECLARE ifEmailExists CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TUsers WHERE strEmail = @strEmail AND intUserID != @intUserID -- Returns 1 if email exists, 0 if it doesn't
+
+		OPEN ifEmailExists
+
+		FETCH FROM ifEmailExists
+		INTO @EmailExists
+
+		CLOSE ifEmailExists	
+	
+	IF @UserNameExists = 0 AND @EmailExists = 0
+		BEGIN
+			UPDATE TUsers  
+			SET strFirstName = @strFirstName, strLastName = @strLastName, strEmail = @strEmail, strPassword = @strPassword, strUserName = @strUsername
+			WHERE @intUserID = intUserID 
+			RETURN 0
+		END
+
+	ELSE IF @UserNameExists = 1
+		BEGIN
+			COMMIT
+			RETURN @UserNameExists
+		END
+	ELSE IF @EmailExists = 1
+		BEGIN
+			COMMIT
+			RETURN @EmailExists + 1
+		END
+
+COMMIT TRANSACTION	
+
+GO
+
+--SELECT * FROM TUsers
+--DECLARE @error as int
+--EXECUTE @error =  uspUpdateUser 1, 'Ike', 'Galle', 'Kaitlin.cordell@gmail.com', 'RECIPLEASE82', 'Falcawn'
+--PRINT @error
+--SELECT * FROM TUsers
 
 -- --------------------------------------------------------------------------------------------
 
