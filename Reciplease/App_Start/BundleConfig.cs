@@ -22,9 +22,9 @@ namespace Reciplease {
 					  "~/Scripts/jquery-3.3.1.js" ) );
 
 			bundles.Add( new StyleBundle( "~/Content/css" ).Include(
+					  "~/Content/style.css",
 					  "~/Content/bootstrap.css",
 					  "~/Content/site.css",
-					  "~/Content/style.css",
 					  "~/Content/profile.css",
 					  "~/Content/cartstyle.css",
 					  "~/Content/util1.css" ) );
