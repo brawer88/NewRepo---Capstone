@@ -8,5 +8,6 @@ namespace Reciplease.Controllers
 {
     public class ProfileController
     {
+
     }
 }
