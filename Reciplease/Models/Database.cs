@@ -81,5 +81,59 @@ namespace Reciplease.Models {
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
+
+		public User.ActionTypes InsertUser( User u ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "INSERT_USER", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@uid", u.UID, SqlDbType.BigInt, Direction: ParameterDirection.Output );
+				SetParameter( ref cm, "@user_id", u.UserID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@password", u.Password, SqlDbType.NVarChar );
+
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+
+				switch ( intReturnValue )
+				{
+					case 1: // new user created
+						u.UID = (long)cm.Parameters["@uid"].Value;
+						return User.ActionTypes.InsertSuccessful;
+					case -1:
+						return User.ActionTypes.DuplicateEmail;
+					case -2:
+						return User.ActionTypes.DuplicateUserID;
+					default:
+						return User.ActionTypes.Unknown;
+				}
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
+		public void TestDBConnection() {
+			bool blnResult = true;
+			SqlConnection cn = new SqlConnection( );
+			if ( !GetDBConnection( ref cn ) )
+			{
+				blnResult = false;
+			}
+			
+
+			if (blnResult == true )
+			{
+				System.Diagnostics.Debug.WriteLine( "Db Connection Successful" );
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine( "Db Connection failed" );
+			}
+		}
 	}
 }

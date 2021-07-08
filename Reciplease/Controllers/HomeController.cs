@@ -13,6 +13,11 @@ namespace Reciplease.Controllers {
 	public class HomeController : Controller {
 		public ActionResult Index( ) {
 
+			Database db = new Database();
+
+			db.TestDBConnection( );
+
+
 			Models.HomeContent h = new Models.HomeContent
 			{
 				// get recipes to display

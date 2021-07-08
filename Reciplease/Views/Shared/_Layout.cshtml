@@ -7,6 +7,9 @@
 	@*@Styles.Render("Reciplease/Reciplease/Views/Home/style.css")
 		@Scripts.Render("Reciplease/Reciplease/Scripts/modernizr-2.8.3.js")*@
 	@Styles.Render( "~/Content/css" )
+	@Scripts.Render( "~/bundles/modernizr" )
+	@Scripts.Render( "~/bundles/jquery" )
+	@Scripts.Render( "~/bundles/bootstrap" )
 </head>
 <body>
 	<nav id="sidebar">
@@ -40,16 +43,16 @@
 		</ul>
 
 	</nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Reciplease</p>
-        </footer>
-    </div>
+	<div class="container body-content">
+		@RenderBody( )
+		<hr />
+		<footer>
+			<p>&copy; @DateTime.Now.Year - Reciplease</p>
+		</footer>
+	</div>
 
-    @Scripts.Render("Reciplease/Reciplease/Scripts/jquery-3.3.1.js")
-    @Scripts.Render("Reciplease/Reciplease/Scripts/bootstrap.js")
-    @RenderSection("scripts", required: false)
+
+
+	
 </body>
 </html>

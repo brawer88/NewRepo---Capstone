@@ -9,9 +9,6 @@
 	<p class="lead">Shop for your next meal.</p>
 </div>
 
-
-<link rel="stylesheet" href="css/style2.css">
-
 @*Iterate over recipes to display them*@
 @foreach ( Reciplease.Models.Recipe recipe in Model.RecipesToDisplay.recipes )
 {
@@ -20,7 +17,7 @@
 			<aside>
 				<a href="@Url.Action("Recipe", new { id = recipe.id })" class="button">
 					<span class="icon icon-play">
-						<img width="600" src=@recipe.image alt=@recipe.title onerror="this.onerror=null;this.src='/Content/images/no-photo.jpg'" ; />
+						<img width="600" src=@recipe.image alt=@recipe.title onerror="this.onerror=null;this.src='~/Content/images/no-photo.jpg'" ; />
 					</span>
 				</a>
 			</aside>

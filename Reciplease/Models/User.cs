@@ -18,5 +18,24 @@ namespace Reciplease.Models {
 		public string UserID = string.Empty;
 		public string Password = string.Empty;
 
+
+
+
+
+		public enum ActionTypes {
+			NoType = 0,
+			InsertSuccessful = 1,
+			UpdateSuccessful = 2,
+			DuplicateEmail = 3,
+			DuplicateUserID = 4,
+			Unknown = 5,
+			RequiredFieldsMissing = 6,
+			LoginFailed = 7
+		}
+
+
+
 	}
+
+
 }
