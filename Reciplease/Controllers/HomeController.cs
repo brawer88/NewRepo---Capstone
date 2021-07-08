@@ -30,7 +30,11 @@ namespace Reciplease.Controllers {
 		}
 
 		public ActionResult Search( ) {
-			Models.HomeContent h = new Models.HomeContent();
+			Models.HomeContent h = new Models.HomeContent
+			{
+				User = new Models.User( )
+			};
+			h.User = h.User.GetUserSession( );
 
 			return View( h );
 		}
@@ -60,21 +64,24 @@ namespace Reciplease.Controllers {
 				SearchResults = RecipeAPI.RecipeSearch( searchItems.query, searchItems.cuisine, searchItems.ingredients,
 														searchItems.diets, searchItems.excludedIngredients, searchItems.intolerances, searchItems.type, searchItems.index )
 				
-				// get the user object when we set up users
 			};
+
+			h.User = new Models.User( );
+			h.User = h.User.GetUserSession( );
 
 			return View( h );
 		}
 
 		public ActionResult Recipe(  ) {
-			// update to search model when that is created
 			Models.HomeContent h = new Models.HomeContent
 			{
 				// get recipes to display
 				SingleRecipe = RecipeAPI.GetRecipeById( Convert.ToString(RouteData.Values["id"]) )
-
-				// get the user object when we set up users
+				
 			};
+
+			h.User = new Models.User( );
+			h.User = h.User.GetUserSession( );
 
 			return View( h );
 		}

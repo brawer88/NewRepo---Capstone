@@ -138,7 +138,7 @@ namespace Reciplease.Models {
 				{
 					ds = new DataSet( );
 					da.Fill( ds );
-					if ( ds.Tables.Count > 0 )
+					if ( ds.Tables[0].Rows.Count > 0 )
 					{
 						newUser = new User( );
 						DataRow dr = ds.Tables[0].Rows[0];
