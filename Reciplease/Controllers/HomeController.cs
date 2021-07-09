@@ -15,6 +15,19 @@ namespace Reciplease.Controllers {
 
 			Database db = new Database();
 
+
+			User u = new User( );
+			u.Email = "brawer@brawer.dev";
+			u.FirstName = "Brando";
+			u.LastName = "Werneke";
+			u.Password = "Brawer88";
+			u.Username = "Reciplease23";
+			u.UID = 2;
+			
+
+			//User.ActionTypes result2 = db.UpdateUser( u );
+
+
 			Models.HomeContent h = new Models.HomeContent
 			{
 				// get recipes to display

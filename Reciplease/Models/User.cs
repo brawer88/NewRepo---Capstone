@@ -14,8 +14,8 @@ using System.Web;
 //#################################################
 namespace Reciplease.Models {
 	public class User {
-		public long UID = 0;
-		public string UserID = string.Empty;
+		public int UID = 0;
+		public string Username = string.Empty;
 		public string FirstName = string.Empty;
 		public string LastName = string.Empty;
 		public string Password = string.Empty;
@@ -27,7 +27,7 @@ namespace Reciplease.Models {
 			InsertSuccessful = 1,
 			UpdateSuccessful = 2,
 			DuplicateEmail = 3,
-			DuplicateUserID = 4,
+			DuplicateUsername = 4,
 			Unknown = 5,
 			RequiredFieldsMissing = 6,
 			LoginFailed = 7

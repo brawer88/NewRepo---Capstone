@@ -90,8 +90,8 @@ namespace Reciplease.Models {
 				SqlCommand cm = new SqlCommand( "uspAddNewUser", cn );
 				int intReturnValue = -1;
 
-				SetParameter( ref cm, "@intUserID", u.UID, SqlDbType.BigInt, Direction: ParameterDirection.Output );
-				SetParameter( ref cm, "@strUsername", u.UserID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intUserID", u.UID, SqlDbType.Int, Direction: ParameterDirection.Output );
+				SetParameter( ref cm, "@strUsername", u.Username, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@strPassword", u.Password, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@strEmail", u.Email, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@strFirstName", u.FirstName, SqlDbType.NVarChar );
@@ -106,17 +106,20 @@ namespace Reciplease.Models {
 				switch ( intReturnValue )
 				{
 					case 0: // new user created
-						u.UID = (long)cm.Parameters["@intUserID"].Value;
+						u.UID = (int)cm.Parameters["@intUserID"].Value;
 						return User.ActionTypes.InsertSuccessful;
 					case 1:
-						return User.ActionTypes.DuplicateUserID;
+						return User.ActionTypes.DuplicateUsername;
 					case 2:
 						return User.ActionTypes.DuplicateEmail;
 					default:
 						return User.ActionTypes.Unknown;
 				}
 			}
-			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+			catch ( Exception ex ) {
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return User.ActionTypes.Unknown;
+			}
 		}
 
 
@@ -130,7 +133,7 @@ namespace Reciplease.Models {
 				User newUser = null;
 				da.SelectCommand.CommandType = CommandType.StoredProcedure;
 
-				SetParameter( ref da, "@strUsername", u.UserID, SqlDbType.NVarChar );
+				SetParameter( ref da, "@strUsername", u.Username, SqlDbType.NVarChar );
 				SetParameter( ref da, "@strPassword", u.Password, SqlDbType.NVarChar );
 
 
@@ -143,7 +146,7 @@ namespace Reciplease.Models {
 						newUser = new User( );
 						DataRow dr = ds.Tables[0].Rows[0];
 						newUser.UID = (int)dr["intUserID"];
-						newUser.UserID = u.UserID;
+						newUser.Username = u.Username;
 						newUser.Password = u.Password;
 						newUser.FirstName = (string)dr["strFirstName"];
 						newUser.LastName = (string)dr["strLastName"];
@@ -169,8 +172,8 @@ namespace Reciplease.Models {
 				SqlCommand cm = new SqlCommand( "uspUpdateUser", cn );
 				int intReturnValue = -1;
 
-				SetParameter( ref cm, "@intUserID", u.UID, SqlDbType.BigInt, Direction: ParameterDirection.Output );
-				SetParameter( ref cm, "@strUsername", u.UserID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intUserID", u.UID, SqlDbType.Int );
+				SetParameter( ref cm, "@strUsername", u.Username, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@strPassword", u.Password, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@strEmail", u.Email, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@strFirstName", u.FirstName, SqlDbType.NVarChar );
@@ -187,14 +190,16 @@ namespace Reciplease.Models {
 					case 0: //new updated
 						return User.ActionTypes.UpdateSuccessful;
 					case 1:
-						return User.ActionTypes.DuplicateUserID;
+						return User.ActionTypes.DuplicateUsername;
 					case 2:
 						return User.ActionTypes.DuplicateEmail;
 					default:
 						return User.ActionTypes.Unknown;
 				}
 			}
-			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+			catch ( Exception ex ) {
+				System.Diagnostics.Debug.WriteLine( ex.ToString() );
+				return User.ActionTypes.Unknown; }
 		}
 
 

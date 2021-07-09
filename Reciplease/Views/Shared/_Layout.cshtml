@@ -51,12 +51,16 @@
 		<hr />
 		<footer>
 			<p>&copy; @DateTime.Now.Year - Reciplease</p>
+
 		</footer>
 	</div>
 
 
-
-
+	<script>
+		$('img').on('error', function () {
+			$(this).attr('src', '/Content/images/no-photo.jpg');
+		})
+	</script>
 </body>
 
 
