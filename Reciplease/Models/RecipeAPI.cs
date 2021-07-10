@@ -28,8 +28,22 @@ namespace Reciplease.Models {
 			if ( response.StatusCode == HttpStatusCode.OK )
 			{
 				Recipes = JsonConvert.DeserializeObject<RecipesList>( response.Content );
+				Database db = new Database( );
+
+				foreach( Recipe r in Recipes.GetEnumerator() )
+				{
+					if ( r.image == null )
+					{
+						r.image = "'/Content/images/no-photo.jpg'";
+					}
+					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
+				}
 			}
-			
+
+
+
+
+
 			return Recipes;
 			
 		}
@@ -49,7 +63,15 @@ namespace Reciplease.Models {
 			if ( response.StatusCode == HttpStatusCode.OK )
 			{
 				clsRecipe = JsonConvert.DeserializeObject<Recipe>( response.Content );
+
+				Database db = new Database( );
+				if ( clsRecipe.image == null )
+				{
+					clsRecipe.image = "'/Content/images/no-photo.jpg'";
+				}
+				clsRecipe.dictRatings = db.GetRecipeRatings( int.Parse( clsRecipe.id ) );
 			}
+			
 
 			return clsRecipe;
 
@@ -94,6 +116,17 @@ namespace Reciplease.Models {
 			if ( response.StatusCode == HttpStatusCode.OK )
 			{
 				Recipes = JsonConvert.DeserializeObject<SearchResultsList>( response.Content );
+				Database db = new Database( );
+
+				foreach ( Result r in Recipes.GetEnumerator( ) )
+				{
+					if(r.image == null)
+					{
+						r.image = "'/Content/images/no-photo.jpg'";
+					}
+					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
+				}
+
 			}
 			else if ( response.StatusCode == HttpStatusCode.Unauthorized )
 			{

@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\HomeContent.cs" />
+    <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\RecipeAPI.cs" />
     <Compile Include="Models\RandomRecipesList.cs" />

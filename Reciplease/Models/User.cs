@@ -21,6 +21,8 @@ namespace Reciplease.Models {
 		public string Password = string.Empty;
 		public ActionTypes ActionType = ActionTypes.NoType;
 		public string Email = string.Empty;
+		public List<Rating> Ratings;
+
 
 		public enum ActionTypes {
 			NoType = 0,
@@ -34,6 +36,34 @@ namespace Reciplease.Models {
 		}
 
 
+		public bool IsAuthenticated {
+			get
+			{
+				if ( UID > 0 ) return true;
+				return false;
+			}
+		}
+
+
+		public Tuple<int, int> GetUserRatings( int RecipeID ) {
+
+			Tuple<int, int> ZeroRatings = Tuple.Create(0,0);
+
+			try
+			{
+				foreach ( Rating r in this.Ratings )
+				{
+					if ( r.intRecipeID == RecipeID )
+					{
+						return Tuple.Create( r.intTasteRating, r.intDifficultyRating );
+					}
+				}
+				return ZeroRatings;
+			}
+			catch ( Exception ) { return ZeroRatings; }
+		}
+
+
 		public User Login( ) {
 			try
 			{
@@ -42,7 +72,6 @@ namespace Reciplease.Models {
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
-
 
 
 		public bool RemoveUserSession( ) {
@@ -76,6 +105,17 @@ namespace Reciplease.Models {
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
+
+
+		public int RateRecipe( int RecipeID, int intDifficultyRating, int intTasteRating ) {
+			try
+			{
+				Database db = new Database( );
+				return db.RateRecipe( this.UID, RecipeID, intDifficultyRating, intTasteRating );
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
 
 	}
 
