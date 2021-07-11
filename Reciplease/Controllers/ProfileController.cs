@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Reciplease.Models;
+﻿using Reciplease.Models;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -11,8 +10,7 @@ using System.Web.Mvc;
 
 namespace Reciplease.Controllers
 {
-    public class ProfileController
-    {
+    public class ProfileController : Controller {
         public ActionResult Index()
         {
             Models.User u = new Models.User();
@@ -35,7 +33,7 @@ namespace Reciplease.Controllers
                 u.Username = collfrmAttr["Username"];
                 u.Password = collfrmAttr["Password"];
 
-                if (u.FirstName.Length == 0 || u.LastName.Length == 0 || u.Email.Length == 0 || u.UserID.Length == 0 || u.Password.Length == 0)
+                if (u.FirstName.Length == 0 || u.LastName.Length == 0 || u.Email.Length == 0 || u.Username.Length == 0 || u.Password.Length == 0)
                 {
                     u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
                     return View(u);
@@ -77,10 +75,10 @@ namespace Reciplease.Controllers
 
                 if (col["btnSubmit"] == "signin")
                 {
-                    u.UserID = col["UserID"];
+                    u.Username = col["Username"];
                     u.Password = col["Password"];
 
-                    if (u.UserID.Length == 0 || u.Password.Length == 0)
+                    if (u.Username.Length == 0 || u.Password.Length == 0)
                     {
                         u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
                         return View(u);
@@ -96,7 +94,7 @@ namespace Reciplease.Controllers
                         else
                         {
                             u = new Models.User();
-                            u.UserID = col["UserID"];
+                            u.Username = col["Username"];
                             u.ActionType = Models.User.ActionTypes.LoginFailed;
                         }
                     }
@@ -126,10 +124,10 @@ namespace Reciplease.Controllers
                 u.FirstName = col["FirstName"];
                 u.LastName = col["LastName"];
                 u.Email = col["Email"];
-                u.UserID = col["UserID"];
+                u.Username = col["Username"];
                 u.Password = col["Password"];
 
-                if (u.FirstName.Length == 0 || u.LastName.Length == 0 || u.Email.Length == 0 || u.UserID.Length == 0 || u.Password.Length == 0)
+                if (u.FirstName.Length == 0 || u.LastName.Length == 0 || u.Email.Length == 0 || u.Username.Length == 0 || u.Password.Length == 0)
                 {
                     u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
                     return View(u);
