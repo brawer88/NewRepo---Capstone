@@ -31,7 +31,7 @@ IF OBJECT_ID('VRecipeIngredients')				IS NOT NULL DROP VIEW VRecipeIngredients
 IF OBJECT_ID('VUserFavorites')					IS NOT NULL DROP VIEW VUserFavorites
 IF OBJECT_ID('VUserShoppingList')				IS NOT NULL DROP VIEW VUserShoppingList
 IF OBJECT_ID('VRecipeRatings')					IS NOT NULL DROP VIEW VRecipeRatings 
-IF OBJECT_ID('vUserRating')					IS NOT NULL DROP VIEW vUserRating
+IF OBJECT_ID('vUserRating')						IS NOT NULL DROP VIEW vUserRating
 
 -- ---------------------------------------------------------------------------------
 -- Drop Procedures
@@ -40,8 +40,13 @@ IF OBJECT_ID('vUserRating')					IS NOT NULL DROP VIEW vUserRating
 IF OBJECT_ID('uspAddNewUser')					IS NOT NULL DROP PROCEDURE uspAddNewUser
 IF OBJECT_ID('uspLogin')						IS NOT NULL DROP PROCEDURE uspLogin
 IF OBJECT_ID('uspRateRecipe')					IS NOT NULL DROP PROCEDURE uspRateRecipe 
-IF OBJECT_ID('uspUpdateUser')					IS NOT NULL DROP PROCEDURE uspUpdateUser
-                                                                                                                                                                                                                                                                                                                                                                                                
+IF OBJECT_ID('uspUpdateUser')					IS NOT NULL DROP PROCEDURE uspUpdateUser 
+IF OBJECT_ID('uspRateRecipe')					IS NOT NULL DROP PROCEDURE uspRateRecipe 
+IF OBJECT_ID('uspFavoriteUnfavorite')			IS NOT NULL DROP PROCEDURE uspFavoriteUnfavorite 
+IF OBJECT_ID('uspAddRecipe')					IS NOT NULL DROP PROCEDURE uspAddRecipe 
+IF OBJECT_ID('uspAddIngredient')				IS NOT NULL DROP PROCEDURE uspAddIngredient 
+
+                                                                                                                                                                                                                                                                                                                                                                                               
 -- --------------------------------------------------------------------------------
 -- Step #1: Create Tables
 -- --------------------------------------------------------------------------------
@@ -58,12 +63,12 @@ CREATE TABLE TUsers
 
 CREATE TABLE TRecipes
 (
-	 intRecipeID		INTEGER	  IDENTITY	NOT NULL
-	,strName			VARCHAR(50)			NOT NULL
-	,strDescription		VARCHAR(300)		NOT NULL
-	,strInstructions	VARCHAR(3000)		NOT NULL
-	,intReadyInMins		INTEGER				NOT NULL
-	,intServings		INTEGER				NOT NULL
+	 intRecipeID		INTEGER	IDENTITY(5000001, 1)	NOT NULL
+	,strName			VARCHAR(50)						NOT NULL
+	,strDescription		VARCHAR(300)					NOT NULL
+	,strInstructions	VARCHAR(3000)					NOT NULL
+	,intReadyInMins		INTEGER				
+	,intServings		INTEGER				
 	,strCuisines		VARCHAR(255)		
 	,strDiets			VARCHAR(255)		
 	,strDishTypes		VARCHAR(255)
@@ -275,22 +280,22 @@ VALUES					 ('Rosemary Garlic Butter Steak', 'Ribeye Steak pan seared in a cast 
 						,('Recipe Test 4', 'Recipe Test 4 Desc', 'Recipe Test 4 Instructions',180, 6, 4)
 
  INSERT INTO TRatings		(intRatingID, intUserID, intDifficultyID, intTasteID, intRecipeID)
- VALUES					 (1, 1, 5, 5, 1)
-						,(2, 2, 2, 3, 1)
-						,(3, 3, 5, 2, 1)
-						,(4, 4, 5, 5, 1)
-						,(5, 2, 2, 3, 3)
-						,(6, 2, 5, 2, 4)
-						,(7, 1, 5, 5, 3)
+ VALUES					 (1, 1, 5, 5, 5000001)
+						,(2, 2, 2, 3, 5000001)
+						,(3, 3, 5, 2, 5000001)
+						,(4, 4, 5, 5, 5000001)
+						,(5, 2, 2, 3, 5000003)
+						,(6, 2, 5, 2, 5000004)
+						,(7, 1, 5, 5, 5000004)
 
  INSERT INTO TUserFavorites( intUserID, intRecipeID )
- VALUES					 (2, 2)
-						,(2, 1)
-						,(3, 1)
-						,(4, 3)
-						,(4, 1)
-						,(3, 2)
-						,(3, 3)
+ VALUES					 (2, 5000002)
+						,(2, 5000001)
+						,(3, 5000001)
+						,(4, 5000003)
+						,(4, 5000001)
+						,(3, 5000002)
+						,(3, 5000003)
 
 INSERT INTO TIngredients ( intIngredientID, strIngredientName )
 VALUES					 (1, 'Sweet White Onion' )
@@ -312,16 +317,16 @@ VALUES					 (1, 'Sweet White Onion' )
 						,(17, 'All-Spice')
 
  INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, intIngredientQuantity, intMeasurementUnitID )
- VALUES					 (1, 6, 1, 1)
-						,(1, 8, 1, 2)
-						,(1, 9, 6, 2)
-						,(1, 10, 1, 4)
-						,(1, 11, 3, 1)
-						,(1, 12, 3, 1)
-						,(2, 3, 2, 7)
-						,(2, 9, 1, 8)
-						,(2, 10, 1, 9)
-						,(2, 8, 1, 10)
+ VALUES					 (5000001, 6, 1, 1)
+						,(5000001, 8, 1, 2)
+						,(5000001, 9, 6, 2)
+						,(5000001, 10, 1, 4)
+						,(5000001, 11, 3, 1)
+						,(5000001, 12, 3, 1)
+						,(5000002, 3, 2, 7)
+						,(5000002, 9, 1, 8)
+						,(5000002, 10, 1, 9)
+						,(5000002, 8, 1, 10)
 
 INSERT INTO TShoppingList ( intShoppingListID, intUserID, intRecipeIngredientID )
 VALUES						 (1,1,1)
@@ -612,6 +617,9 @@ BEGIN TRANSACTION
 	
 		IF @Exists = 1
 			BEGIN
+				UPDATE TRatings
+				SET intTasteID = @intTasteID, intDifficultyID = @intDifficultyID
+				WHERE @intUserID = intUserID AND @intRecipeID = intRecipeID
 				COMMIT
 				RETURN @Exists
 			END
@@ -638,10 +646,11 @@ GO
 
 --DECLARE @Exists as INTEGER
 --SELECT * FROM VRecipeRatings
---EXECUTE @Exists = uspRateRecipe 1, 5, 5, 2
+--EXECUTE @Exists = uspRateRecipe 1, 4, 4, 2
 --SELECT * FROM VRecipeRatings
 --PRINT @Exists
 
+GO
 -- --------------------------------------------------------------------------------------------
 
 Create Procedure uspUpdateUser
@@ -711,7 +720,218 @@ GO
 --PRINT @error
 --SELECT * FROM TUsers
 
+GO
 -- --------------------------------------------------------------------------------------------
+
+Create Procedure uspFavoriteUnfavorite
+					 @intUserID		AS INTEGER OUTPUT
+					,@intRecipeID	AS INTEGER OUTPUT
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+
+	DECLARE @Exists as INTEGER
+
+		-- Returns 1 if username exists, 0 if it doesn't
+	DECLARE ifFavorited CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TUserFavorites WHERE intRecipeID = @intRecipeID AND intUserID = @intUserID -- Returns 1 if exists, 0 if it doesn't
+
+		OPEN ifFavorited
+
+		FETCH FROM ifFavorited
+		INTO @Exists
+
+		CLOSE ifFavorited
+
+	IF @Exists = 1 -- if user has favorited dish, the favorite will be removed
+		BEGIN
+			DELETE FROM TUserFavorites WHERE intRecipeID = @intRecipeID AND intUserID = @intUserID
+			COMMIT
+			RETURN @Exists
+		END
+	ELSE IF @Exists = 0 -- if user has not favorited the favorite will be added
+		BEGIN
+			INSERT INTO TUserFavorites	(intUserID, intRecipeID)
+			VALUES						(@intUserID, @intRecipeID)
+			
+			COMMIT
+			RETURN @Exists
+		END
+
+COMMIT TRANSACTION	
+
+GO
+
+--SELECT * FROM VUserFavorites
+--EXECUTE uspFavoriteUnfavorite 1, 1
+--SELECT * FROM VUserFavorites
+
+GO
+-- --------------------------------------------------------------------------------------------
+
+Create Procedure uspAddRecipe
+					 @intRecipeID		AS INTEGER OUTPUT
+					,@strName			AS VARCHAR(50) OUTPUT
+					,@strDescription	AS VARCHAR(300) OUTPUT
+					,@strInstructions	AS VARCHAR(3000) OUTPUT
+					,@intReadyInMins	AS INTEGER OUTPUT			-- OPTIONAL
+					,@intServings		AS INTEGER OUTPUT			-- OPTIONAL
+					,@strCuisines		AS VARCHAR(255) OUTPUT		-- OPTIONAL
+					,@strDiets			AS VARCHAR(255) OUTPUT		-- OPTIONAL
+					,@strDishTypes		AS VARCHAR(255) OUTPUT		-- OPTIONAL
+					,@strNutrition		AS VARCHAR(3000) OUTPUT		-- OPTIONAL
+					,@intUserID			AS INTEGER OUTPUT			-- OPTIONAL
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+
+	DECLARE @Exists as INTEGER
+
+			-- Returns 1 if username exists, 0 if it doesn't
+	DECLARE ifExists CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TRecipes WHERE intRecipeID = @intRecipeID -- Returns 1 if exists, 0 if it doesn't
+
+		OPEN ifExists
+
+		FETCH FROM ifExists
+		INTO @Exists
+
+		CLOSE ifExists
+
+	IF @Exists = 1 -- Recipe already exists in Database, returns 1
+		BEGIN
+			COMMIT
+			RETURN @Exists
+		END
+	ELSE IF @Exists = 0
+		BEGIN
+			-- Gets next UserID
+			IF @intRecipeID = 0
+				BEGIN
+					SELECT @intRecipeID = MAX(intRecipeID) + 1
+					FROM TRecipes (TABLOCKX) -- Locks table till end of transaction
+
+					-- Defaults to 1 if no Users
+					SELECT @intRecipeID = COALESCE ( @intRecipeID, 5000001)
+				END
+
+			SET IDENTITY_INSERT TRecipes ON
+
+			INSERT INTO TRecipes (intRecipeID, strName, strDescription, strInstructions, intReadyInMins, intServings, strCuisines, strDiets, strDishTypes, strNutrition, intUserID)
+			VALUES				(@intRecipeID, @strName, @strDescription, @strInstructions, @intReadyInMins, @intServings, @strCuisines, @strDiets, @strDishTypes, @strNutrition, @intUserID)
+
+			SET IDENTITY_INSERT TRecipes OFF
+			COMMIT
+			RETURN @Exists
+		END
+
+COMMIT TRANSACTION	
+
+GO 
+
+--SELECT * FROM TRecipes
+--DECLARE @Exists as Int
+--DECLARE @RecipeID as int = 0
+--EXECUTE @Exists = uspAddRecipe @RecipeID OUTPUT, 'Delicious Beef Stew', 'Stew made with beef, potato, onion, carrot, celery, wine, vinegar, bay leaf.', 'LARGE LIST OF INSTRUCTIONS HERE', 120, 4, 'American', '', '', '', 1
+--PRINT @Exists
+--SELECT * FROM TRecipes
+GO 
+
+-- --------------------------------------------------------------------------------------------
+
+Create Procedure uspAddIngredient  -- Checks if IngredientID and IngredientName being added exist. If they exist it returns the ID for the ingredient. If it does not the Ingredient is added.
+								   -- If the Ingredient added has no ID then it is defaulted to the next value.
+					 @intIngredientID		AS INTEGER OUTPUT
+					,@strIngredientName		AS VARCHAR(50) OUTPUT
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+	DECLARE @IDExists as INTEGER
+	DECLARE @NameExists as INTEGER = 0
+
+			-- Returns 1 if username exists, 0 if it doesn't
+	DECLARE ifIDExists CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TIngredients WHERE intIngredientID = @intIngredientID OR strIngredientName = @strIngredientName -- Returns 1 if exists, 0 if it doesn't
+
+		OPEN ifIDExists
+
+		FETCH FROM ifIDExists
+		INTO @IDExists
+
+		CLOSE ifIDExists
+
+	DECLARE ifNameExists CURSOR LOCAL FOR
+	SELECT intIngredientID FROM TIngredients WHERE strIngredientName = @strIngredientName  -- Gets ID for Ingredient if the name was already found to avoid duplicates
+
+		OPEN ifNameExists
+
+		FETCH FROM ifNameExists
+		INTO @NameExists
+
+		CLOSE ifNameExists
+
+
+	IF @IDExists = 1 OR @NameExists > 0 -- Ingredient already exists in Database, returns 1
+
+		BEGIN
+			COMMIT
+			RETURN @NameExists -- Returns intID if the ingredient is found
+		END
+
+	ELSE IF @IDExists = 0 -- Ingredient doesn't exist, adds to DB
+
+		BEGIN
+						-- Gets next UserID
+			IF @intIngredientID = 0
+				BEGIN
+					SELECT @intIngredientID = MAX(intIngredientID) + 1
+					FROM TIngredients (TABLOCKX) -- Locks table till end of transaction
+
+					-- Defaults to 1 if no Users
+					SELECT @intIngredientID = COALESCE ( @intIngredientID, 1)
+				END
+			
+			INSERT INTO TIngredients (intIngredientID, strIngredientName)
+			VALUES					(@intIngredientID, @strIngredientName)
+			COMMIT
+			RETURN @IDExists -- Returns 0 if ingredient wasnt found, to show ingredient was added.
+		END
+
+COMMIT TRANSACTION
+	
+GO
+--SELECT * FROM TIngredients
+--DECLARE @Exists as Int
+--EXECUTE @exists = uspAddIngredient 0, 'Bacon'
+--SELECT * FROM TIngredients
+--PRINT @Exists
+
+-- --------------------------------------------------------------------------------------------
+
+--Create Procedure uspAddRecipeIngredients
+--				 @intRecipeIngredientID
+--				,@intRecipeID
+--				,@intIngredientID
+--				,@i
+
+-- --------------------------------------------------------------------------------------------
+	-- intRecipeID		INTEGER	  IDENTITY	NOT NULL
+	--,strName			VARCHAR(50)			NOT NULL
+	--,strDescription		VARCHAR(300)		NOT NULL
+	--,strInstructions	VARCHAR(3000)		NOT NULL
+	--,intReadyInMins		INTEGER				
+	--,intServings		INTEGER				
+	--,strCuisines		VARCHAR(255)		
+	--,strDiets			VARCHAR(255)		
+	--,strDishTypes		VARCHAR(255)
+	--,strNutrition		VARCHAR(3000)		
+	--,intUserID			INTEGER				
 
 
 
