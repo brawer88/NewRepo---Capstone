@@ -11,14 +11,7 @@ else {
 	@Html.Partial("UserTabMenu")
 	using (Html.BeginForm("Index", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" })) {
 		<p>To make changes to your profile enter your information below and click the Update button.</p>
-		<div id="user-profile-image">
-			@if (Model.UserImage != null) {
-				if (Model.UserImage.ImageID > 0) {
-					<div class="user-profile-image-container">
-						<img class="user-profile-thumbnail" src="@string.Concat("data:Image/",
-Model.UserImage.FileExtension, ";base64,",
-Model.UserImage.BytesBase64)" />
-					</div>
+		
 				}
 			}
 		</div>
@@ -43,8 +36,8 @@ Model.UserImage.BytesBase64)" />
 					<div>@Html.LabelFor(model => model.Email)</div>
 					<div>@Html.TextBoxFor(model => model.Email)</div>
 
-					<div>@Html.LabelFor(model => model.UserID)</div>
-					<div>@Html.TextBoxFor(model => model.UserID)</div>
+					<div>@Html.LabelFor(model => model.Username)</div>
+					<div>@Html.TextBoxFor(model => model.Username)</div>
 
 					<div>@Html.LabelFor(model => model.Password)</div>
 					<div>@Html.TextBoxFor(model => model.Password, new { type = "password" })</div>
