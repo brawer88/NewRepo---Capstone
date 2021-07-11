@@ -9,7 +9,7 @@
 
 @using (Html.BeginForm(FormMethod.Post)) {
 
-	if (Model.ActionType == Reciplease.Models.User.ActionTypes.DuplicateUserID) {
+	if (Model.ActionType == Reciplease.Models.User.ActionTypes.DuplicateUsername) {
 		<div id="content-locked">
 			<i class=" fad fa-exclamation-triangle fa-2x"></i>
 			<span>That user ID has already been used. To sign-up enter a different user ID.</span>
@@ -43,8 +43,8 @@
 	</div>
 	<div class="section">
 		<div class="item">
-			<div>@Html.LabelFor(model => model.UserID)</div>
-			<div>@Html.TextBoxFor(model => model.UserID)</div>
+			<div>@Html.LabelFor(model => model.Username)</div>
+			<div>@Html.TextBoxFor(model => model.Username)</div>
 		</div>
 		<div class="item">
 			<div>@Html.LabelFor(model => model.Password)</div>
