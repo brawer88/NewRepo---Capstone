@@ -4,11 +4,11 @@
 }
 <h2>@ViewBag.Title</h2>
 
-@*@if (!Model.IsAuthenticated) {
+@if (!Model.IsAuthenticated) {
 	@Html.Partial("NotAuthenticated")
 }
-else {*@
-	@using (Html.BeginForm("Index", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" })) {
+else {
+	using (Html.BeginForm("Index", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" })) {
 		<p>To make changes to your profile enter your information below and click the Update button.</p>
 		
 		<div id="user-profile-data">
@@ -36,7 +36,7 @@ else {*@
 				<button class="button-action" id="btnUpdate" name="btnSubmit" value="update"><i class='far fa-save'></i> Update</button>
 			</div>
 		</div>
-	
+}	
 }
 
 <script>
