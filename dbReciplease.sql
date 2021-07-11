@@ -30,7 +30,8 @@ IF OBJECT_ID('TIngredients')					IS NOT NULL DROP TABLE TIngredients
 IF OBJECT_ID('VRecipeIngredients')				IS NOT NULL DROP VIEW VRecipeIngredients
 IF OBJECT_ID('VUserFavorites')					IS NOT NULL DROP VIEW VUserFavorites
 IF OBJECT_ID('VUserShoppingList')				IS NOT NULL DROP VIEW VUserShoppingList
-IF OBJECT_ID('VRecipeRatings')					IS NOT NULL DROP VIEW VRecipeRatings
+IF OBJECT_ID('VRecipeRatings')					IS NOT NULL DROP VIEW VRecipeRatings 
+IF OBJECT_ID('vUserRating')					IS NOT NULL DROP VIEW vUserRating
 
 -- ---------------------------------------------------------------------------------
 -- Drop Procedures
@@ -440,6 +441,33 @@ GROUP BY TR.intRecipeID, TR.strName
 GO
 
 SELECT * FROM VRecipeRatings
+
+GO
+
+-- --------------------------------------------------------------------------------------------
+
+Create View vUserRating
+AS
+SELECT		 TRe.intRecipeID
+			,TU.intUserID
+			,TD.intDifficultyID
+			,TT.intTasteID
+
+FROM		TUsers as TU JOIN TRatings as TR
+			ON TU.intUserID = TR.intUserID
+
+			JOIN TDifficulty as TD
+			ON TD.intDifficultyID = TR.intDifficultyID
+
+			JOIN TTaste as TT
+			ON TT.intTasteID = TR.intTasteID
+
+			JOIN TRecipes as TRe
+			ON TRe.intRecipeID = TR.intRecipeID
+
+GO
+
+--SELECT * FROM vUserRating WHERE intRecipeID = 1
 
 GO
 -- --------------------------------------------------------------------------------------------
