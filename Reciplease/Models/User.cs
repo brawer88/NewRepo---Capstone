@@ -14,23 +14,53 @@ using System.Web;
 //#################################################
 namespace Reciplease.Models {
 	public class User {
-		public long UID = 0;
-		public string UserID = string.Empty;
+		public int UID = 0;
+		public string Username = string.Empty;
 		public string FirstName = string.Empty;
 		public string LastName = string.Empty;
 		public string Password = string.Empty;
 		public ActionTypes ActionType = ActionTypes.NoType;
 		public string Email = string.Empty;
+		public List<Rating> Ratings;
+
 
 		public enum ActionTypes {
 			NoType = 0,
 			InsertSuccessful = 1,
 			UpdateSuccessful = 2,
 			DuplicateEmail = 3,
-			DuplicateUserID = 4,
+			DuplicateUsername = 4,
 			Unknown = 5,
 			RequiredFieldsMissing = 6,
 			LoginFailed = 7
+		}
+
+
+		public bool IsAuthenticated {
+			get
+			{
+				if ( UID > 0 ) return true;
+				return false;
+			}
+		}
+
+
+		public Tuple<int, int> GetUserRatings( int RecipeID ) {
+
+			Tuple<int, int> ZeroRatings = Tuple.Create(0,0);
+
+			try
+			{
+				foreach ( Rating r in this.Ratings )
+				{
+					if ( r.intRecipeID == RecipeID )
+					{
+						return Tuple.Create( r.intTasteRating, r.intDifficultyRating );
+					}
+				}
+				return ZeroRatings;
+			}
+			catch ( Exception ) { return ZeroRatings; }
 		}
 
 
@@ -42,7 +72,6 @@ namespace Reciplease.Models {
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
-
 
 
 		public bool RemoveUserSession( ) {
@@ -76,6 +105,17 @@ namespace Reciplease.Models {
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
+
+
+		public int RateRecipe( int RecipeID, int intDifficultyRating, int intTasteRating ) {
+			try
+			{
+				Database db = new Database( );
+				return db.RateRecipe( this.UID, RecipeID, intDifficultyRating, intTasteRating );
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
 
 	}
 

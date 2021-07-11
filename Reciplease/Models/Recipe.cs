@@ -28,6 +28,8 @@ namespace Reciplease.Models {
 		[JsonProperty( "nutrition" )]
 		public Nutrition nutrition { get; set; }
 		public ActionTypes ActionType = ActionTypes.NoType;
+		public Dictionary<String, int> dictRatings { get; set; }
+
 
 		// return sorted and fractionized ingredients
 		public List<Ingredient> GetFractionizedIngredients( ) {

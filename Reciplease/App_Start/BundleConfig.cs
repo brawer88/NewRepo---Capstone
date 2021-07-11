@@ -17,14 +17,24 @@ namespace Reciplease {
 						"~/Scripts/modernizr-*" ) );
 
 			bundles.Add( new ScriptBundle( "~/bundles/bootstrap" ).Include(
-					  "~/Scripts/bootstrap.js" ) );
+					  "~/Scripts/bootstrap*" ) );
 			bundles.Add( new ScriptBundle( "~/bundles/jquery" ).Include(
+					  "~/Scripts/jquery-3.3.1.min.js",
+					  "~/Scripts/jquery-3.3.1.min.map",
+					  "~/Scripts/jquery-3.3.1.min.js",
+					  "~/Scripts/jquery-3.3.1.slim.js",
+					  "~/Scripts/jquery-3.3.1.slim.min.js",
+					  "~/Scripts/jquery-3.3.1.slim.min.map",
 					  "~/Scripts/jquery-3.3.1.js" ) );
+			bundles.Add( new ScriptBundle( "~/bundles/js" ).Include(
+					  "~/Scripts/main.js",
+					  "~/Scripts/popper.js") );
 
 			bundles.Add( new StyleBundle( "~/Content/css" ).Include(
-					  "~/Content/bootstrap.css",
-					  "~/Content/site.css",
+					  "~/Content/style2.css",
 					  "~/Content/style.css",
+					  "~/Content/bootstrap.min.css",
+					  "~/Content/site.css",
 					  "~/Content/profile.css",
 					  "~/Content/cartstyle.css",
 					  "~/Content/util1.css" ) );

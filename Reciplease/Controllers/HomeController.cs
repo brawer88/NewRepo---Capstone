@@ -12,15 +12,12 @@ using System.Web.Mvc;
 namespace Reciplease.Controllers {
 	public class HomeController : Controller {
 		public ActionResult Index( ) {
-
-			Database db = new Database();
-
+			
 			Models.HomeContent h = new Models.HomeContent
 			{
 				// get recipes to display
 				RecipesToDisplay = RecipeAPI.Get5RandomAPIRecipes( )
-
-				// get the user object when we set up users
+				
 			};
 
 			h.User = new Models.User( );
@@ -30,6 +27,19 @@ namespace Reciplease.Controllers {
 		}
 
 		public ActionResult Search( ) {
+			// testing testing testing
+			//Database DB = new Database( );
+
+			//User u = new User( );
+
+			//u.Username = "Brawer";
+			//u.Password = "reciplease2";
+
+			//u = u.Login( );
+
+			//u.RateRecipe( 2, 5, 5 );
+
+
 			Models.HomeContent h = new Models.HomeContent
 			{
 				User = new Models.User( )
@@ -88,6 +98,21 @@ namespace Reciplease.Controllers {
 			return View( h );
 		}
 
+		// will update when procedures are in place
+		[HttpPost]
+		public JsonResult RateRecipe( int UID, int ID, int intDifficultyRating, int intTasteRating ) {
+			try
+			{
+				Models.Database db = new Models.Database( );
+				int intReturn = 0;
+				intReturn = db.RateRecipe( UID, ID, intDifficultyRating, intTasteRating );
+				return Json( new { Status = intReturn } );
+			}
+			catch ( Exception ex )
+			{
+				return Json( new { Status = -1 } ); //error
+			}
+		}
 
 
 		public ActionResult About( ) {

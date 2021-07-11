@@ -686,18 +686,19 @@ BEGIN TRANSACTION
 			UPDATE TUsers  
 			SET strFirstName = @strFirstName, strLastName = @strLastName, strEmail = @strEmail, strPassword = @strPassword, strUserName = @strUsername
 			WHERE @intUserID = intUserID 
+			COMMIT
 			RETURN 0
 		END
 
 	ELSE IF @UserNameExists = 1
 		BEGIN
 			COMMIT
-			RETURN @UserNameExists
+			RETURN 1
 		END
 	ELSE IF @EmailExists = 1
 		BEGIN
 			COMMIT
-			RETURN @EmailExists + 1
+			RETURN 2
 		END
 
 COMMIT TRANSACTION	
@@ -706,7 +707,7 @@ GO
 
 --SELECT * FROM TUsers
 --DECLARE @error as int
---EXECUTE @error =  uspUpdateUser 1, 'Ike', 'Galle', 'Kaitlin.cordell@gmail.com', 'RECIPLEASE82', 'Falcawn'
+--EXECUTE @error =  uspUpdateUser 1, 'Ike', 'Galle', 'Kaitlin.cordelsl@gmail.com', 'reciplease2', 'Falcawn'
 --PRINT @error
 --SELECT * FROM TUsers
 

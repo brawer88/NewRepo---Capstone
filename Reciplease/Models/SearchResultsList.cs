@@ -27,5 +27,6 @@ namespace Reciplease.Models {
 		public string readyInMinutes = string.Empty;
 		public string servings = string.Empty;
 		public string image = string.Empty;
+		public Dictionary<String, int> dictRatings { get; set; }
 	}
 }
