@@ -107,6 +107,24 @@ namespace Reciplease.Models {
 		}
 
 
+		public User.ActionTypes Save( ) {
+			try
+			{
+				Database db = new Database( );
+				if ( UID == 0 )
+				{ //insert new user
+					this.ActionType = db.InsertUser( this );
+				}
+				else
+				{
+					this.ActionType = db.UpdateUser( this );
+				}
+				return this.ActionType;
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
+
 		public int RateRecipe( int RecipeID, int intDifficultyRating, int intTasteRating ) {
 			try
 			{
