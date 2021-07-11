@@ -203,6 +203,7 @@
     <Content Include="Views\Favorites\View_Favorite" />
     <Content Include="Views\Profile\SignIn.cshtml" />
     <Content Include="Views\Profile\SignUp.cshtml" />
+    <Content Include="Views\Shared\NotAuthenticated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
