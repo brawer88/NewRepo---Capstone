@@ -1,0 +1,73 @@
+@model Reciplease.Models.User
+@{
+	ViewBag.Title = "Index";
+}
+<h2>@ViewBag.Title</h2>
+  <head>
+  	<title>Reciplease</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/style.css">
+  </head>
+       <!-- Page Content  -->
+      <div id="content" class="p-4 p-md-5 pt-5">
+	  <h3>Based on your recent history</h3>
+<div class="recipe-card">
+<link rel="stylesheet" href="css/style2.css">
+	<aside>
+
+		<a href="#" class="button"><span class="icon icon-play"></span></a>
+
+		<!---Display Recipe--->
+        <article>
+            <h2>@recipe.title</h2>
+            <p>Ready in : @recipe.readyInMinutes</p>
+            <p>Servings : @recipe.servings </p>
+            <p>@recipe.image</p>
+            <p>@recipe.instructions</p>
+            <p>@recipe.cuisine</p>
+            <p>@recipe.diets</p>
+            <p>@recipe.dishTypes</p>
+            <p>@recipe.extendedIngredients</p>
+            <p>@recipe.nutritionnutrition</p>
+
+        </article>
+		<!---End Display Recipe--->
+		
+		<br>
+				<!---Rating System--->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+			<style>
+			.checked {
+			  color: orange;
+			}
+			</style>
+			</head>
+			<body>
+			<p><b>Difficulty</b></p>
+			<span class="fa fa-star checked"></span>
+			<span class="fa fa-star checked"></span>
+			<span class="fa fa-star checked"></span>
+			<span class="fa fa-star"></span>
+			<span class="fa fa-star"></span>
+		<!---- --->
+		
+
+		
+		<br>
+			</article>
+	
+</div>
+		</div>
+		</div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
