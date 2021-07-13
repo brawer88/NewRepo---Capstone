@@ -32,7 +32,9 @@ namespace Reciplease.Models {
 			DuplicateUsername = 4,
 			Unknown = 5,
 			RequiredFieldsMissing = 6,
-			LoginFailed = 7
+			LoginFailed = 7,
+			RecipeFavorited = 8,
+			RecipeUnfavorited = 9
 		}
 
 
@@ -134,7 +136,14 @@ namespace Reciplease.Models {
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
-
+		public void ToggleFavorite( int RecipeID ) {
+			try
+			{
+				Database db = new Database( );
+				this.ActionType = db.ToggleFavorite( this.UID, RecipeID );
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
 	}
 
 

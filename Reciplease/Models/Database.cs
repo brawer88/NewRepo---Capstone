@@ -341,5 +341,41 @@ namespace Reciplease.Models {
 			}
 		}
 
+
+		public User.ActionTypes ToggleFavorite( int UID, int RecipeID ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspFavoriteUnfavorite", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int );
+				SetParameter( ref cm, "@intRecipeID", RecipeID, SqlDbType.BigInt );
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+
+				switch ( intReturnValue )
+				{
+					case 0: //new updated
+						return User.ActionTypes.RecipeFavorited;
+					case 1:
+						return User.ActionTypes.RecipeUnfavorited;
+					default:
+						return User.ActionTypes.Unknown;
+				}
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return User.ActionTypes.Unknown;
+			}
+		}
+
+
 	}
 }

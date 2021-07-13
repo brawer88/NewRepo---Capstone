@@ -37,7 +37,7 @@ namespace Reciplease.Controllers {
 
 			//u = u.Login( );
 
-			//u.RateRecipe( 2, 5, 5 );
+			//u.ToggleFavorite( 5000001);
 
 
 			Models.HomeContent h = new Models.HomeContent
