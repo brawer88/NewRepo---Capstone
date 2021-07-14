@@ -349,6 +349,7 @@ Select	 TRI.intRecipeIngredientID
 		,TRI.intIngredientQuantity
 		,TRI.strUnitOfMeasurement
 		,TI.strIngredientName
+		,TR.intRecipeID
 	 
 
 FROM	TRecipes as TR JOIN TRecipeIngredients as TRI
