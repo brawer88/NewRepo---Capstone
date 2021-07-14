@@ -55,34 +55,41 @@ namespace Reciplease.Models {
 			string fraction = string.Empty;
 
 			string[] numberParts = strUnit.Split( '.' );
-			string wholePart = numberParts[0];
-			string decPart = numberParts[1];
-			if ( numberParts[1].Length > 3 )
+
+			if ( numberParts.Length == 2 )
 			{
-				decPart = decPart.Substring(0, 3);
-			}
+				string wholePart = numberParts[0];
+				string decPart = numberParts[1];
+				if ( numberParts[1].Length > 3 )
+				{
+					decPart = decPart.Substring( 0, 3 );
+				}
 
 
-			// there will only be a few options for this, so will code those up
-			string[] aDecPossinilities = {"0", "062", "125", "166", "187", "25", "312", "333", "375", "437", "5", "562", "625", "666", "6875", "75", "812", "833", "875", "9375"};
-			string[] aFracPossinilities = { "", "1/16", "1/8", "1/6", "3/16", "1/4", "5/16", "1/3", "3/8", "7/16", "1/2", "9/16", "5/8", "2/3", "11/16", "3/4", "13/16", "5/6", "7/8", "15/16" };
+				// there will only be a few options for this, so will code those up
+				string[] aDecPossinilities = { "0", "062", "125", "166", "187", "25", "312", "333", "375", "437", "5", "562", "625", "666", "6875", "75", "812", "833", "875", "9375" };
+				string[] aFracPossinilities = { "", "1/16", "1/8", "1/6", "3/16", "1/4", "5/16", "1/3", "3/8", "7/16", "1/2", "9/16", "5/8", "2/3", "11/16", "3/4", "13/16", "5/6", "7/8", "15/16" };
 
-			int index = Array.IndexOf( aDecPossinilities, decPart );
+				int index = Array.IndexOf( aDecPossinilities, decPart );
 
-			if ( wholePart == "0")
-			{
-				wholePart = "";
-			}
-			if( index != -1 )
-			{
-				fraction = wholePart + " " + aFracPossinilities[index];
+				if ( wholePart == "0" )
+				{
+					wholePart = "";
+				}
+				if ( index != -1 )
+				{
+					fraction = wholePart + " " + aFracPossinilities[index];
+				}
+				else
+				{
+					fraction = wholePart + decPart;
+				}
+				return fraction;
 			}
 			else
 			{
-				fraction = wholePart + decPart;
+				return strUnit;
 			}
-
-			return fraction;
 		}
 
 		public string[] SplitInstructions() {
