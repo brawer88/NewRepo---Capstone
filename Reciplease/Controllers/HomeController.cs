@@ -28,7 +28,7 @@ namespace Reciplease.Controllers {
 
 		public ActionResult Search( ) {
 			// testing testing testing
-			Database DB = new Database( );
+			//Database DB = new Database( );
 
 			//User u = new User( );
 
