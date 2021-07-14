@@ -45,7 +45,7 @@ IF OBJECT_ID('uspRateRecipe')					IS NOT NULL DROP PROCEDURE uspRateRecipe
 IF OBJECT_ID('uspFavoriteUnfavorite')			IS NOT NULL DROP PROCEDURE uspFavoriteUnfavorite 
 IF OBJECT_ID('uspAddRecipe')					IS NOT NULL DROP PROCEDURE uspAddRecipe 
 IF OBJECT_ID('uspAddIngredient')				IS NOT NULL DROP PROCEDURE uspAddIngredient 
-
+IF OBJECT_ID('uspAddRecipeIngredients')			IS NOT NULL DROP PROCEDURE uspAddRecipeIngredients 
                                                                                                                                                                                                                                                                                                                                                                                                
 -- --------------------------------------------------------------------------------
 -- Step #1: Create Tables
@@ -802,10 +802,10 @@ BEGIN TRANSACTION
 
 		CLOSE ifExists
 
-	IF @Exists = 1 -- Recipe already exists in Database, returns 1
+	IF @Exists = 1 -- Recipe already exists in Database, returns 0
 		BEGIN
-			COMMIT
-			RETURN @Exists
+			COMMIT 
+			RETURN 0
 		END
 	ELSE IF @Exists = 0
 		BEGIN
@@ -826,7 +826,7 @@ BEGIN TRANSACTION
 
 			SET IDENTITY_INSERT TRecipes OFF
 			COMMIT
-			RETURN @Exists
+			RETURN @intRecipeID
 		END
 
 COMMIT TRANSACTION	
@@ -834,12 +834,11 @@ COMMIT TRANSACTION
 GO 
 
 --SELECT * FROM TRecipes
---DECLARE @Exists as Int
---DECLARE @RecipeID as int = 0
---EXECUTE @Exists = uspAddRecipe @RecipeID OUTPUT, 'Delicious Beef Stew', 'Stew made with beef, potato, onion, carrot, celery, wine, vinegar, bay leaf.', 'LARGE LIST OF INSTRUCTIONS HERE', 120, 4, 'American', '', '', '', 1
---PRINT @Exists
+--DECLARE @RecipeID as int = 5000004
+--EXECUTE @RecipeID = uspAddRecipe @RecipeID OUTPUT, 'Delicious Beef Stew', 'Stew made with beef, potato, onion, carrot, celery, wine, vinegar, bay leaf.', 'LARGE LIST OF INSTRUCTIONS HERE', 120, 4, 'American', '', '', '', 1
+--PRINT @RecipeID
 --SELECT * FROM TRecipes
-GO 
+--GO 
 
 -- --------------------------------------------------------------------------------------------
 
@@ -877,17 +876,17 @@ BEGIN TRANSACTION
 		CLOSE ifNameExists
 
 
-	IF @IDExists = 1 OR @NameExists > 0 -- Ingredient already exists in Database, returns 1
+	IF @IDExists = 1 AND @NameExists > 0 -- Ingredient already exists in Database, returns 1
 
 		BEGIN
 			COMMIT
-			RETURN @NameExists -- Returns intID if the ingredient is found
+			RETURN @NameExists -- Finds correct ID for Ingredeient and returns the ID, will return 0 if ID exists and Name Does not.
 		END
 
 	ELSE IF @IDExists = 0 -- Ingredient doesn't exist, adds to DB
 
 		BEGIN
-						-- Gets next UserID
+						-- Gets next ingredientID
 			IF @intIngredientID = 0
 				BEGIN
 					SELECT @intIngredientID = MAX(intIngredientID) + 1
@@ -900,25 +899,156 @@ BEGIN TRANSACTION
 			INSERT INTO TIngredients (intIngredientID, strIngredientName)
 			VALUES					(@intIngredientID, @strIngredientName)
 			COMMIT
-			RETURN @IDExists -- Returns 0 if ingredient wasnt found, to show ingredient was added.
+			RETURN @intIngredientID -- Returns intIngredientID to be added to an array to then be added to uspAddRecipeIngredient
 		END
 
 COMMIT TRANSACTION
 	
 GO
 --SELECT * FROM TIngredients
---DECLARE @Exists as Int
---EXECUTE @exists = uspAddIngredient 0, 'Bacon'
+--DECLARE @IngredientID as Int
+--EXECUTE @IngredientID = uspAddIngredient 12, 'Pork'
 --SELECT * FROM TIngredients
---PRINT @Exists
+--PRINT @IngredientID
+GO
 
 -- --------------------------------------------------------------------------------------------
 
---Create Procedure uspAddRecipeIngredients
---				 @intRecipeIngredientID
---				,@intRecipeID
---				,@intIngredientID
---				,@i
+Create Procedure uspAddRecipeIngredients
+				 @intRecipeID				AS INTEGER OUTPUT
+				,@intIngredientID			AS INTEGER OUTPUT
+				,@intIngredientQuantity		AS INTEGER OUTPUT
+				,@intMeasurementUnitID		AS INTEGER OUTPUT
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+
+	DECLARE @Exists as INTEGER
+
+	-- Returns 1 if recipe + ingredient exists, 0 if it doesn't
+	DECLARE ifExists CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TRecipeIngredients WHERE intRecipeID = @intRecipeID and intIngredientID = @intIngredientID -- Returns 1 if exists, 0 if it doesn't
+
+		OPEN ifExists
+
+		FETCH FROM ifExists
+		INTO @Exists
+
+		CLOSE ifExists
+
+	IF @Exists = 1
+		BEGIN
+			COMMIT
+			RETURN -1 -- Returns -1 because ingredient is already in recipe
+		END
+	ELSE
+		BEGIN
+			-- intRecipeIngredeintID is set to INTEGER IDENTITY, ID will be grabbed from next available ID
+			INSERT INTO TRecipeIngredients	(intRecipeID, intIngredientID, intIngredientQuantity, intMeasurementUnitID)
+			VALUES							(@intRecipeID, @intIngredientID, @intIngredientQuantity, @intMeasurementUnitID)
+			COMMIT
+			RETURN 0 -- Returns 0, code ran successfully
+		END
+
+COMMIT TRANSACTION
+
+GO
+
+--SELECT * FROM TRecipeIngredients
+--EXECUTE uspAddRecipeIngredients 5000004, 1, 20, 10
+--SELECT * FROM TRecipeIngredients
+
+GO
+
+
+-- ADD RECIPE AND ALL ITS INGREDIENTS TEST --
+
+--SELECT * FROM TRecipes
+--SELECT * FROM TIngredients
+--SELECT * FROM TRecipeIngredients
+--SELECT * FROM VRecipeIngredients
+--DECLARE @RecipeID as INTEGER = 4000
+--DECLARE @IngredientID as INT = 0
+--EXECUTE @RecipeID = uspAddRecipe  @RecipeID OUTPUT, 'Bagel Bites', 'Tiny pizza bagels, bite sized, delicious!', 'Put the cheese on bagel, then the pepperonie, bake at high temp for a medium amount of time', 30, 1, 'American', '', '', 'BAD FOR YOU', 1
+--PRINT @RecipeID
+--EXECUTE @IngredientID = uspAddIngredient @IngredientID OUTPUT, 'Bacon' 
+--PRINT @IngredientID
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 10
+--EXECUTE @IngredientID = uspAddIngredient 24, 'Butter' 
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 2
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 2, 2, 10
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 3, 3, 9
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 4, 4, 10
+--SELECT * FROM TRecipes
+--SELECT * FROM TIngredients
+--SELECT * FROM TRecipeIngredients
+--SELECT * FROM VRecipeIngredients
+
+
+
+
+
+
+
+
+--SELECT * FROM TRecipeIngredients
+--DECLARE @Exists as int
+--EXECUTE @Exists = uspAddRecipeIngredients 5000002, 6, 2, 2
+--PRINT @Exists
+--SELECT * FROM TRecipeIngredients
+-- --------------------------------------------------------------------------------------------
+
+--Create Procedure uspCreateCompleteRecipe
+--					 @intRecipeID			AS INTEGER OUTPUT
+--					,@strName				AS VARCHAR(50) OUTPUT
+--					,@strDescription		AS VARCHAR(300) OUTPUT
+--					,@strInstructions		AS VARCHAR(3000) OUTPUT
+--					,@intReadyInMins		AS INTEGER OUTPUT			-- OPTIONAL
+--					,@intServings			AS INTEGER OUTPUT			-- OPTIONAL
+--					,@strCuisines			AS VARCHAR(255) OUTPUT		-- OPTIONAL
+--					,@strDiets				AS VARCHAR(255) OUTPUT		-- OPTIONAL
+--					,@strDishTypes			AS VARCHAR(255) OUTPUT		-- OPTIONAL
+--					,@strNutrition			AS VARCHAR(3000) OUTPUT		-- OPTIONAL
+--					,@intUserID				AS INTEGER OUTPUT			-- OPTIONAL
+--					,@intIngredientID		AS INTEGER OUTPUT
+--					,@strIngredientName		AS VARCHAR(50) OUTPUT
+--					,@intIngredientQuantity	AS INTEGER OUTPUT
+--					,@intMeasurementUnitID	AS INTEGER OUTPUT
+
+--					 intRecipeID and intIngredientID must be 0 unless entered from the API. 
+--					 intRecipeID will return 0 if Recipe was added succesfully, will return 1 if the Recipe already exists. RecipeID will COALESCE from 5000001 going up by 1 
+--							for user created recipes. API recipes added to be able to be favorited will be the RecipeID used in the API.
+--					 intIngredientID will return THE ID of the ingredient
+
+--AS
+--SET XACT_ABORT ON
+
+--BEGIN TRANSACTION
+	
+--	DECLARE @Exists as INT
+
+--	EXECUTE @Exists = uspAddRecipe @intRecipeID OUTPUT, @strName, @strDescription, @strInstructions, @intReadyInMins, @intServings, @strCuisines, @strDiets, @strDishTypes, @strNutrition, @intUserID
+
+--	IF @Exists = 1
+
+--		BEGIN
+--		COMMIT
+--		RETURN -1
+--		END
+
+--	ELSE 
+
+--		EXECUTE @Exists = uspAddIngredient @intIngredientID OUTPUT, @strIngredientName
+
+--		IF @Exists > 0
+
+--			BEGIN
+				
+--				EXECUTE @Exists = uspAddRecipeIngredients
+
+
+--COMMIT TRANSACTION
 
 -- --------------------------------------------------------------------------------------------
 	-- intRecipeID		INTEGER	  IDENTITY	NOT NULL
