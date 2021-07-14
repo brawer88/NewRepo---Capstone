@@ -805,8 +805,45 @@ BEGIN TRANSACTION
 		END
 	ELSE IF @Exists = 0
 		BEGIN
+
+			-- ALL OPTIONAL OUTPUTS will be given a -1 for NULL or another value if not null
+			IF @intReadyInMins = -1
+				BEGIN
+					SET @intReadyInMins = NULL
+				END
+
+			IF @intServings = -1
+				BEGIN
+					SET @intServings = NULL
+				END
+				
+			IF @strCuisines = '-1'
+				BEGIN
+					SET @strCuisines = NULL
+				END
+				
+			IF @strDiets = '-1'
+				BEGIN
+					SET @strDiets = NULL
+				END			
+
+			IF @strDishTypes = '-1'
+				BEGIN
+					SET @strDishTypes = NULL
+				END
+				
+			IF @strNutrition = '-1'
+				BEGIN
+					SET @strNutrition = NULL
+				END
+				
+			IF @intUserID = -1
+				BEGIN
+					SET @intUserID = NULL
+				END			
+
 			-- Gets next UserID
-			IF @intRecipeID = 0
+			IF @intRecipeID = -1
 				BEGIN
 					SELECT @intRecipeID = MAX(intRecipeID) + 1
 					FROM TRecipes (TABLOCKX) -- Locks table till end of transaction
@@ -830,8 +867,8 @@ COMMIT TRANSACTION
 GO 
 
 --SELECT * FROM TRecipes
---DECLARE @RecipeID as int = 5000004
---EXECUTE @RecipeID = uspAddRecipe @RecipeID OUTPUT, 'Delicious Beef Stew', 'LARGE LIST OF INSTRUCTIONS HERE', 120, 4, 'American', '', '', '', 1
+--DECLARE @RecipeID as int = 5000005
+--EXECUTE @RecipeID = uspAddRecipe @RecipeID OUTPUT, 'Delicious Beef Stew', 'LARGE LIST OF INSTRUCTIONS HERE', -1, -1, 'American', '-1', '-1', '-1', -1
 --PRINT @RecipeID
 --SELECT * FROM TRecipes
 --GO 
