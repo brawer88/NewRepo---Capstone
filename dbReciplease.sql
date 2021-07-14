@@ -65,7 +65,6 @@ CREATE TABLE TRecipes
 (
 	 intRecipeID		INTEGER	IDENTITY(5000001, 1)	NOT NULL
 	,strName			VARCHAR(50)						NOT NULL
-	,strDescription		VARCHAR(300)					NOT NULL
 	,strInstructions	VARCHAR(3000)					NOT NULL
 	,intReadyInMins		INTEGER				
 	,intServings		INTEGER				
@@ -83,7 +82,7 @@ CREATE TABLE TRecipeIngredients
 	,intRecipeID			INTEGER				NOT NULL
 	,intIngredientID		INTEGER				NOT NULL
 	,intIngredientQuantity	INTEGER				NOT NULL
-	,intMeasurementUnitID	INTEGER				NOT	NULL
+	,strUnitOfMeasurement	VARCHAR(50)			NOT	NULL
 	,CONSTRAINT RecipeIngredient_UQ UNIQUE ( intRecipeID, intIngredientID )
 	,CONSTRAINT TRecipeIngredients_PK PRIMARY KEY ( intRecipeIngredientID )
 )
@@ -146,12 +145,12 @@ CREATE TABLE TLast10
 	,CONSTRAINT TLast10_PK PRIMARY KEY ( intLast10ID )
 )
 
-CREATE TABLE TMeasurementUnits
-(
-	 intMeasurementUnitID				INTEGER				NOT NULL
-	,strUnit							VARCHAR(50)			NOT NULL
-	,CONSTRAINT TUnitsOfMeasurement		PRIMARY KEY ( intMeasurementUnitID )
-)
+--CREATE TABLE TMeasurementUnits
+--(
+--	 intMeasurementUnitID				INTEGER				NOT NULL
+--	,strUnit							VARCHAR(50)			NOT NULL
+--	,CONSTRAINT TUnitsOfMeasurement		PRIMARY KEY ( intMeasurementUnitID )
+--)
 
 -- --------------------------------------------------------------------------------
 -- Step #2: Identify and Create Foreign Keys
@@ -199,8 +198,8 @@ ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TIngredients_FK
 FOREIGN KEY ( intIngredientID ) REFERENCES TIngredients ( intIngredientID )
 
 -- 15
-ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TMeasurementUnits_FK
-FOREIGN KEY ( intMeasurementUnitID ) REFERENCES TMeasurementUnits ( intMeasurementUnitID )
+----ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TMeasurementUnits_FK
+----FOREIGN KEY ( intMeasurementUnitID ) REFERENCES TMeasurementUnits ( intMeasurementUnitID )
 
 -- 7
 ALTER TABLE TRatings ADD CONSTRAINT TRatings_TTaste_FK
@@ -236,19 +235,19 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
  --Step #3: INSERT INTO TABLES
  --------------------------------------------------------------------------------
 
- INSERT INTO TMeasurementUnits( intMeasurementUnitID, strUnit )
- VALUES					 (1, ' ')
-						,(2, 'Tsp')
-						,(3, 'TBSP')
-						,(4, 'Cup')
-						,(5, 'Quart')
-						,(6, 'Pint')
-						,(7, 'Gallon')
-						,(8, 'Liter')
-						,(9, 'ML')
-						,(10, 'OZ')
-						,(11, 'LB')
-						,(12, 'Grams')
+ --INSERT INTO TMeasurementUnits( intMeasurementUnitID, strUnit )
+ --VALUES					 (1, ' ')
+	--					,(2, 'Tsp')
+	--					,(3, 'TBSP')
+	--					,(4, 'Cup')
+	--					,(5, 'Quart')
+	--					,(6, 'Pint')
+	--					,(7, 'Gallon')
+	--					,(8, 'Liter')
+	--					,(9, 'ML')
+	--					,(10, 'OZ')
+	--					,(11, 'LB')
+	--					,(12, 'Grams')
 
  INSERT INTO TDifficulty ( intDifficultyRating )
  VALUES					 (1)
@@ -270,14 +269,13 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
 						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
 
-INSERT INTO TRecipes	(strName, strDescription, strInstructions, intReadyInMins, intServings, intUserID)
-VALUES					 ('Rosemary Garlic Butter Steak', 'Ribeye Steak pan seared in a cast iron with butter allowing the rosemary and garlic to infuse into the butter and steak itself.'
-							, 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
+INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID)
+VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
 							   Step 2; Once the steak is seared reduce heat to Medium - Medium High add butter to the pan and let it melt. Once the butter has melted put in 2-3 "sticks" of rosemary and 3-4 garlic cloves quartered or halved in the butter. Cook the steak an additional 3 - 5 minutes depending on how rare youd like it, while cooking spoon the melted butter over the steak.
 							   Step 3; Enjoy :)', 25, 2, 1 )
-						,('Recipe Test 2', 'Recipe Test 2 Desc', 'Recipe Test 2 Instructions', 30, 4, 1)
-						,('Recipe Test 3', 'Recipe Test 3 Desc', 'Recipe Test 3 Instructions', 60, 4, 3)
-						,('Recipe Test 4', 'Recipe Test 4 Desc', 'Recipe Test 4 Instructions',180, 6, 4)
+						,('Recipe Test 2', 'Recipe Test 2 Instructions', 30, 4, 1)
+						,('Recipe Test 3', 'Recipe Test 3 Instructions', 60, 4, 3)
+						,('Recipe Test 4', 'Recipe Test 4 Instructions',180, 6, 4)
 
  INSERT INTO TRatings		(intRatingID, intUserID, intDifficultyID, intTasteID, intRecipeID)
  VALUES					 (1, 1, 5, 5, 5000001)
@@ -316,17 +314,17 @@ VALUES					 (1, 'Sweet White Onion' )
 						,(16, 'Lemon')
 						,(17, 'All-Spice')
 
- INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, intIngredientQuantity, intMeasurementUnitID )
- VALUES					 (5000001, 6, 1, 1)
-						,(5000001, 8, 1, 2)
-						,(5000001, 9, 6, 2)
-						,(5000001, 10, 1, 4)
-						,(5000001, 11, 3, 1)
-						,(5000001, 12, 3, 1)
-						,(5000002, 3, 2, 7)
-						,(5000002, 9, 1, 8)
-						,(5000002, 10, 1, 9)
-						,(5000002, 8, 1, 10)
+ INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, intIngredientQuantity, strUnitOfMeasurement )
+ VALUES					 (5000001, 6, 1, 'LB')
+						,(5000001, 8, 1, 'TSP')
+						,(5000001, 9, 6, 'TBSP')
+						,(5000001, 10, 1, 'OZ')
+						,(5000001, 11, 3, 'ML')
+						,(5000001, 12, 3, 'Gram')
+						,(5000002, 3, 2, 'Cup')
+						,(5000002, 9, 1, 'Quart')
+						,(5000002, 10, 1, 'Pint')
+						,(5000002, 8, 1, 'Gallon')
 
 INSERT INTO TShoppingList ( intShoppingListID, intUserID, intRecipeIngredientID )
 VALUES						 (1,1,1)
@@ -349,7 +347,7 @@ AS
 Select	 TRI.intRecipeIngredientID
 		,TR.strName
 		,TRI.intIngredientQuantity
-		,TMU.strUnit
+		,TRI.strUnitOfMeasurement
 		,TI.strIngredientName
 	 
 
@@ -358,9 +356,6 @@ FROM	TRecipes as TR JOIN TRecipeIngredients as TRI
 
 		JOIN TIngredients as TI
 		ON TI.intIngredientID = TRI.intIngredientID
-
-		JOIN TMeasurementUnits as TMU
-		ON TMU.intMeasurementUnitID = TRI.intMeasurementUnitID
 
 GO
 
@@ -376,13 +371,15 @@ Select	 TU.intUserID
 		,TU.strFirstName + ' ' + TU.strLastName as USERNAME
 		,TR.intRecipeID
 		,TR.strName
-		,TR.strDescription		 
 
 FROM	TUsers as TU JOIN TUserFavorites as TUF
 		ON TU.intUserID = TUF.intUserID
 
 		JOIN TRecipes as TR
 		ON TR.intRecipeID = TUF.intRecipeID
+
+		--JOIN TMeasurementUnits as TMU
+		--ON TMU.intMeasurementUnitID = TRI.intMeasurementUnitID	
 
 GO
 
@@ -397,7 +394,7 @@ AS
 SELECT	 TU.intUserID as USERID
 		,TRI.intIngredientID as INGREDIENTID
 		,TRI.intIngredientQuantity
-		,TMU.strUnit
+		,TRI.strUnitOfMeasurement
 		,TI.strIngredientName
 
 FROM	TUsers as TU JOIN TShoppingList TSL
@@ -412,8 +409,8 @@ FROM	TUsers as TU JOIN TShoppingList TSL
 		JOIN TIngredients as TI
 		ON TI.intIngredientID = TRI.intIngredientID
 
-		JOIN TMeasurementUnits as TMU
-		ON TMU.intMeasurementUnitID = TRI.intMeasurementUnitID	
+		--JOIN TMeasurementUnits as TMU
+		--ON TMU.intMeasurementUnitID = TRI.intMeasurementUnitID	
 
 GO
 
@@ -774,7 +771,6 @@ GO
 Create Procedure uspAddRecipe
 					 @intRecipeID		AS INTEGER OUTPUT
 					,@strName			AS VARCHAR(50) OUTPUT
-					,@strDescription	AS VARCHAR(300) OUTPUT
 					,@strInstructions	AS VARCHAR(3000) OUTPUT
 					,@intReadyInMins	AS INTEGER OUTPUT			-- OPTIONAL
 					,@intServings		AS INTEGER OUTPUT			-- OPTIONAL
@@ -809,8 +805,45 @@ BEGIN TRANSACTION
 		END
 	ELSE IF @Exists = 0
 		BEGIN
+
+			-- ALL OPTIONAL OUTPUTS will be given a -1 for NULL or another value if not null
+			IF @intReadyInMins = -1
+				BEGIN
+					SET @intReadyInMins = NULL
+				END
+
+			IF @intServings = -1
+				BEGIN
+					SET @intServings = NULL
+				END
+				
+			IF @strCuisines = '-1'
+				BEGIN
+					SET @strCuisines = NULL
+				END
+				
+			IF @strDiets = '-1'
+				BEGIN
+					SET @strDiets = NULL
+				END			
+
+			IF @strDishTypes = '-1'
+				BEGIN
+					SET @strDishTypes = NULL
+				END
+				
+			IF @strNutrition = '-1'
+				BEGIN
+					SET @strNutrition = NULL
+				END
+				
+			IF @intUserID = -1
+				BEGIN
+					SET @intUserID = NULL
+				END			
+
 			-- Gets next UserID
-			IF @intRecipeID = 0
+			IF @intRecipeID = -1
 				BEGIN
 					SELECT @intRecipeID = MAX(intRecipeID) + 1
 					FROM TRecipes (TABLOCKX) -- Locks table till end of transaction
@@ -821,8 +854,8 @@ BEGIN TRANSACTION
 
 			SET IDENTITY_INSERT TRecipes ON
 
-			INSERT INTO TRecipes (intRecipeID, strName, strDescription, strInstructions, intReadyInMins, intServings, strCuisines, strDiets, strDishTypes, strNutrition, intUserID)
-			VALUES				(@intRecipeID, @strName, @strDescription, @strInstructions, @intReadyInMins, @intServings, @strCuisines, @strDiets, @strDishTypes, @strNutrition, @intUserID)
+			INSERT INTO TRecipes (intRecipeID, strName, strInstructions, intReadyInMins, intServings, strCuisines, strDiets, strDishTypes, strNutrition, intUserID)
+			VALUES				(@intRecipeID, @strName, @strInstructions, @intReadyInMins, @intServings, @strCuisines, @strDiets, @strDishTypes, @strNutrition, @intUserID)
 
 			SET IDENTITY_INSERT TRecipes OFF
 			COMMIT
@@ -834,8 +867,8 @@ COMMIT TRANSACTION
 GO 
 
 --SELECT * FROM TRecipes
---DECLARE @RecipeID as int = 5000004
---EXECUTE @RecipeID = uspAddRecipe @RecipeID OUTPUT, 'Delicious Beef Stew', 'Stew made with beef, potato, onion, carrot, celery, wine, vinegar, bay leaf.', 'LARGE LIST OF INSTRUCTIONS HERE', 120, 4, 'American', '', '', '', 1
+--DECLARE @RecipeID as int = 5000005
+--EXECUTE @RecipeID = uspAddRecipe @RecipeID OUTPUT, 'Delicious Beef Stew', 'LARGE LIST OF INSTRUCTIONS HERE', -1, -1, 'American', '-1', '-1', '-1', -1
 --PRINT @RecipeID
 --SELECT * FROM TRecipes
 --GO 
@@ -915,10 +948,10 @@ GO
 -- --------------------------------------------------------------------------------------------
 
 Create Procedure uspAddRecipeIngredients
-				 @intRecipeID				AS INTEGER OUTPUT
-				,@intIngredientID			AS INTEGER OUTPUT
-				,@intIngredientQuantity		AS INTEGER OUTPUT
-				,@intMeasurementUnitID		AS INTEGER OUTPUT
+				 @intRecipeID				AS INTEGER		OUTPUT
+				,@intIngredientID			AS INTEGER		OUTPUT
+				,@intIngredientQuantity		AS INTEGER		OUTPUT
+				,@strUnitOfMeasurement		AS VARCHAR(50)	OUTPUT
 AS
 SET XACT_ABORT ON
 
@@ -945,8 +978,8 @@ BEGIN TRANSACTION
 	ELSE
 		BEGIN
 			-- intRecipeIngredeintID is set to INTEGER IDENTITY, ID will be grabbed from next available ID
-			INSERT INTO TRecipeIngredients	(intRecipeID, intIngredientID, intIngredientQuantity, intMeasurementUnitID)
-			VALUES							(@intRecipeID, @intIngredientID, @intIngredientQuantity, @intMeasurementUnitID)
+			INSERT INTO TRecipeIngredients	(intRecipeID, intIngredientID, intIngredientQuantity, strUnitOfMeasurement)
+			VALUES							(@intRecipeID, @intIngredientID, @intIngredientQuantity, @strUnitOfMeasurement)
 			COMMIT
 			RETURN 0 -- Returns 0, code ran successfully
 		END
@@ -956,7 +989,7 @@ COMMIT TRANSACTION
 GO
 
 --SELECT * FROM TRecipeIngredients
---EXECUTE uspAddRecipeIngredients 5000004, 1, 20, 10
+--EXECUTE uspAddRecipeIngredients 5000004, 1, 20, 'OZ'
 --SELECT * FROM TRecipeIngredients
 
 GO
@@ -970,14 +1003,14 @@ GO
 --SELECT * FROM VRecipeIngredients
 --DECLARE @RecipeID as INTEGER = 4000
 --DECLARE @IngredientID as INT = 0
---EXECUTE @RecipeID = uspAddRecipe  @RecipeID OUTPUT, 'Bagel Bites', 'Tiny pizza bagels, bite sized, delicious!', 'Put the cheese on bagel, then the pepperonie, bake at high temp for a medium amount of time', 30, 1, 'American', '', '', 'BAD FOR YOU', 1
+--EXECUTE @RecipeID = uspAddRecipe  @RecipeID OUTPUT, 'Bagel Bites', 'Put the cheese on bagel, then the pepperonie, bake at high temp for a medium amount of time', 30, 1, 'American', '', '', 'BAD FOR YOU', 1
 --PRINT @RecipeID
 --EXECUTE @IngredientID = uspAddIngredient @IngredientID OUTPUT, 'Bacon' 
 --PRINT @IngredientID
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 10
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 'Grams'
 --EXECUTE @IngredientID = uspAddIngredient 24, 'Butter' 
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 2
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 2, 2, 10
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 'TBSP'
+--EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 2, 2, 'Cups'
 --EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 3, 3, 9
 --EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 4, 4, 10
 --SELECT * FROM TRecipes
@@ -1049,70 +1082,3 @@ GO
 
 
 --COMMIT TRANSACTION
-
--- --------------------------------------------------------------------------------------------
-	-- intRecipeID		INTEGER	  IDENTITY	NOT NULL
-	--,strName			VARCHAR(50)			NOT NULL
-	--,strDescription		VARCHAR(300)		NOT NULL
-	--,strInstructions	VARCHAR(3000)		NOT NULL
-	--,intReadyInMins		INTEGER				
-	--,intServings		INTEGER				
-	--,strCuisines		VARCHAR(255)		
-	--,strDiets			VARCHAR(255)		
-	--,strDishTypes		VARCHAR(255)
-	--,strNutrition		VARCHAR(3000)		
-	--,intUserID			INTEGER				
-
-
-
---DECLARE @intVisitID AS INTEGER = 0 
---EXECUTE uspRandomizationInsertVisit @intVisitID OUTPUT, 4
---PRINT 'VISIT ID = ' + CONVERT(VARCHAR, @intVisitID)
---SELECT * FROM TVisits
-
- -- TEST
---SELECT * FROM vPatientVisits
---DECLARE @intVisitID as INTEGER = 0
---EXECUTE uspScreening @intVisitID OUTPUT, '12/12/19', 2, '09/10/1992', 1, 178
---PRINT 'VISIT ID = ' + CONVERT(VARCHAR, @intVisitID)
---SELECT * FROM vPatientVisits
---SELECT * FROM vPatientSites
-
-
---Create Procedure uspInsertPatient
---		 @intPatientID		as INTEGER OUTPUT
---		,@intSiteID			as INTEGER
---		,@dtmDOB			as DATE
---		,@intGenderID		as INTEGER
---		,@intWeight			as INTEGER
---AS
---SET XACT_ABORT ON	--- Terminate and roll back if any errors
-
---BEGIN TRANSACTION
-
---	SELECT @intPatientID = MAX(intPatientID) + 1
---	FROM TPatients	(TABLOCKX)	-- Locks table until the end of the transaction
-
---	-- Default to 1 if the table is empty
---	SELECT @intPatientID = COALESCE( @intPatientID, 1 )
-
---	-- Gets next number from patients at selected site
---	DECLARE @intPatientNumber as INTEGER
---		BEGIN
---			DECLARE PatientNumCursor CURSOR LOCAL FOR
---			SELECT MAX(intPatientNumber) + 1 FROM vPatientSites
---			WHERE intSiteID = @intSiteID
-			
---			OPEN PatientNumCursor
-			
---			FETCH FROM PatientNumCursor
---			INTO @intPatientNumber
---		END			
-
---		-- INSERT data into the table
---	INSERT INTO TPatients(intPatientID, intPatientNumber, intSiteID, dtmDOB, intGenderID, intWeight)
---	VALUES (@intPatientID, @intPatientNumber, @intSiteID, @dtmDOB, @intGenderID, @intWeight)
-		
---COMMIT TRANSACTION
-
---GO
