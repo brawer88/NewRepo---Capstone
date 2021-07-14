@@ -98,8 +98,8 @@ namespace Reciplease.Controllers {
 			return View( h );
 		}
 
-		// will update when procedures are in place
-		[HttpPost]
+        // will update when procedures are in place
+        [HttpPost]
 		public JsonResult RateRecipe( int UID, int ID, int intDifficultyRating, int intTasteRating ) {
 			try
 			{
@@ -115,7 +115,7 @@ namespace Reciplease.Controllers {
 		}
 
 
-		public ActionResult About( ) {
+        public ActionResult About( ) {
 			ViewBag.Message = "Your application description page.";
 
 			return View( );
