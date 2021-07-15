@@ -26,14 +26,12 @@
 				<h2>@recipe.title</h2>
 				<p>Ready In: @recipe.readyInMinutes</p>
 				<p>Servings: @recipe.servings</p>
-				@*
-						Perhaps having the ingredients listed is too much on the card
-						@foreach ( Reciplease.Models.Ingredient ingredient in @recipe.extendedIngredients )
-					{
-						<ul>
-							<li>@ingredient.name</li>
-						</ul>
-					}*@
+				<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
+				<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
+				<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
+				<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
+
+
 			</article>
 			
 		</div>

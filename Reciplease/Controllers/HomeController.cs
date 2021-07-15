@@ -39,6 +39,7 @@ namespace Reciplease.Controllers {
 
 			//u.ToggleFavorite( 5000001);
 
+			//DB.SaveRecipe( "test", "this is a test", "submit recipe to db, check return value", 0, 0, "", "", "", "", -1, 0 );
 
 			Models.HomeContent h = new Models.HomeContent
 			{
@@ -85,15 +86,38 @@ namespace Reciplease.Controllers {
 
 
 		public ActionResult Recipe(  ) {
-			Models.HomeContent h = new Models.HomeContent
-			{
-				// get recipes to display
-				SingleRecipe = RecipeAPI.GetRecipeById( Convert.ToString(RouteData.Values["id"]) )
-				
-			};
-
+			Models.HomeContent h = new Models.HomeContent( );
 			h.User = new Models.User( );
 			h.User = h.User.GetUserSession( );
+
+			Database DB = new Database( );
+
+			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
+
+			// check if recipe id exists
+			if ( DB.RecipeExists( strRecipeID ) == false )
+			{
+				// get recipes to display
+				h.SingleRecipe = RecipeAPI.GetRecipeById( strRecipeID );
+				// save recipe
+				int intSavedID = DB.SaveRecipe( h.SingleRecipe.title, h.SingleRecipe.instructions, int.Parse( h.SingleRecipe.readyInMinutes ), int.Parse( h.SingleRecipe.servings ),
+					String.Join( ", ", h.SingleRecipe.cuisines ), String.Join( ", ", h.SingleRecipe.diets ), String.Join( ", ", h.SingleRecipe.dishTypes ), JsonConvert.SerializeObject( h.SingleRecipe.nutrition ), -1, int.Parse( h.SingleRecipe.id ) );
+
+				foreach ( Ingredient ingredient in h.SingleRecipe.extendedIngredients )
+				{
+					// now save ingredients
+					int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
+
+					DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+				}
+
+
+			}
+			else
+			{
+				// load from db
+				h.SingleRecipe = DB.LoadRecipe( strRecipeID );
+			}
 
 			return View( h );
 		}

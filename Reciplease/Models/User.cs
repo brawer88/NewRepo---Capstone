@@ -136,11 +136,11 @@ namespace Reciplease.Models {
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
-		public void ToggleFavorite( int RecipeID ) {
+		public int ToggleFavorite( int RecipeID ) {
 			try
 			{
 				Database db = new Database( );
-				this.ActionType = db.ToggleFavorite( this.UID, RecipeID );
+				return db.ToggleFavorite( this.UID, RecipeID );
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}

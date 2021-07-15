@@ -3,6 +3,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Reciplease.Models {
 	public class Database {		
@@ -122,6 +124,131 @@ namespace Reciplease.Models {
 				return User.ActionTypes.Unknown;
 			}
 		}
+
+
+
+
+		internal Recipe LoadRecipe( string strRecipeID ) {
+			try
+			{
+				DataSet ds = new DataSet( );
+				SqlConnection cn = new SqlConnection( );
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				Recipe recipe = new Recipe( );
+
+				SqlCommand selectCMD = new SqlCommand( "SELECT * FROM TRecipes WHERE intRecipeID=" + strRecipeID, cn );
+				SqlDataAdapter da = new SqlDataAdapter( );
+				da.SelectCommand = selectCMD;
+
+
+				try
+				{
+					da.Fill( ds );
+				}
+				catch ( Exception ex2 )
+				{
+					System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
+				}
+				finally { CloseDBConnection( ref cn ); }
+
+				if ( ds.Tables[0].Rows.Count != 0 )
+				{
+					foreach ( DataRow dr in ds.Tables[0].Rows )
+					{
+						recipe.id = strRecipeID;
+						recipe.title = (string)dr["strName"];
+						recipe.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
+						recipe.servings = ((int)dr["intServings"]).ToString();
+						recipe.instructions = (string)dr["strInstructions"];
+						recipe.dishTypes = ( (string)dr["strName"] ).Split( ',' ).ToList( );
+						recipe.cuisines = ( (string)dr["strCuisines"] ).Split( ',' ).ToList( );
+						recipe.diets = ( (string)dr["strDiets"] ).Split( ',' ).ToList( );
+						recipe.nutrition = JsonConvert.DeserializeObject<Nutrition>( (string)dr["strNutrition"] );
+					}
+
+					recipe.extendedIngredients = GetIngredients( strRecipeID );
+
+					return recipe;
+				}
+				return null;
+			}
+				
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
+		private List<Ingredient> GetIngredients( string strRecipeID ) {
+			List<Ingredient> ingredients = new List<Ingredient>( );
+			DataSet ds = new DataSet( );
+			SqlConnection cn = new SqlConnection( );
+			if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+			Recipe recipe = new Recipe( );
+
+			SqlCommand selectCMD = new SqlCommand( "SELECT * FROM VRecipeIngredients WHERE intRecipeID=" + strRecipeID, cn );
+			SqlDataAdapter da = new SqlDataAdapter( );
+			da.SelectCommand = selectCMD;
+
+
+			try
+			{
+				da.Fill( ds );
+			}
+			catch ( Exception ex2 )
+			{
+				System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
+			}
+			finally { CloseDBConnection( ref cn ); }
+
+			if ( ds.Tables[0].Rows.Count != 0 )
+			{
+				foreach ( DataRow dr in ds.Tables[0].Rows )
+				{
+					Ingredient ingredient = new Ingredient( );
+					ingredient.amount = ((double)dr["intIngredientQuantity"]).ToString();
+					ingredient.unit = (string)dr["strUnitOfMeasurement"];
+					ingredient.name = (string)dr["strIngredientName"];
+					ingredients.Add( ingredient );
+
+				}
+			}
+
+			return ingredients;
+
+		}
+
+		internal bool RecipeExists( string recipeID ) {
+			bool exists = false;
+			DataSet ds = new DataSet( );
+			SqlConnection cn = new SqlConnection( );
+			if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+			List<Rating> ratings = new List<Rating>( );
+
+
+
+			SqlCommand selectCMD = new SqlCommand( "SELECT * FROM TRecipes WHERE intRecipeID=" + recipeID, cn );
+			SqlDataAdapter da = new SqlDataAdapter( );
+			da.SelectCommand = selectCMD;
+
+
+			try
+			{
+				da.Fill( ds );
+			}
+			catch ( Exception ex2 )
+			{
+				System.Diagnostics.Debug.WriteLine( "checking for recipe id error: " + ex2.Message );
+			}
+			finally { CloseDBConnection( ref cn ); }
+
+			if ( ds.Tables[0].Rows.Count != 0 )
+			{
+				exists = true;
+			}
+
+			return exists;
+		}
+
+
+
 
 
 		public User Login( User u ) {
@@ -261,10 +388,10 @@ namespace Reciplease.Models {
 				}
 				catch ( Exception ex2 )
 				{
-					//SysLog.UpdateLogFile(this.ToString(), MethodBase.GetCurrentMethod().Name.ToString(), ex2.Message);
+					System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
 				}
 				finally { CloseDBConnection( ref cn ); }
-
+			
 				if ( ds.Tables[0].Rows.Count != 0 )
 				{
 					foreach ( DataRow dr in ds.Tables[0].Rows )
@@ -315,7 +442,7 @@ namespace Reciplease.Models {
 				return ratings;
 			}
 			catch ( Exception ex ) {
-				System.Diagnostics.Debug.WriteLine( "getting ratings error: " +  ex.Message );
+				System.Diagnostics.Debug.WriteLine( "getting recipe ratings error: " +  ex.Message );
 				return ratings; }
 		}
 
@@ -342,7 +469,7 @@ namespace Reciplease.Models {
 		}
 
 
-		public User.ActionTypes ToggleFavorite( int UID, int RecipeID ) {
+		public int ToggleFavorite( int UID, int RecipeID ) {
 			try
 			{
 				SqlConnection cn = null;
@@ -359,23 +486,109 @@ namespace Reciplease.Models {
 				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
 				CloseDBConnection( ref cn );
 
-				switch ( intReturnValue )
-				{
-					case 0: //new updated
-						return User.ActionTypes.RecipeFavorited;
-					case 1:
-						return User.ActionTypes.RecipeUnfavorited;
-					default:
-						return User.ActionTypes.Unknown;
-				}
+				return intReturnValue; // 0 is favorited, 1 is unfavorited
 			}
 			catch ( Exception ex )
 			{
 				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
-				return User.ActionTypes.Unknown;
+				return -1; // somethind went wrong, check debug
+			}
+		}
+
+		public int SaveRecipe( string strName, string strInstructions, int intReadyInMins = -1, 
+			int intServings = -1, string strCuisines = "-1", string strDiets = "-1", string strDishTypes = "-1", string strNutrition = "-1", int UID = -1, int intRecipeID = 0) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspAddRecipe", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intRecipeID", intRecipeID, SqlDbType.NVarChar);
+				SetParameter( ref cm, "@strName", strName, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strInstructions", strInstructions, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intReadyInMins", intReadyInMins, SqlDbType.BigInt );
+				SetParameter( ref cm, "@intServings", intServings, SqlDbType.BigInt );
+				SetParameter( ref cm, "@strCuisines", strCuisines, SqlDbType.NVarChar ); 
+				SetParameter( ref cm, "@strDiets", strDiets, SqlDbType.NVarChar ); 
+				SetParameter( ref cm, "@strDishTypes", strDishTypes, SqlDbType.NVarChar ); 
+				SetParameter( ref cm, "@strNutrition", strNutrition, SqlDbType.NVarChar ); 
+				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int ); 
+				
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+
+				return intReturnValue;
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return -1; // something went wrong
 			}
 		}
 
 
+		public int SaveIngredient( int intIngredientID, string strIngredientName ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspAddIngredient", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intIngredientID", intIngredientID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strIngredientName", strIngredientName, SqlDbType.NVarChar );
+
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+
+				CloseDBConnection( ref cn );
+
+				return intReturnValue;
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return -1; // something went wrong
+			}
+		}
+
+
+		public int AddRecipeIngredients( int inRecipeID, int intIngredientID, double dblIngredientQuantity, string strUnit ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspAddRecipeIngredients", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intRecipeID", inRecipeID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intIngredientID", intIngredientID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intIngredientQuantity", dblIngredientQuantity, SqlDbType.Float );
+				SetParameter( ref cm, "@strUnitOfMeasurement", strUnit, SqlDbType.NVarChar );
+
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+
+				CloseDBConnection( ref cn );
+
+				return intReturnValue;
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return -1; // something went wrong
+			}
+		}
 	}
 }
