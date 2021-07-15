@@ -81,7 +81,8 @@ CREATE TABLE TRecipeIngredients
 	 intRecipeIngredientID	INTEGER IDENTITY	NOT NULL
 	,intRecipeID			INTEGER				NOT NULL
 	,intIngredientID		INTEGER				NOT NULL
-	,intIngredientQuantity	INTEGER				NOT NULL
+	,dblIngredientQuantity	FLOAT				NOT NULL
+	--,intIngredientQuantity	INTEGER				NOT NULL
 	,strUnitOfMeasurement	VARCHAR(50)			NOT	NULL
 	,CONSTRAINT RecipeIngredient_UQ UNIQUE ( intRecipeID, intIngredientID )
 	,CONSTRAINT TRecipeIngredients_PK PRIMARY KEY ( intRecipeIngredientID )
@@ -314,11 +315,11 @@ VALUES					 (1, 'Sweet White Onion' )
 						,(16, 'Lemon')
 						,(17, 'All-Spice')
 
- INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, intIngredientQuantity, strUnitOfMeasurement )
- VALUES					 (5000001, 6, 1, 'LB')
-						,(5000001, 8, 1, 'TSP')
-						,(5000001, 9, 6, 'TBSP')
-						,(5000001, 10, 1, 'OZ')
+ INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, dblIngredientQuantity, strUnitOfMeasurement )
+ VALUES					 (5000001, 6, 1.5, 'LB')
+						,(5000001, 8, 1.75, 'TSP')
+						,(5000001, 9, 1, 'TBSP')
+						,(5000001, 10, 0.75, 'OZ')
 						,(5000001, 11, 3, 'ML')
 						,(5000001, 12, 3, 'Gram')
 						,(5000002, 3, 2, 'Cup')
@@ -346,10 +347,9 @@ Create View VRecipeIngredients
 AS
 Select	 TRI.intRecipeIngredientID
 		,TR.strName
-		,TRI.intIngredientQuantity
+		,TRI.dblIngredientQuantity
 		,TRI.strUnitOfMeasurement
 		,TI.strIngredientName
-		,TR.intRecipeID
 	 
 
 FROM	TRecipes as TR JOIN TRecipeIngredients as TRI
@@ -394,7 +394,7 @@ Create View VUserShoppingList
 AS
 SELECT	 TU.intUserID as USERID
 		,TRI.intIngredientID as INGREDIENTID
-		,TRI.intIngredientQuantity
+		,TRI.dblIngredientQuantity
 		,TRI.strUnitOfMeasurement
 		,TI.strIngredientName
 
@@ -951,7 +951,7 @@ GO
 Create Procedure uspAddRecipeIngredients
 				 @intRecipeID				AS INTEGER		OUTPUT
 				,@intIngredientID			AS INTEGER		OUTPUT
-				,@intIngredientQuantity		AS INTEGER		OUTPUT
+				,@dblIngredientQuantity		AS INTEGER		OUTPUT
 				,@strUnitOfMeasurement		AS VARCHAR(50)	OUTPUT
 AS
 SET XACT_ABORT ON
@@ -979,8 +979,8 @@ BEGIN TRANSACTION
 	ELSE
 		BEGIN
 			-- intRecipeIngredeintID is set to INTEGER IDENTITY, ID will be grabbed from next available ID
-			INSERT INTO TRecipeIngredients	(intRecipeID, intIngredientID, intIngredientQuantity, strUnitOfMeasurement)
-			VALUES							(@intRecipeID, @intIngredientID, @intIngredientQuantity, @strUnitOfMeasurement)
+			INSERT INTO TRecipeIngredients	(intRecipeID, intIngredientID, dblIngredientQuantity, strUnitOfMeasurement)
+			VALUES							(@intRecipeID, @intIngredientID, @dblIngredientQuantity, @strUnitOfMeasurement)
 			COMMIT
 			RETURN 0 -- Returns 0, code ran successfully
 		END
