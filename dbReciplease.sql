@@ -346,6 +346,7 @@ GO
 Create View VRecipeIngredients
 AS
 Select	 TRI.intRecipeIngredientID
+		,TR.intRecipeID
 		,TR.strName
 		,TRI.dblIngredientQuantity
 		,TRI.strUnitOfMeasurement
@@ -392,11 +393,11 @@ GO
 
 Create View VUserShoppingList
 AS
-SELECT	 TU.intUserID as USERID
-		,TRI.intIngredientID as INGREDIENTID
+SELECT	 TU.intUserID
+		,TRI.intIngredientID
+		,TI.strIngredientName
 		,TRI.dblIngredientQuantity
 		,TRI.strUnitOfMeasurement
-		,TI.strIngredientName
 
 FROM	TUsers as TU JOIN TShoppingList TSL
 		ON TU.intUserID = TSL.intUserID
@@ -415,7 +416,7 @@ FROM	TUsers as TU JOIN TShoppingList TSL
 
 GO
 
-SELECT * FROM VUserShoppingList
+SELECT * FROM VUserShoppingList WHERE USERID = 1
 
 GO
 
