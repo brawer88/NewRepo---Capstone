@@ -121,6 +121,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Database.cs" />
+    <Compile Include="Models\FavoritesContent.cs" />
     <Compile Include="Models\HomeContent.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Recipe.cs" />
@@ -223,7 +224,7 @@
     <Content Include="Views\Cart\Remove_Item" />
     <Content Include="Views\Favorites\Add_Favorite" />
     <Content Include="Views\Favorites\Remove_Favorite" />
-    <Content Include="Views\Favorites\View_Favorite" />
+    <None Include="Views\Favorites\index.cshtml" />
     <Content Include="Views\Profile\SignIn.cshtml" />
     <Content Include="Views\Profile\SignUp.cshtml" />
     <Content Include="Views\Shared\NotAuthenticated.cshtml" />

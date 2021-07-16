@@ -157,6 +157,7 @@ namespace Reciplease.Models {
 					{
 						recipe.id = strRecipeID;
 						recipe.title = (string)dr["strName"];
+						recipe.image = (string)dr["strRecipeImage"];
 						recipe.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
 						recipe.servings = ((int)dr["intServings"]).ToString();
 						recipe.instructions = (string)dr["strInstructions"];
@@ -495,7 +496,7 @@ namespace Reciplease.Models {
 			}
 		}
 
-		public int SaveRecipe( string strName, string strInstructions, int intReadyInMins = -1, 
+		public int SaveRecipe( string strName, string strInstructions, int intReadyInMins = -1, string strRecipeImage = "'/Content/images/no-photo.jpg'",
 			int intServings = -1, string strCuisines = "-1", string strDiets = "-1", string strDishTypes = "-1", string strNutrition = "-1", int UID = -1, int intRecipeID = 0) {
 			try
 			{
@@ -507,6 +508,7 @@ namespace Reciplease.Models {
 				SetParameter( ref cm, "@intRecipeID", intRecipeID, SqlDbType.NVarChar);
 				SetParameter( ref cm, "@strName", strName, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@strInstructions", strInstructions, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strRecipeImage", strRecipeImage, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@intReadyInMins", intReadyInMins, SqlDbType.BigInt );
 				SetParameter( ref cm, "@intServings", intServings, SqlDbType.BigInt );
 				SetParameter( ref cm, "@strCuisines", strCuisines, SqlDbType.NVarChar ); 
@@ -589,6 +591,95 @@ namespace Reciplease.Models {
 				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
 				return -1; // something went wrong
 			}
+		}
+
+
+
+		public List<Recipe> GetUserFavorites( int intUserID ) {
+			try
+			{
+				Database db = new Database( );
+				DataSet ds = new DataSet( );
+				SqlConnection cn = new SqlConnection( );
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				List<Recipe> recipes = new List<Recipe>( );
+
+
+
+				SqlCommand selectCMD = new SqlCommand( "SELECT * FROM VUserFavorites WHERE intUserID=" + intUserID, cn );
+				SqlDataAdapter da = new SqlDataAdapter( );
+				da.SelectCommand = selectCMD;
+
+
+				try
+				{
+					da.Fill( ds );
+				}
+				catch ( Exception ex2 )
+				{
+					System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
+				}
+				finally { CloseDBConnection( ref cn ); }
+
+				if ( ds.Tables[0].Rows.Count != 0 )
+				{
+					foreach ( DataRow dr in ds.Tables[0].Rows )
+					{
+						Recipe r = new Recipe( );
+						r.id = ((int)dr["intRecipeID"]).ToString();
+						r.image = (string)dr["strRecipeImage"];
+						r.readyInMinutes = ((int)dr["intReadyInMinutes"]).ToString();
+						r.dictRatings = db.GetRecipeRatings( int.Parse(r.id) );
+						recipes.Add( r );
+					}
+				}
+				return recipes;
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
+
+		public List<Recipe> GetUserCreations( int intUserID ) {
+			try
+			{
+				Database db = new Database( );
+				DataSet ds = new DataSet( );
+				SqlConnection cn = new SqlConnection( );
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				List<Recipe> recipes = new List<Recipe>( );
+
+
+
+				SqlCommand selectCMD = new SqlCommand( "SELECT * FROM TRecipes WHERE intUserID=" + intUserID, cn );
+				SqlDataAdapter da = new SqlDataAdapter( );
+				da.SelectCommand = selectCMD;
+
+
+				try
+				{
+					da.Fill( ds );
+				}
+				catch ( Exception ex2 )
+				{
+					System.Diagnostics.Debug.WriteLine( "getting user recipes error: " + ex2.Message );
+				}
+				finally { CloseDBConnection( ref cn ); }
+
+				if ( ds.Tables[0].Rows.Count != 0 )
+				{
+					foreach ( DataRow dr in ds.Tables[0].Rows )
+					{
+						Recipe r = new Recipe( );
+						r.id = ( (int)dr["intRecipeID"] ).ToString( );
+						r.image = (string)dr["strRecipeImage"];
+						r.readyInMinutes = ( (int)dr["intReadyInMinutes"] ).ToString( );
+						r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
+						recipes.Add( r );
+					}
+				}
+				return recipes;
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 	}
 }

@@ -17,7 +17,7 @@
 </head>
 <!-- Page Content  -->
 <div id="content" class="p-4 p-md-5 pt-5">
-	<h3>Based on your recent history</h3>
+	<h1>Based on your recent history</h1>
 	<div class="recipe-card">
 		<link rel="stylesheet" href="css/style2.css">
 		<aside>
@@ -31,7 +31,12 @@
 					<p>Ready in : @Model.SingleRecipe.readyInMinutes</p> 
 					<p>Servings : @Model.SingleRecipe.servings </p>
 					<p>@Model.SingleRecipe.image</p>
-					<p>@Model.SingleRecipe.SplitInstructions()</p>
+					<ol>
+						@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
+						{
+							<li>@instruction</li> 
+						}
+					</ol>
 					<p>@Model.SingleRecipe.cuisines</p>
 					<p>@Model.SingleRecipe.diets</p>
 					<p>@Model.SingleRecipe.dishTypes</p>
