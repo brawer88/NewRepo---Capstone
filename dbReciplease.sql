@@ -72,7 +72,8 @@ CREATE TABLE TRecipes
 	,strDiets			VARCHAR(255)		
 	,strDishTypes		VARCHAR(255)
 	,strNutrition		VARCHAR(3000)		
-	,intUserID			INTEGER				
+	,intUserID			INTEGER		
+	,strRecipeImage		VARCHAR(500)		
 	,CONSTRAINT TRecipes_PK PRIMARY KEY ( intRecipeID )
 )
 
@@ -270,13 +271,13 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
 						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
 
-INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID)
+INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID, strRecipeImage)
 VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
 							   Step 2; Once the steak is seared reduce heat to Medium - Medium High add butter to the pan and let it melt. Once the butter has melted put in 2-3 "sticks" of rosemary and 3-4 garlic cloves quartered or halved in the butter. Cook the steak an additional 3 - 5 minutes depending on how rare youd like it, while cooking spoon the melted butter over the steak.
-							   Step 3; Enjoy :)', 25, 2, 1 )
-						,('Recipe Test 2', 'Recipe Test 2 Instructions', 30, 4, 1)
-						,('Recipe Test 3', 'Recipe Test 3 Instructions', 60, 4, 3)
-						,('Recipe Test 4', 'Recipe Test 4 Instructions',180, 6, 4)
+							   Step 3; Enjoy :)', 25, 2, 1, '')
+						,('Recipe Test 2', 'Recipe Test 2 Instructions', 30, 4, 1, '')
+						,('Recipe Test 3', 'Recipe Test 3 Instructions', 60, 4, 3, '')
+						,('Recipe Test 4', 'Recipe Test 4 Instructions',180, 6, 4, '')
 
  INSERT INTO TRatings		(intRatingID, intUserID, intDifficultyID, intTasteID, intRecipeID)
  VALUES					 (1, 1, 5, 5, 5000001)
@@ -370,18 +371,16 @@ GO
 Create View VUserFavorites
 AS
 Select	 TU.intUserID
-		,TU.strFirstName + ' ' + TU.strLastName as USERNAME
 		,TR.intRecipeID
 		,TR.strName
+		,TR.intReadyInMins
+		,TR.strRecipeImage
 
 FROM	TUsers as TU JOIN TUserFavorites as TUF
 		ON TU.intUserID = TUF.intUserID
 
-		JOIN TRecipes as TR
+		LEFT JOIN TRecipes as TR
 		ON TR.intRecipeID = TUF.intRecipeID
-
-		--JOIN TMeasurementUnits as TMU
-		--ON TMU.intMeasurementUnitID = TRI.intMeasurementUnitID	
 
 GO
 
@@ -416,7 +415,7 @@ FROM	TUsers as TU JOIN TShoppingList TSL
 
 GO
 
-SELECT * FROM VUserShoppingList WHERE USERID = 1
+SELECT * FROM VUserShoppingList WHERE intUserID = 1
 
 GO
 
