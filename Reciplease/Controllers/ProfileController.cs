@@ -168,6 +168,33 @@ namespace Reciplease.Controllers
             u.RemoveUserSession();
             return RedirectToAction("Index", "Home");
         }
+
+
+        public ActionResult Favorites()
+        {
+            FavoritesContent favorites = new FavoritesContent();
+            Models.User u = new Models.User();
+            Database db = new Database();
+            favorites.user = u.GetUserSession();
+            favorites.lstUserFavorites = db.GetUserFavorites(favorites.user.UID);
+
+            return View(favorites);
+        }
+
+
+        public ActionResult MyRecipes()
+        {
+            UserRecipesContent MyRecipes = new UserRecipesContent();
+            Models.User u = new Models.User();
+            Database db = new Database();
+            favorites.user = u.GetUserSession();
+            favorites.lstUserFavorites = db.GetUserFavorites(favorites.user.UID);
+
+            return View(favorites);
+        }
+
+
+
     }
 }
 
