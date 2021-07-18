@@ -628,7 +628,7 @@ namespace Reciplease.Models {
 						Recipe r = new Recipe( );
 						r.id = ((int)dr["intRecipeID"]).ToString();
 						r.image = (string)dr["strRecipeImage"];
-						r.readyInMinutes = ((int)dr["intReadyInMinutes"]).ToString();
+						r.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
 						r.dictRatings = db.GetRecipeRatings( int.Parse(r.id) );
 						recipes.Add( r );
 					}

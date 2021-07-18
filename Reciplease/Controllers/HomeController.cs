@@ -28,18 +28,24 @@ namespace Reciplease.Controllers {
 
 		public ActionResult Search( ) {
 			// testing testing testing
-			//Database DB = new Database( );
+			Database DB = new Database( );
 
-			//User u = new User( );
+			User u = new User( );
 
-			//u.Username = "Brawer";
-			//u.Password = "reciplease2";
+			u.Username = "Brawer";
+			u.Password = "reciplease2";
 
-			//u = u.Login( );
+			u = u.Login( );
 
 			//u.ToggleFavorite( 5000001);
+			//u.ToggleFavorite( 5000001 );
+			//u.ToggleFavorite( 5000001 );
+			//u.ToggleFavorite( 5000001 );
+			//u.ToggleFavorite( 5000001 );
 
-			//DB.SaveRecipe( "test", "this is a test", "submit recipe to db, check return value", 0, 0, "", "", "", "", -1, 0 );
+			DB.GetUserFavorites( u.UID );
+
+			DB.GetUserCreations( u.UID );
 
 			Models.HomeContent h = new Models.HomeContent
 			{
@@ -100,7 +106,7 @@ namespace Reciplease.Controllers {
 				// get recipes to display
 				h.SingleRecipe = RecipeAPI.GetRecipeById( strRecipeID );
 				// save recipe
-				int intSavedID = DB.SaveRecipe( h.SingleRecipe.title, h.SingleRecipe.instructions, int.Parse( h.SingleRecipe.readyInMinutes ), int.Parse( h.SingleRecipe.servings ),
+				int intSavedID = DB.SaveRecipe( h.SingleRecipe.title, h.SingleRecipe.instructions, int.Parse( h.SingleRecipe.readyInMinutes ), h.SingleRecipe.image, int.Parse( h.SingleRecipe.servings ),
 					String.Join( ", ", h.SingleRecipe.cuisines ), String.Join( ", ", h.SingleRecipe.diets ), String.Join( ", ", h.SingleRecipe.dishTypes ), JsonConvert.SerializeObject( h.SingleRecipe.nutrition ), -1, int.Parse( h.SingleRecipe.id ) );
 
 				foreach ( Ingredient ingredient in h.SingleRecipe.extendedIngredients )

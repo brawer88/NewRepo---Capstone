@@ -23,6 +23,7 @@ namespace Reciplease.Controllers
 			// need to fill this in with items from the favorites content
 			// in the database object, we have a method GetUserFavorites that gets the list of recipes to display on the homepage
 			// get the user object and pass that user id to this method
+			// DB.GetUserFavorites( u.UID );
 
 			return View( favorites );
 		}
