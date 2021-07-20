@@ -22,6 +22,8 @@ namespace Reciplease.Models {
 		public ActionTypes ActionType = ActionTypes.NoType;
 		public string Email = string.Empty;
 		public List<Rating> Ratings;
+		public string KrogerAuthCode { get; set; }
+		public AuthCodes KrogerAuthTokens { get; set; }
 
 
 		public enum ActionTypes {

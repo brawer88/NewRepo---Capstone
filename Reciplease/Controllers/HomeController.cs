@@ -37,7 +37,13 @@ namespace Reciplease.Controllers {
 
 			u = u.Login( );
 
-			KrogerAPI.GetKrogerAuth( );
+			string authcode = "bj0XRkqi8BMPfzs5BLm8c2gUp2jIgrkbrcApyYwF";
+
+			u.SaveUserSession( );
+			//return RedirectToAction( "KrogerSignIn", "Cart" );
+			return RedirectToAction( "AuthCode", "Cart", new { id = authcode } );
+
+
 
 			Models.HomeContent h = new Models.HomeContent
 			{

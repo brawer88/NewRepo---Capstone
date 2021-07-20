@@ -40,10 +40,6 @@ namespace Reciplease.Models {
 				}
 			}
 
-
-
-
-
 			return Recipes;
 			
 		}
