@@ -37,15 +37,7 @@ namespace Reciplease.Controllers {
 
 			u = u.Login( );
 
-			//u.ToggleFavorite( 5000001);
-			//u.ToggleFavorite( 5000001 );
-			//u.ToggleFavorite( 5000001 );
-			//u.ToggleFavorite( 5000001 );
-			//u.ToggleFavorite( 5000001 );
-
-			DB.GetUserFavorites( u.UID );
-
-			DB.GetUserCreations( u.UID );
+			KrogerAPI.GetKrogerAuth( );
 
 			Models.HomeContent h = new Models.HomeContent
 			{
