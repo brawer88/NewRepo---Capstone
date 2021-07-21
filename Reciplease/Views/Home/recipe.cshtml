@@ -1,11 +1,10 @@
-﻿@* this is what is passed to the view from the Recipe method in the home controller*@
-@model Reciplease.Models.HomeContent
+﻿@model Reciplease.Models.HomeContent
 
 @{
 	ViewBag.Title = "Recipe";
 }
 <h2>@ViewBag.Title</h2>
-<head>
+@*<head> already on layout page
 	<title>Reciplease</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,16 +13,15 @@
 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/style.css">
-</head>
+</head>*@
 <!-- Page Content  -->
 <div id="content" class="p-4 p-md-5 pt-5">
 	<h1>Based on your recent history</h1>
 	<div class="recipe-card">
 		<link rel="stylesheet" href="css/style2.css">
-		<aside>
-
-			<a href="#" class="button"><span class="icon icon-play"></span></a>
-
+		
+			<!--maybe use js to call this? -->
+			@*@Model.User.ToggleFavorite(int.Parse(Model.SingleRecipe.id))*@
 			<!---Display Recipe--->
 			<article>
 				
@@ -54,8 +52,6 @@
 					color: orange;
 				}
 			</style>
-			</head>
-			<body>
 				<p><b>Difficulty</b></p>
 				<span class="fa fa-star checked"></span>
 				<span class="fa fa-star checked"></span>
@@ -67,15 +63,11 @@
 
 
 				<br>
-				</article>
 
 	</div>
 </div>
-		</div>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
-  </body>
-</html>

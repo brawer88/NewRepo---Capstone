@@ -226,9 +226,7 @@
     <Content Include="Views\Cart\Quantity" />
     <Content Include="Views\Cart\Remove1" />
     <Content Include="Views\Cart\Remove_Item" />
-    <Content Include="Views\Favorites\Add_Favorite" />
-    <Content Include="Views\Favorites\Remove_Favorite" />
-    <None Include="Views\Favorites\index.cshtml" />
+    <None Include="Views\Profile\Favorites.cshtml" />
     <Content Include="Views\Profile\SignIn.cshtml" />
     <Content Include="Views\Profile\SignUp.cshtml" />
     <Content Include="Views\Shared\NotAuthenticated.cshtml" />

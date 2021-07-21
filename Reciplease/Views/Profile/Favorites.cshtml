@@ -1,0 +1,42 @@
+@model Reciplease.Models.FavoritesContent
+
+@{
+	ViewBag.Title = "Favorite List";
+}
+
+@*Iterate over recipes to display them*@
+@if ( @Model.user.IsAuthenticated == true )
+{
+	foreach ( Reciplease.Models.Recipe recipe in Model.lstUserFavorites )
+	{
+		<div class="row">
+			<div class="recipe-card">
+				<aside>
+					<a href="@Url.Action("Recipe", "Home", new { id = recipe.id })" class="button">
+						<span class="icon icon-play">
+							<img width="600" src=@recipe.image alt=@recipe.title ; />
+						</span>
+					</a>
+				</aside>
+
+				<article>
+					<h2>@recipe.title</h2>
+					<p>Ready In: @recipe.readyInMinutes minutes</p>
+					<p>Servings: @recipe.servings</p>
+					<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
+					<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
+					<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
+					<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
+
+
+				</article>
+
+			</div>
+		</div>
+	}
+}
+else{
+	@Html.Partial( "NotAuthenticated" )
+}
+
+
