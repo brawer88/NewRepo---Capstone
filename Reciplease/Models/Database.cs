@@ -158,16 +158,27 @@ namespace Reciplease.Models {
 						recipe.id = strRecipeID;
 						recipe.title = (string)dr["strName"];
 						recipe.image = (string)dr["strRecipeImage"];
-						recipe.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
-						recipe.servings = ((int)dr["intServings"]).ToString();
+						recipe.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
+						recipe.servings = ( (int)dr["intServings"] ).ToString( );
 						recipe.instructions = (string)dr["strInstructions"];
 						recipe.dishTypes = ( (string)dr["strName"] ).Split( ',' ).ToList( );
 						recipe.cuisines = ( (string)dr["strCuisines"] ).Split( ',' ).ToList( );
 						recipe.diets = ( (string)dr["strDiets"] ).Split( ',' ).ToList( );
-						recipe.nutrition = JsonConvert.DeserializeObject<Nutrition>( (string)dr["strNutrition"] );
+						try
+						{
+							recipe.nutrition = JsonConvert.DeserializeObject<Nutrition>( (string)dr["strNutrition"] );
+						}
+						catch ( Exception ex )
+						{
+							recipe.nutrition = new Nutrition( );
+						}
 					}
-
 					recipe.extendedIngredients = GetIngredients( strRecipeID );
+
+					if (recipe.image.Length < 5)
+					{
+						recipe.image = "/Content/images/no-photo.jpg";
+					}
 
 					return recipe;
 				}
@@ -631,9 +642,14 @@ namespace Reciplease.Models {
 						r.image = (string)dr["strRecipeImage"];
 						r.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
 						r.dictRatings = db.GetRecipeRatings( int.Parse(r.id) );
+						if ( r.image.Length < 5 )
+						{
+							r.image = "/Content/images/no-photo.jpg";
+						}
 						recipes.Add( r );
 					}
 				}
+				
 				return recipes;
 			}
 			catch ( Exception ex ) { System.Diagnostics.Debug.WriteLine( ex.ToString( ) ); return null; }
