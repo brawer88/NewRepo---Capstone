@@ -114,20 +114,25 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CartContent.cs" />
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\FavoritesContent.cs" />
     <Compile Include="Models\HomeContent.cs" />
+    <Compile Include="Models\KrogerAPI.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\RecipeAPI.cs" />
     <Compile Include="Models\RandomRecipesList.cs" />
     <Compile Include="Models\SearchResultsList.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserRecipeContent.cs" />
+    <Compile Include="Models\UserRecipesContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

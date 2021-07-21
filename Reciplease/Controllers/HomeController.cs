@@ -37,15 +37,13 @@ namespace Reciplease.Controllers {
 
 			u = u.Login( );
 
-			//u.ToggleFavorite( 5000001);
-			//u.ToggleFavorite( 5000001 );
-			//u.ToggleFavorite( 5000001 );
-			//u.ToggleFavorite( 5000001 );
-			//u.ToggleFavorite( 5000001 );
+			string authcode = "bj0XRkqi8BMPfzs5BLm8c2gUp2jIgrkbrcApyYwF";
 
-			DB.GetUserFavorites( u.UID );
+			u.SaveUserSession( );
+			//return RedirectToAction( "KrogerSignIn", "Cart" );
+			return RedirectToAction( "AuthCode", "Cart", new { id = authcode } );
 
-			DB.GetUserCreations( u.UID );
+
 
 			Models.HomeContent h = new Models.HomeContent
 			{

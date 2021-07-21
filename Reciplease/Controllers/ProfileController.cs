@@ -190,7 +190,10 @@ namespace Reciplease.Controllers
             MyRecipes.user = u.GetUserSession();
             MyRecipes.lstUserRecipes = db.GetUserFavorites(MyRecipes.user.UID);
 
-            return View(MyRecipes);
+
+
+            return View( MyRecipes );
+
         }
 
 
