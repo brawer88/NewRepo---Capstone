@@ -147,6 +147,21 @@ namespace Reciplease.Models {
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
+
+		public bool IsAFavorite( string RecipeID ) {
+			bool blnFavorite = false;
+				
+			foreach (Recipe r in this.Favorites)
+			{
+				if (r.id == RecipeID)
+				{
+					blnFavorite = true;
+					break;
+				}
+			}
+
+			return blnFavorite;
+		}
 	}
 
 

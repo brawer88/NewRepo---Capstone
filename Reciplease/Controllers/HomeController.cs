@@ -151,6 +151,39 @@ namespace Reciplease.Controllers {
 			}
 		}
 
+		[HttpPost]
+		public ActionResult ToggleFavorite() {
+			User u = new Models.User( );
+			u = u.GetUserSession( );
+
+			int result = u.ToggleFavorite( Convert.ToInt32( RouteData.Values["id"] ) );
+
+			
+
+			// update favorites list
+				Database db = new Database( );
+
+			u.Favorites = db.GetUserFavorites( u.UID );
+
+			u.SaveUserSession( );
+			if(result != -1 )
+			{
+				return Json( new
+				{
+					success = true,
+					responseText = result
+				}, JsonRequestBehavior.AllowGet );
+			}
+			else
+			{
+				return Json( new
+				{
+					success = false,
+					responseText = result
+				}, JsonRequestBehavior.AllowGet );
+			}
+
+		}
 
         public ActionResult About( ) {
 			ViewBag.Message = "Your application description page.";

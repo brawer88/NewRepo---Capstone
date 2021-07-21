@@ -204,7 +204,7 @@ namespace Reciplease.Models {
 				foreach ( DataRow dr in ds.Tables[0].Rows )
 				{
 					Ingredient ingredient = new Ingredient( );
-					ingredient.amount = ((double)dr["intIngredientQuantity"]).ToString();
+					ingredient.amount = ((double)dr["dblIngredientQuantity"]).ToString();
 					ingredient.unit = (string)dr["strUnitOfMeasurement"];
 					ingredient.name = (string)dr["strIngredientName"];
 					ingredients.Add( ingredient );
@@ -574,7 +574,7 @@ namespace Reciplease.Models {
 
 				SetParameter( ref cm, "@intRecipeID", inRecipeID, SqlDbType.NVarChar );
 				SetParameter( ref cm, "@intIngredientID", intIngredientID, SqlDbType.NVarChar );
-				SetParameter( ref cm, "@intIngredientQuantity", dblIngredientQuantity, SqlDbType.Float );
+				SetParameter( ref cm, "@dblIngredientQuantity", dblIngredientQuantity, SqlDbType.Float );
 				SetParameter( ref cm, "@strUnitOfMeasurement", strUnit, SqlDbType.NVarChar );
 
 				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
@@ -636,7 +636,7 @@ namespace Reciplease.Models {
 				}
 				return recipes;
 			}
-			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+			catch ( Exception ex ) { System.Diagnostics.Debug.WriteLine( ex.ToString( ) ); return null; }
 		}
 
 
@@ -680,7 +680,7 @@ namespace Reciplease.Models {
 				}
 				return recipes;
 			}
-			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+			catch ( Exception ex ) { System.Diagnostics.Debug.WriteLine( ex.ToString( ) ); return null; }
 		}
 	}
 }

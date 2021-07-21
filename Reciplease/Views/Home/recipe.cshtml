@@ -16,64 +16,110 @@
 </head>*@
 <!-- Page Content  -->
 <div id="content" class="p-4 p-md-5 pt-5">
-	<h1>Based on your recent history</h1>
 	<div class="recipe-card">
 		<link rel="stylesheet" href="css/style2.css">
-		
-			<!--maybe use js to call this? -->
-			
-			<button name="togglefavorite" onclick="toggle()">Favorite</button>
-			<!---Display Recipe--->
-			<article>
-				
-					<h2>@Model.SingleRecipe.title</h2>
-					<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p> 
-					<p>Servings : @Model.SingleRecipe.servings </p>
-					<p>@Model.SingleRecipe.image</p>
-					<ol>
-						@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
-						{
-							<li>@instruction</li> 
-						}
-					</ol>
-					<p>@Model.SingleRecipe.cuisines</p>
-					<p>@Model.SingleRecipe.diets</p>
-					<p>@Model.SingleRecipe.dishTypes</p>
-					<p>@Model.SingleRecipe.GetFractionizedIngredients()</p>
-					<p>@Model.SingleRecipe.nutrition</p>
 
-			</article>
-			<!---End Display Recipe--->
+		<!--maybe use js to call this? -->
+		@if ( Model.User.IsAuthenticated )
+		{
+			if ( Model.User.IsAFavorite( Model.SingleRecipe.id ) )
+			{
+				<input type="button" class="btn-dark" id="togglefavorite" onclick="toggle()" value="UnFavorite" />
+			}
+			else
+			{
+				<input type="button" class="btn-dark" id="togglefavorite" onclick="toggle()" value="Favorite" />
+			}
+		}
+		<!---Display Recipe--->
+		<article>
 
-			<br>
-			<!---Rating System--->
-			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-			<style>
-				.checked {
-					color: orange;
+			<h2>@Model.SingleRecipe.title</h2>
+			<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
+			<p>Servings : @Model.SingleRecipe.servings </p>
+			<p>@Model.SingleRecipe.image</p>
+			<ol>
+				@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
+				{
+					<li>@instruction</li>
 				}
-			</style>
-				<p><b>Difficulty</b></p>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star"></span>
-				<span class="fa fa-star"></span>
-				<!---- --->
+			</ol>
+			<p>@Model.SingleRecipe.cuisines</p>
+			<p>@Model.SingleRecipe.diets</p>
+			<p>@Model.SingleRecipe.dishTypes</p>
+			<p>@Model.SingleRecipe.GetFractionizedIngredients( )</p>
+			<p>@Model.SingleRecipe.nutrition</p>
+
+		</article>
+		<!---End Display Recipe--->
+
+		<br>
+		<!---Rating System--->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+			.checked {
+				color: orange;
+			}
+		</style>
+		<p><b>Difficulty</b></p>
+		<span class="fa fa-star checked"></span>
+		<span class="fa fa-star checked"></span>
+		<span class="fa fa-star checked"></span>
+		<span class="fa fa-star"></span>
+		<span class="fa fa-star"></span>
+		<!---- --->
 
 
 
-				<br>
+		<br>
 
 	</div>
 </div>
-
+<div id="snackbar">Some text some message..</div>
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
 <script>
 	function toggle() {
-		@Model.User.ToggleFavorite( int.Parse( Model.SingleRecipe.id ) )
-	}
+		/**/
+	$.ajax({
+        type: "POST",
+        url: '@Url.Action( "ToggleFavorite", "Home", new { id = Model.SingleRecipe.id } )',
+		async: true,
+        success: function (msg) {
+			
+			if (msg.responseText == 0) {
+				$("#togglefavorite").prop("value", "UnFavorite");
+				var x = document.getElementById("snackbar");
+
+				// Add the "show" class to DIV
+				x.className = "show";
+
+				x.textContent = "Recipe Favorited"
+
+				// After 3 seconds, remove the show class from DIV
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			}
+			else if (msg.responseText == 1) {
+				$("#togglefavorite").prop("value", "Favorite");
+				var x = document.getElementById("snackbar");
+
+				// Add the "show" class to DIV
+				x.className = "show";
+
+				x.textContent = "Recipe UnFavorited"
+
+				// After 3 seconds, remove the show class from DIV
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			}
+			
+        },
+        error: function () {
+            alert("Error toggling the favorite. Please contact developers.")
+        }
+    });
+	/**/
+
+}
 </script>

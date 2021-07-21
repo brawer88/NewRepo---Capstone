@@ -773,6 +773,7 @@ Create Procedure uspAddRecipe
 					 @intRecipeID		AS INTEGER OUTPUT
 					,@strName			AS VARCHAR(50) OUTPUT
 					,@strInstructions	AS VARCHAR(3000) OUTPUT
+					,@strRecipeImage	AS VARCHAR(255) OUTPUT		-- OPTIONAL
 					,@intReadyInMins	AS INTEGER OUTPUT			-- OPTIONAL
 					,@intServings		AS INTEGER OUTPUT			-- OPTIONAL
 					,@strCuisines		AS VARCHAR(255) OUTPUT		-- OPTIONAL
@@ -808,6 +809,10 @@ BEGIN TRANSACTION
 		BEGIN
 
 			-- ALL OPTIONAL OUTPUTS will be given a -1 for NULL or another value if not null
+			IF @strRecipeImage = '-1'
+				BEGIN
+					SET @strRecipeImage = NULL
+				END
 			IF @intReadyInMins = -1
 				BEGIN
 					SET @intReadyInMins = NULL
@@ -855,8 +860,8 @@ BEGIN TRANSACTION
 
 			SET IDENTITY_INSERT TRecipes ON
 
-			INSERT INTO TRecipes (intRecipeID, strName, strInstructions, intReadyInMins, intServings, strCuisines, strDiets, strDishTypes, strNutrition, intUserID)
-			VALUES				(@intRecipeID, @strName, @strInstructions, @intReadyInMins, @intServings, @strCuisines, @strDiets, @strDishTypes, @strNutrition, @intUserID)
+			INSERT INTO TRecipes (intRecipeID, strName, strInstructions, intReadyInMins, intServings, strCuisines, strDiets, strDishTypes, strNutrition, intUserID, strRecipeImage)
+			VALUES				(@intRecipeID, @strName, @strInstructions, @intReadyInMins, @intServings, @strCuisines, @strDiets, @strDishTypes, @strNutrition, @intUserID, @strRecipeImage)
 
 			SET IDENTITY_INSERT TRecipes OFF
 			COMMIT
