@@ -187,10 +187,10 @@ namespace Reciplease.Controllers
             UserRecipesContent MyRecipes = new UserRecipesContent();
             Models.User u = new Models.User();
             Database db = new Database();
-            favorites.user = u.GetUserSession();
-            favorites.lstUserFavorites = db.GetUserFavorites(favorites.user.UID);
+            MyRecipes.user = u.GetUserSession();
+            MyRecipes.lstUserRecipes = db.GetUserFavorites(MyRecipes.user.UID);
 
-            return View(favorites);
+            return View(MyRecipes);
         }
 
 
