@@ -1,7 +1,38 @@
-﻿@{
-    ViewBag.Title = "About";
-}
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
 
-<p>Use this area to provide additional information.</p>
+    @{
+        ViewBag.Title = "About";
+    }
+
+    .flex1 {
+        display: flex;
+        flex-direction: column;
+        background-color: DodgerBlue;
+        justify-content: center;
+        align-items: center;
+    }
+
+     .flex1 > div {
+        margin: 100px;
+        font-size: 22px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="flex1">
+        <div><h1>@ViewBag.Title.</h1></div>
+        @*<div>@ViewBag.Message</div>*@
+        <div>
+            Reciplease is a web-based application originally designed for 'Cincinnati State Technical and Community Colleges' CPDM Capstone course. The idea behind Reciplease was to
+            make an application that allows users to step out of their cooking comfort zone, try cooking something new, or to help users grab the ingredients they need for a nice meal
+            on their way home from work hassel free. Pick a recipe, add or remove ingredients from your shopping list, and send your shopping list to your nearest Kroger for checkout and Kroger Pickup!
+            Brandon Wernke, Kaitlin Cordell, Omonigho Odairi, and Isaak Galle designed the application in hopes that everyone could benefit from it in some way. While this application is still in very
+            early stages we all would love to continue development after the capstone class ends, eventually turning it into a quick and easy stop to find, create, or edit your own or someone elses recipes!
+        </div>
+</body>
+</html>
+
