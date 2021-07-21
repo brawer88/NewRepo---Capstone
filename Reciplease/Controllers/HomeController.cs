@@ -66,7 +66,7 @@ namespace Reciplease.Controllers {
 			{
 				return RedirectToAction( "index" );
 			}
-			else if ( col["btnSubmit"] == "submit" )
+			else // is the submit button or the next page button which does the same thing
 			{
 				searchItems.query = col["hquery"] == null ? col["SearchQuery"] : col["hquery"];
 				searchItems.cuisine = col["hcuisine"] == null ? col["Cuisine"] : col["hcuisine"];
