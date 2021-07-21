@@ -6,7 +6,6 @@
 	<title>@ViewBag.Title - Reciplease</title>
 	@Styles.Render( "~/Content/css" )
 	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	@Scripts.Render( "~/bundles/modernizr" )
 	@Scripts.Render( "~/bundles/jquery" )
@@ -14,11 +13,9 @@
 </head>
 <body>
 	<div class="topnav" id="myTopnav">
-
-
 		<a href="~/Home/Index"><span class="fa fa-home mr-3"></span> Homepage</a>
 		<div id="myLinks">
-			<a href="~/Home/Search"><span class="fa fa-search mr-3 active"></span>Search</a>
+			<a href="~/Home/Search"><span class="fa fa-search mr-3"></span>Search</a>
 			<a href="~/Profile/Favorites"><span class="fa fa-paper-plane-o mr-3"></span>Favorites </a>
 			<a href="~/Cart/index"><span class="fa fa-shopping-cart mr-3"></span>My Cart</a>
 			<a href="~/Profile/index"><span class="fa fa-user mr-3"></span>My Account</a>
@@ -45,21 +42,17 @@
 		$('img').on('error', function () {
 			$(this).attr('src', '/Content/images/no-photo.jpg');
 		})
+
+		/* Toggle between showing and hiding the navigation menu links when the user clicks on the hamburger menu / bar icon */
+		function myFunction() {
+			var x = document.getElementById("myLinks");
+			if (x.style.display === "block") {
+				x.style.display = "none";
+			} else {
+				x.style.display = "block";
+			}
+		}
 	</script>
 </body>
-
-
 @Scripts.Render( "~/bundles/js" )
-
 </html>
-<script>
-	/* Toggle between showing and hiding the navigation menu links when the user clicks on the hamburger menu / bar icon */
-	function myFunction() {
-		var x = document.getElementById("myLinks");
-		if (x.style.display === "block") {
-			x.style.display = "none";
-		} else {
-			x.style.display = "block";
-		}
-	}
-</script>

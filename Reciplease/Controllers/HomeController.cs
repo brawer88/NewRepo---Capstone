@@ -59,32 +59,41 @@ namespace Reciplease.Controllers {
 
 			SearchItems searchItems = default( SearchItems );
 
-		// added this items to the model in a struct so we can continue using same search items
-		// ternary : if hidden element is null, use original search page element, else use hidden element
-
-			searchItems.query = col["hquery"] == null ? col["SearchQuery"] : col["hquery"];
-			searchItems.cuisine = col["hcuisine"] == null ? col["Cuisine"] : col["hcuisine"];
-			searchItems.ingredients = col["hingredients"] == null ? col["Ingredients"] : col["hingredients"];
-			searchItems.diets = col["hdiets"] == null ? col["Diets"] : col["hdiets"];
-			searchItems.excludedIngredients = col["hexcludedIngredients"] == null ? col["ExcludedIngredients"] : col["hexcludedIngredients"];
-			searchItems.intolerances = col["hintolerances"] == null ? col["Intolerances"] : col["hintolerances"];
-			searchItems.type = col["htype"] == null ? col["Type"] : col["htype"];
-			searchItems.index = col["hindex"] == null ? 0 : Convert.ToInt32( col["hindex"] ) + 1;
-
-			// update to search model when that is created
-			Models.HomeContent h = new Models.HomeContent
+			// added this items to the model in a struct so we can continue using same search items
+			// ternary : if hidden element is null, use original search page element, else use hidden element
+			
+			if (col["btnSubmit"] == "close")
 			{
-				searchItems = searchItems,
-				// get recipes to display
-				SearchResults = RecipeAPI.RecipeSearch( searchItems.query, searchItems.cuisine, searchItems.ingredients,
-														searchItems.diets, searchItems.excludedIngredients, searchItems.intolerances, searchItems.type, searchItems.index )
+				return RedirectToAction( "index" );
+			}
+			else if ( col["btnSubmit"] == "submit" )
+			{
+				searchItems.query = col["hquery"] == null ? col["SearchQuery"] : col["hquery"];
+				searchItems.cuisine = col["hcuisine"] == null ? col["Cuisine"] : col["hcuisine"];
+				searchItems.ingredients = col["hingredients"] == null ? col["Ingredients"] : col["hingredients"];
+				searchItems.diets = col["hdiets"] == null ? col["Diets"] : col["hdiets"];
+				searchItems.excludedIngredients = col["hexcludedIngredients"] == null ? col["ExcludedIngredients"] : col["hexcludedIngredients"];
+				searchItems.intolerances = col["hintolerances"] == null ? col["Intolerances"] : col["hintolerances"];
+				searchItems.type = col["htype"] == null ? col["Type"] : col["htype"];
+				searchItems.index = col["hindex"] == null ? 0 : Convert.ToInt32( col["hindex"] ) + 1;
+
+				// update to search model when that is created
+				Models.HomeContent h = new Models.HomeContent
+				{
+					searchItems = searchItems,
+					// get recipes to display
+					SearchResults = RecipeAPI.RecipeSearch( searchItems.query, searchItems.cuisine, searchItems.ingredients,
+															searchItems.diets, searchItems.excludedIngredients, searchItems.intolerances, searchItems.type, searchItems.index )
 				
-			};
+				};
 
-			h.User = new Models.User( );
-			h.User = h.User.GetUserSession( );
+				h.User = new Models.User( );
+				h.User = h.User.GetUserSession( );
 
-			return View( h );
+				return View( h );
+			}
+
+			return View( );
 		}
 
 
