@@ -13,7 +13,36 @@
 		font-size: 16px;
 		}
 
-	
+.topnav {
+	overflow: hidden;
+	background-color: #829CD0;
+	position: relative;
+}
+
+.topnav #myLinks {
+	display: none;
+}
+
+.topnav a {
+	color: white;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+	display: block;
+}
+
+.topnav a.icon {
+	background: #829CD0;
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.topnav a:hover {
+	background-color: #829CD0;
+	color: blue;
+}
 
 .sidenav {
 	height: 100vh;

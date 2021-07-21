@@ -13,48 +13,23 @@
 	@Scripts.Render( "~/Scripts/bootstrap.bundle.js" )
 </head>
 <body>
-	<div class="wrapper d-flex align-items-stretch">
-		<nav id="sidebar">
-			<div class="custom-menu">
-				<button type="button" id="sidebarCollapse" class="btn btn-primary">
-					<i class="fa fa-bars"></i>
-					<span class="sr-only">Toggle Menu</span>
-				</button>
-			</div>
+	<div class="topnav" id="myTopnav">
 
 
-			<ul class="list-unstyled components mb-5">
-				<li class="active">
-					<a href="~/Home/Index"><span class="fa fa-home mr-3"></span> Homepage</a>
-				</li>
-				<li>
-					<a href="~/Home/Search"><span class="fa fa-search mr-3"></span> Search</a>
-				</li>
-				<li>
-					<a href="~/Profile/Favorites"><span class="fa fa-paper-plane-o mr-3"></span> Favorites </a>
-				</li>
-				<li>
-					<a href="~/Cart/index"><span class="fa fa-shopping-cart mr-3"></span> My Cart</a>
-				</li>
-				<li>
-					<a href="~/Profile/index"><span class="fa fa-user mr-3"></span> My Account</a>
-				</li>
-				<li>
-					<a href="~/Account_Settings/Edit_Info"><span class="fa fa-user mr-3"></span>Account Settings</a>
-				</li>
-			</ul>
-			
-			<!--- Log in button--->
-			<div>
-				<button id="btnSignIn" name="btnSubmit" value="signin" class="button-action" href="Reciplease/Views/Profile/index.cshtml"><i class="fas fa-sign-in-alt"></i> Sign-In</button>
-			</div>
-			
-			<!---Sign out button--->
-			<div>
-				<button id="btnSignOut" name="btnSubmit" value="SignOut" class="button-action" href="Reciplease/Views/Home/Index.cshtml"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-			</div>
-			
-		</nav>
+		<a href="~/Home/Index"><span class="fa fa-home mr-3"></span> Homepage</a>
+		<div id="myLinks">
+			<a href="~/Home/Search"><span class="fa fa-search mr-3 active"></span>Search</a>
+			<a href="~/Profile/Favorites"><span class="fa fa-paper-plane-o mr-3"></span>Favorites </a>
+			<a href="~/Cart/index"><span class="fa fa-shopping-cart mr-3"></span>My Cart</a>
+			<a href="~/Profile/index"><span class="fa fa-user mr-3"></span>My Account</a>
+			<a href="~/Account_Settings/Edit_Info"><span class="fa fa-user mr-3"></span>Account Settings</a>
+			<a href="~/Profile/SignIn"><span class="fa fa-user mr-3"></span>Sign-In</a>
+			<a href="~/Profile/SignOut"><span class="fa fa-user mr-3"></span>Sign-Out</a>
+
+		</div>
+		<a href="javascript:void(0);" class="icon" onclick="myFunction()">
+			<i class="fa fa-bars"></i>
+		</a>
 	</div>
 	<div class="container body-content">
 		@RenderBody( )
@@ -75,4 +50,16 @@
 
 
 @Scripts.Render( "~/bundles/js" )
+
 </html>
+<script>
+	/* Toggle between showing and hiding the navigation menu links when the user clicks on the hamburger menu / bar icon */
+	function myFunction() {
+		var x = document.getElementById("myLinks");
+		if (x.style.display === "block") {
+			x.style.display = "none";
+		} else {
+			x.style.display = "block";
+		}
+	}
+</script>
