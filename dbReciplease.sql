@@ -956,7 +956,7 @@ GO
 Create Procedure uspAddRecipeIngredients
 				 @intRecipeID				AS INTEGER		OUTPUT
 				,@intIngredientID			AS INTEGER		OUTPUT
-				,@dblIngredientQuantity		AS INTEGER		OUTPUT
+				,@dblIngredientQuantity		AS FLOAT		OUTPUT
 				,@strUnitOfMeasurement		AS VARCHAR(50)	OUTPUT
 AS
 SET XACT_ABORT ON
