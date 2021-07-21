@@ -32,8 +32,6 @@ namespace Reciplease {
 					  "~/Scripts/popper.js") );
 
 			bundles.Add( new StyleBundle( "~/Content/css" ).Include(
-					  "~/Content/style2.css",
-					  "~/Content/style.css",
 					  "~/Content/bootstrap.min.css",
 					  "~/Content/site.css",
 					  "~/Content/profile.css",

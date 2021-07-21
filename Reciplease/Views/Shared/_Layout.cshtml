@@ -29,11 +29,12 @@
 		</a>
 	</div>
 	<div class="container body-content">
+
 		@RenderBody( )
+
 		<hr />
 		<footer>
 			<p>&copy; @DateTime.Now.Year - Reciplease</p>
-
 		</footer>
 	</div>
 
@@ -42,7 +43,8 @@
 		$('img').on('error', function () {
 			$(this).attr('src', '/Content/images/no-photo.jpg');
 		})
-
+	</script>
+	<script>
 		/* Toggle between showing and hiding the navigation menu links when the user clicks on the hamburger menu / bar icon */
 		function myFunction() {
 			var x = document.getElementById("myLinks");
