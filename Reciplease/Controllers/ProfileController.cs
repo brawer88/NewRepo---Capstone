@@ -43,9 +43,6 @@ namespace Reciplease.Controllers
                     if (collfrmAttr["btnSubmit"] == "update")
                     { //update button pressed
                         u.Save();
-
-                        
- 
                         u.SaveUserSession();
                         return RedirectToAction("Index");
                     }

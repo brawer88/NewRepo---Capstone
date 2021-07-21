@@ -161,9 +161,31 @@ namespace Reciplease.Models {
 						recipe.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
 						recipe.servings = ( (int)dr["intServings"] ).ToString( );
 						recipe.instructions = (string)dr["strInstructions"];
-						recipe.dishTypes = ( (string)dr["strName"] ).Split( ',' ).ToList( );
-						recipe.cuisines = ( (string)dr["strCuisines"] ).Split( ',' ).ToList( );
-						recipe.diets = ( (string)dr["strDiets"] ).Split( ',' ).ToList( );
+						try
+						{
+							recipe.dishTypes = ( (string)dr["strName"] ).Split( ',' ).ToList( );
+						}
+						catch ( Exception ex )
+						{
+							recipe.dishTypes = new List<string>();
+						}
+						try
+						{
+							recipe.cuisines = ( (string)dr["strCuisines"] ).Split( ',' ).ToList( );
+						}
+						catch ( Exception ex )
+						{
+							recipe.cuisines = new List<string>( );
+						}
+						try
+						{
+							recipe.diets = ( (string)dr["strDiets"] ).Split( ',' ).ToList( );
+						}
+						catch ( Exception ex )
+						{
+							recipe.diets = new List<string>( );
+						}
+
 						try
 						{
 							recipe.nutrition = JsonConvert.DeserializeObject<Nutrition>( (string)dr["strNutrition"] );
@@ -640,9 +662,10 @@ namespace Reciplease.Models {
 						Recipe r = new Recipe( );
 						r.id = ((int)dr["intRecipeID"]).ToString();
 						r.image = (string)dr["strRecipeImage"];
+						r.title = (string)dr["strName"];
 						r.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
 						r.dictRatings = db.GetRecipeRatings( int.Parse(r.id) );
-						if ( r.image.Length < 5 )
+						if ( r.image.Length < 5 || r.image == null )
 						{
 							r.image = "/Content/images/no-photo.jpg";
 						}
