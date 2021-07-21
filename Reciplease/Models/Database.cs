@@ -284,6 +284,7 @@ namespace Reciplease.Models {
 						newUser.Email = (string)dr["strEmail"];
 						// get user ratings list
 						newUser.Ratings = GetUserRatings( newUser.UID );
+						newUser.Favorites = GetUserFavorites( newUser.UID );
 					}
 				}
 				catch ( Exception ex ) { throw new Exception( ex.Message ); }

@@ -48,6 +48,7 @@ namespace Reciplease.Models {
 			}
 		}
 
+		public List<Recipe> Favorites { get; internal set; }
 
 		public Tuple<int, int> GetUserRatings( int RecipeID ) {
 

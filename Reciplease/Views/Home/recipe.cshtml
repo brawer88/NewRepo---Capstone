@@ -21,7 +21,8 @@
 		<link rel="stylesheet" href="css/style2.css">
 		
 			<!--maybe use js to call this? -->
-			@*@Model.User.ToggleFavorite(int.Parse(Model.SingleRecipe.id))*@
+			
+			<button name="togglefavorite" onclick="toggle()">Favorite</button>
 			<!---Display Recipe--->
 			<article>
 				
@@ -71,3 +72,8 @@
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
+<script>
+	function toggle() {
+		@Model.User.ToggleFavorite( int.Parse( Model.SingleRecipe.id ) )
+	}
+</script>
