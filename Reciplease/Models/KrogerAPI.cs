@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Reciplease.Models {
 	public class KrogerAPI {
-		const String client_secret = "FZ0osbSCdA7k00PGmMzHXOetq8cA0BjIIBNQg7pn";
+		const String client_secret = APIConfig.KrogerSecret;
 		const String client_id = "reciplease-cff94f4f6041dea129095d1b936180016290439862649948138";
 
 		public static string GetKrogerAuth() {
