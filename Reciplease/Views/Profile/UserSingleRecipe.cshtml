@@ -1,0 +1,56 @@
+@model Reciplease.Models.UserRecipes
+
+@{
+	ViewBag.Title = "User Recipe";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@*<head> already on layout page
+	<title>Reciplease</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>*@
+
+
+<!-- Page Content  -->
+<div id="content" class="p-4 p-md-5 pt-5">
+	<div class="recipe-card">
+		<link rel="stylesheet" href="css/style2.css">
+
+
+		<!---Display Recipe--->
+		<article>
+
+			<h2>@Model.UserSingleRecipe.title</h2>
+			<p>Ready in : @Model.UserSingleRecipe.readyInMinutes minutes</p>
+			<p>Servings : @Model.UserSingleRecipe.servings </p>
+			<p>@Model.UserSingleRecipe.image</p>
+			<ol>
+				@foreach ( String instruction in @Model.USerSingleRecipe.SplitInstructions( ) )
+				{
+					<li>@instruction</li>
+				}
+			</ol>
+			<p>@Model.UserSingleRecipe.cuisines</p>
+			<p>@Model.UserSingleRecipe.diets</p>
+			<p>@Model.UserSingleRecipe.dishTypes</p>
+			<p>@Model.UserSingleRecipe.GetFractionizedIngredients( )</p>
+			<p>@Model.UserSingleRecipe.nutrition</p>
+
+		</article>
+		<!---End Display Recipe--->
+
+
+	</div>
+</div>
+
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
