@@ -46,6 +46,9 @@ IF OBJECT_ID('uspFavoriteUnfavorite')			IS NOT NULL DROP PROCEDURE uspFavoriteUn
 IF OBJECT_ID('uspAddRecipe')					IS NOT NULL DROP PROCEDURE uspAddRecipe 
 IF OBJECT_ID('uspAddIngredient')				IS NOT NULL DROP PROCEDURE uspAddIngredient 
 IF OBJECT_ID('uspAddRecipeIngredients')			IS NOT NULL DROP PROCEDURE uspAddRecipeIngredients 
+IF OBJECT_ID('uspDeleteUserAccount')			IS NOT NULL DROP PROCEDURE uspDeleteUserAccount 
+IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserRecipe 
+IF OBJECT_ID('uspUpdateUserRecipe')				IS NOT NULL DROP PROCEDURE uspUpdateUserRecipe 
                                                                                                                                                                                                                                                                                                                                                                                                
 -- --------------------------------------------------------------------------------
 -- Step #1: Create Tables
@@ -147,13 +150,6 @@ CREATE TABLE TLast10
 	,CONSTRAINT TLast10_PK PRIMARY KEY ( intLast10ID )
 )
 
---CREATE TABLE TMeasurementUnits
---(
---	 intMeasurementUnitID				INTEGER				NOT NULL
---	,strUnit							VARCHAR(50)			NOT NULL
---	,CONSTRAINT TUnitsOfMeasurement		PRIMARY KEY ( intMeasurementUnitID )
---)
-
 -- --------------------------------------------------------------------------------
 -- Step #2: Identify and Create Foreign Keys
 -- --------------------------------------------------------------------------------
@@ -199,10 +195,6 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TIngredients_FK
 FOREIGN KEY ( intIngredientID ) REFERENCES TIngredients ( intIngredientID )
 
--- 15
-----ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TMeasurementUnits_FK
-----FOREIGN KEY ( intMeasurementUnitID ) REFERENCES TMeasurementUnits ( intMeasurementUnitID )
-
 -- 7
 ALTER TABLE TRatings ADD CONSTRAINT TRatings_TTaste_FK
 FOREIGN KEY ( intTasteID ) REFERENCES TTaste ( intTasteID )
@@ -236,20 +228,6 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
  --------------------------------------------------------------------------------
  --Step #3: INSERT INTO TABLES
  --------------------------------------------------------------------------------
-
- --INSERT INTO TMeasurementUnits( intMeasurementUnitID, strUnit )
- --VALUES					 (1, ' ')
-	--					,(2, 'Tsp')
-	--					,(3, 'TBSP')
-	--					,(4, 'Cup')
-	--					,(5, 'Quart')
-	--					,(6, 'Pint')
-	--					,(7, 'Gallon')
-	--					,(8, 'Liter')
-	--					,(9, 'ML')
-	--					,(10, 'OZ')
-	--					,(11, 'LB')
-	--					,(12, 'Grams')
 
  INSERT INTO TDifficulty ( intDifficultyRating )
  VALUES					 (1)
@@ -294,8 +272,8 @@ VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room tem
 						,(3, 5000001)
 						,(4, 5000003)
 						,(4, 5000001)
-						,(3, 5000002)
-						,(3, 5000003)
+						,(1, 5000002)
+						,(1, 5000003)
 
 INSERT INTO TIngredients ( intIngredientID, strIngredientName )
 VALUES					 (1, 'Sweet White Onion' )
@@ -1000,91 +978,112 @@ GO
 
 GO
 
+--IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserRecipe 
+--IF OBJECT_ID('uspUpdateUserRecipe')				IS NOT NULL DROP PROCEDURE uspUpdateUserRecipe 
 
--- ADD RECIPE AND ALL ITS INGREDIENTS TEST --
-
---SELECT * FROM TRecipes
---SELECT * FROM TIngredients
---SELECT * FROM TRecipeIngredients
---SELECT * FROM VRecipeIngredients
---DECLARE @RecipeID as INTEGER = 4000
---DECLARE @IngredientID as INT = 0
---EXECUTE @RecipeID = uspAddRecipe  @RecipeID OUTPUT, 'Bagel Bites', 'Put the cheese on bagel, then the pepperonie, bake at high temp for a medium amount of time', 30, 1, 'American', '', '', 'BAD FOR YOU', 1
---PRINT @RecipeID
---EXECUTE @IngredientID = uspAddIngredient @IngredientID OUTPUT, 'Bacon' 
---PRINT @IngredientID
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 'Grams'
---EXECUTE @IngredientID = uspAddIngredient 24, 'Butter' 
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, @IngredientID, 4, 'TBSP'
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 2, 2, 'Cups'
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 3, 3, 9
---EXECUTE uspAddRecipeIngredients @RecipeID OUTPUT, 4, 4, 10
---SELECT * FROM TRecipes
---SELECT * FROM TIngredients
---SELECT * FROM TRecipeIngredients
---SELECT * FROM VRecipeIngredients
-
-
-
-
-
-
-
-
---SELECT * FROM TRecipeIngredients
---DECLARE @Exists as int
---EXECUTE @Exists = uspAddRecipeIngredients 5000002, 6, 2, 2
---PRINT @Exists
---SELECT * FROM TRecipeIngredients
 -- --------------------------------------------------------------------------------------------
 
---Create Procedure uspCreateCompleteRecipe
---					 @intRecipeID			AS INTEGER OUTPUT
---					,@strName				AS VARCHAR(50) OUTPUT
---					,@strDescription		AS VARCHAR(300) OUTPUT
---					,@strInstructions		AS VARCHAR(3000) OUTPUT
---					,@intReadyInMins		AS INTEGER OUTPUT			-- OPTIONAL
---					,@intServings			AS INTEGER OUTPUT			-- OPTIONAL
---					,@strCuisines			AS VARCHAR(255) OUTPUT		-- OPTIONAL
---					,@strDiets				AS VARCHAR(255) OUTPUT		-- OPTIONAL
---					,@strDishTypes			AS VARCHAR(255) OUTPUT		-- OPTIONAL
---					,@strNutrition			AS VARCHAR(3000) OUTPUT		-- OPTIONAL
---					,@intUserID				AS INTEGER OUTPUT			-- OPTIONAL
---					,@intIngredientID		AS INTEGER OUTPUT
---					,@strIngredientName		AS VARCHAR(50) OUTPUT
---					,@intIngredientQuantity	AS INTEGER OUTPUT
---					,@intMeasurementUnitID	AS INTEGER OUTPUT
+Create Procedure uspDeleteUserAccount
+					 @intUserID as INTEGER OUTPUT
 
---					 intRecipeID and intIngredientID must be 0 unless entered from the API. 
---					 intRecipeID will return 0 if Recipe was added succesfully, will return 1 if the Recipe already exists. RecipeID will COALESCE from 5000001 going up by 1 
---							for user created recipes. API recipes added to be able to be favorited will be the RecipeID used in the API.
---					 intIngredientID will return THE ID of the ingredient
+AS
+SET XACT_ABORT ON
 
---AS
---SET XACT_ABORT ON
+BEGIN TRANSACTION
 
---BEGIN TRANSACTION
-	
---	DECLARE @Exists as INT
+	-- user id is deleted from UserFavorites
+	DELETE FROM TUserFavorites WHERE intUserID = @intUserID
 
---	EXECUTE @Exists = uspAddRecipe @intRecipeID OUTPUT, @strName, @strDescription, @strInstructions, @intReadyInMins, @intServings, @strCuisines, @strDiets, @strDishTypes, @strNutrition, @intUserID
+	-- deletes ratings done by user
+	DELETE FROM TRatings WHERE intUserID = @intUserID
 
---	IF @Exists = 1
+	-- deletes user shopping list
+	DELETE FROM TShoppingList WHERE intUserID = @intUserID
 
---		BEGIN
---		COMMIT
---		RETURN -1
---		END
+	-- userID is delted from TUsers table.
+	DELETE FROM TUsers WHERE intUserID = @intUserID
 
---	ELSE 
+	-- If user had created recipes, their ID is removed so errors do not occur.
+	UPDATE TRecipes
+	SET intUserID = NULL
+	WHERE intUserID = @intUserID
+		
+COMMIT TRANSACTION
 
---		EXECUTE @Exists = uspAddIngredient @intIngredientID OUTPUT, @strIngredientName
+GO
 
---		IF @Exists > 0
+--SELECT * FROM vUserRating WHERE intUserID = 1
+--Select * FROM vUserFavorites WHERE intUserID = 1
+--Select * FROM vUserShoppingList WHERE intUserID = 1
+--EXECUTE uspDeleteUserAccount 1
+--SELECT * FROM vUserRating
+--Select * FROM vUserFavorites
+--Select * FROM vUserShoppingList
 
---			BEGIN
-				
---				EXECUTE @Exists = uspAddRecipeIngredients
+-- --------------------------------------------------------------------------------------------
+
+Create Procedure uspDeleteUserRecipe
+				 @intUserID as INTEGER OUTPUT
+				,@intRecipeID as INTEGER OUTPUT 
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+
+	DECLARE @Count as Int
+	DECLARE @intRecipeIngredientID as INT
+
+	-- gets COUNT of instances where an Ingredient in the recipe to be removed exists
+	DECLARE IngredientCount CURSOR LOCAL FOR
+		SELECT COUNT(intRecipeIngredientID) as COUNT
+		FROM TRecipeIngredients WHERE intRecipeID = @intRecipeID
+	-- Gets a list of RecipeIngredientIDs that need to be removed from shopping lists
+	DECLARE getRecipeIngredientID CURSOR LOCAL FOR
+		SELECT intRecipeIngredientID
+		FROM TRecipeIngredients WHERE intRecipeID = @intRecipeID
+
+	OPEN IngredientCount
+	FETCH FROM IngredientCount
+	INTO @Count
+	CLOSE IngredientCount
+
+	OPEN getRecipeIngredientID
+	WHILE (@Count > 0)
+	BEGIN
+		
+			FETCH FROM getRecipeIngredientID
+			INTO @intRecipeIngredientID
+		
+		-- Deletes Ingredients from shopping list that are tied to the intRecipeID in TRecipeIngredients
+		DELETE FROM TShoppingList WHERE intRecipeIngredientID = @intRecipeIngredientID
+		PRINT @intRecipeIngredientID
+		SET @Count -= 1
+	END
+
+	CLOSE getRecipeIngredientID
+	-- Deletes all instance of RecipeID from TRecipeIngredients
+	DELETE FROM TRecipeIngredients WHERE intRecipeID = @intRecipeID
+	-- Deletes all instances of RecipeID from TUserFavorites
+	DELETE FROM TUserFavorites WHERE intRecipeID = @intRecipeID
+	-- Deletes all instance of ratings for the removed recipe
+	DELETE FROM TRatings WHERE intRecipeID = @intRecipeID
+	-- Deletes Recipe where RecipeID and UserID match.
+	DELETE FROM TRecipes WHERE intRecipeID = @intRecipeID AND intUserID = @intUserID
+
+COMMIT TRANSACTION
+
+GO
+
+--SELECT * FROM VUserFavorites
+--SELECT * FROM TShoppingList
+--SELECT * FROM VRecipeIngredients
+--EXECUTE uspDeleteUserRecipe 1, 5000001
+--SELECT * FROM VUserFavorites
+--SELECT * FROM TShoppingList
+--SELECT * FROM VRecipeIngredients
+GO
+-- --------------------------------------------------------------------------------------------
 
 
---COMMIT TRANSACTION
+
