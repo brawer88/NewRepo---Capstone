@@ -93,10 +93,7 @@ namespace Reciplease.Controllers {
 				return View( h );
 			}
 
-			return View( );
 		}
-
-
 
 		public ActionResult Recipe(  ) {
 			Models.HomeContent h = new Models.HomeContent( );
