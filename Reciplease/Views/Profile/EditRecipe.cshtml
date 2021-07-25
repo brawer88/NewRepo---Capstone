@@ -1,0 +1,30 @@
+@model Reciplease.Models.User
+@{
+	ViewBag.Title = "Edit User Information";
+}
+<h2>@ViewBag.Title</h2>
+
+<link rel="stylesheet" href="Reciplease/Reciplease/Views/Profile/Profile.css">
+
+@using (Html.BeginForm("Edit", "Account"))
+	{
+		@Html.EditorFor(model => Model.UserSingleRecipe.title)
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.readyInMinutes)
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.servings)
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.SplitInstructions( ))
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.cuisines)
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.diets)
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.dishTypes)
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.GetFractionizedIngredients( ))
+		
+		@Html.EditorFor(model => Model.UserSingleRecipe.nutrition)
+		
+		<input type="submit" value="Save"/>
+	}

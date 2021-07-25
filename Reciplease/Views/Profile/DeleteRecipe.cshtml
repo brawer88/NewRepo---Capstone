@@ -1,0 +1,49 @@
+@model web2.Models.UserRecipe
+
+@{
+	ViewBag.Title = string.Concat("Delete ", Model.Title, "?");
+}
+
+<h2>@ViewBag.Title?</h2>
+
+@Html.Partial("UserTabMenu")
+<p>Are you sure you want to delete this recipe?</p>
+
+@using (Html.BeginForm("DeleteRecipe")) {
+	<div class="section">
+		<div id="item">
+			<div><b>Title</b>: @Model.UserSingleRecipe.title</div>
+		</div>
+	</div>
+
+		<!---Display Recipe--->
+		<article>
+
+			<h2>@Model.UserSingleRecipe.title</h2>
+			<p>Ready in : @Model.UserSingleRecipe.readyInMinutes minutes</p>
+			<p>Servings : @Model.UserSingleRecipe.servings </p>
+			<ol>
+				@foreach ( String instruction in @Model.USerSingleRecipe.SplitInstructions( ) )
+				{
+					<li>@instruction</li>
+				}
+			</ol>
+			<p>@Model.UserSingleRecipe.cuisines</p>
+			<p>@Model.UserSingleRecipe.diets</p>
+			<p>@Model.UserSingleRecipe.dishTypes</p>
+			<p>@Model.UserSingleRecipe.GetFractionizedIngredients( )</p>
+			<p>@Model.UserSingleRecipe.nutrition</p>
+
+		</article>
+		<!---End Display Recipe--->
+
+	<div class="section">
+		<button class="button-alert" id="btnDelete" name="btnSubmit" value="delete"><i class='far fa-trash-alt'></i> Delete</button>
+		<button class="button-cancel" id="btnClose" name="btnSubmit" value="close"><i class='fa fa-times'></i> Cancel</button>
+	</div>
+}
+<script>
+	$(document).ready(function () {
+		SetActiveMenus('profile', 'recipes');
+	});
+</script>
