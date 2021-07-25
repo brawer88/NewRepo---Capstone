@@ -313,6 +313,7 @@ VALUES						 (1,1,1)
 							,(4,1,4)
 							,(5,1,5)
 							,(6,1,6)
+							,(7,2,8)
 
 
 
@@ -1085,5 +1086,25 @@ GO
 GO
 -- --------------------------------------------------------------------------------------------
 
+Create Procedure uspUpdateRecipe
+					 @intRecipeID		AS INTEGER OUTPUT
+					,@strName			AS VARCHAR(50) OUTPUT
+					,@strInstructions	AS VARCHAR(3000) OUTPUT
+					,@strRecipeImage	AS VARCHAR(255) OUTPUT		-- OPTIONAL
+					,@intReadyInMins	AS INTEGER OUTPUT			-- OPTIONAL
+					,@intServings		AS INTEGER OUTPUT			-- OPTIONAL
+					,@strCuisines		AS VARCHAR(255) OUTPUT		-- OPTIONAL
+					,@strDiets			AS VARCHAR(255) OUTPUT		-- OPTIONAL
+					,@strDishTypes		AS VARCHAR(255) OUTPUT		-- OPTIONAL
+					,@strNutrition		AS VARCHAR(3000) OUTPUT		-- OPTIONAL
+					,@intUserID			AS INTEGER OUTPUT			-- OPTIONAL
+AS
+SET XACT_ABORT ON
 
+BEGIN TRANSACTION
 
+	UPDATE TRecipes
+	SET strName = @strName, strInstructions = @strInstructions, strRecipeImage = @strRecipeImage, intReadyInMins = @intReadyInMins, intServings = @intServings, strCuisines = @strCuisines, strDiets = @strDiets, strDishTypes = @strDishTypes, strNutrition = @strNutrition, intUserID = @intUserID
+	WHERE intRecipeID = @intRecipeID
+
+COMMIT TRANSACTION
