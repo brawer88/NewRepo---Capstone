@@ -137,12 +137,12 @@ namespace Reciplease.Controllers {
 
         // will update when procedures are in place
         [HttpPost]
-		public JsonResult RateRecipe( int UID, int ID, int intDifficultyRating, int intTasteRating ) {
+		public JsonResult RateRecipe( int UID, int RecipeID, int intDifficultyRating, int intTasteRating ) {
 			try
 			{
 				Models.Database db = new Models.Database( );
 				int intReturn = 0;
-				intReturn = db.RateRecipe( UID, ID, intDifficultyRating, intTasteRating );
+				intReturn = db.RateRecipe( UID, RecipeID, intDifficultyRating, intTasteRating );
 				return Json( new { Status = intReturn } );
 			}
 			catch ( Exception ex )
