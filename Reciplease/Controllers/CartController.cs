@@ -12,8 +12,9 @@ namespace Reciplease.Controllers
         // GET: Cart
         public ActionResult Index()
         {
-			CartContent cart = new CartContent( );
-
+            CartContent cart = new CartContent( );
+            Models.User u = new Models.User();
+            
             return View(cart);
         }
 
