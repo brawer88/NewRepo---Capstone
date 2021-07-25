@@ -5,7 +5,8 @@ using System.Web;
 
 namespace Reciplease.Models {
 	public class UserRecipeContent {
-		public User User { get; internal set; }
+		public User user { get; internal set; }
 		public Recipe SingleRecipe { get; internal set; }
+		public List<Recipe> lstUserRecipes { get; set; }
 	}
 }

@@ -721,5 +721,31 @@ namespace Reciplease.Models {
 			}
 			catch ( Exception ex ) { System.Diagnostics.Debug.WriteLine( ex.ToString( ) ); return null; }
 		}
+
+
+		public int DeleteAccount( int UID ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspDeleteUserAccount", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int );
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+
+				return intReturnValue; 
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return -1; // somethind went wrong, check debug
+			}
+		}
 	}
 }

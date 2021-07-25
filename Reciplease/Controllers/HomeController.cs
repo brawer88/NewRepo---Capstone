@@ -30,16 +30,17 @@ namespace Reciplease.Controllers {
 			// testing testing testing
 			//Database DB = new Database( );
 
-			User u = new User( );
+			//User u = new User( );
 
-			u.Username = "Brawer";
-			u.Password = "reciplease2";
+			//u.Username = "Brawer";
+			//u.Password = "reciplease2";
 
-			u = u.Login( );
+			//u = u.Login( );
+
+			//DB.DeleteAccount( 2 );
 
 			//string authcode = "bj0XRkqi8BMPfzs5BLm8c2gUp2jIgrkbrcApyYwF";
-
-			u.SaveUserSession( );
+			
 			//return RedirectToAction( "KrogerSignIn", "Cart" );
 			//return RedirectToAction( "AuthCode", "Cart", new { id = authcode } );
 
@@ -134,12 +135,12 @@ namespace Reciplease.Controllers {
 
         // will update when procedures are in place
         [HttpPost]
-		public JsonResult RateRecipe( int UID, int ID, int intDifficultyRating, int intTasteRating ) {
+		public JsonResult RateRecipe( int UID, int RecipeID, int intDifficultyRating, int intTasteRating ) {
 			try
 			{
 				Models.Database db = new Models.Database( );
 				int intReturn = 0;
-				intReturn = db.RateRecipe( UID, ID, intDifficultyRating, intTasteRating );
+				intReturn = db.RateRecipe( UID, RecipeID, intDifficultyRating, intTasteRating );
 				return Json( new { Status = intReturn } );
 			}
 			catch ( Exception ex )
