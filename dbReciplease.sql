@@ -927,7 +927,7 @@ GO
 --EXECUTE @IngredientID = uspAddIngredient 12, 'Pork'
 --SELECT * FROM TIngredients
 --PRINT @IngredientID
-GO
+--GO
 
 -- --------------------------------------------------------------------------------------------
 

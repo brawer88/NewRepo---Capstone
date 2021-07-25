@@ -37,9 +37,10 @@ namespace Reciplease.Controllers {
 
 			//u = u.Login( );
 
-			//string authcode = "bj0XRkqi8BMPfzs5BLm8c2gUp2jIgrkbrcApyYwF";
+			//DB.DeleteAccount( 2 );
 
-			u.SaveUserSession( );
+			//string authcode = "bj0XRkqi8BMPfzs5BLm8c2gUp2jIgrkbrcApyYwF";
+			
 			//return RedirectToAction( "KrogerSignIn", "Cart" );
 			//return RedirectToAction( "AuthCode", "Cart", new { id = authcode } );
 
