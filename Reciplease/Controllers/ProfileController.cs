@@ -194,6 +194,45 @@ namespace Reciplease.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult CreateRecipe(FormCollection col)
+        {
+            try
+            {
+                Models.User u = new Models.User();
+                Models.Recipe recipe = new Recipe();
+                Models.UserRecipeContent recipeContent = new UserRecipeContent();
+                recipeContent.user = u.GetUserSession();
+
+
+                // example of getting data from the page in a post method
+                recipe.title = col["RecipeName"];
+                recipe.instructions = col["Instructions"];
+                recipe.diets = new List<string> { col["Diet"] };
+                recipe.cuisines = new List<string> { col["Cusines"] };
+                recipe.dishTypes = new List<string> { col["dishTypes"] };
+                //recipe.extendedIngredients = new List<Ingredient> { col["Diets"] };
+
+                if (recipe.title.Length == 0)
+                {
+                    u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
+                    return View(u);
+                }
+                else
+                {
+                    Database db = new Database();
+                    db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "'/Content/images/no-photo.jpg", int.Parse(recipe.servings), String.Join(",", recipe.cuisines), String.Join(",", recipe.diets), String.Join(",", recipe.dishTypes), "-1", recipeContent.user.UID, 0);
+                    return View(recipeContent);
+                }
+            }
+            catch (Exception)
+            {
+                Models.UserRecipeContent recipeContent = new UserRecipeContent();
+                return View(recipeContent);
+            }
+        }
+
+
 
     }
 }
