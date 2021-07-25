@@ -1,4 +1,4 @@
-@model Reciplease.Models.FavoritesContent
+@model Reciplease.Models.UserRecipeContent
 
 @{
 	ViewBag.Title = "User Recipe List";
@@ -7,7 +7,7 @@
 @*Iterate over recipes to display them*@
 @if ( @Model.user.IsAuthenticated == true )
 {
-	foreach ( Reciplease.Models.UserRecipes recipe in Model.UserRecipes )
+	foreach ( Reciplease.Models.Recipe recipe in Model.lstUserRecipes )
 	{
 		<div class="row">
 			<div class="recipe-card">

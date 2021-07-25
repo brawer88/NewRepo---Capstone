@@ -179,13 +179,13 @@ namespace Reciplease.Controllers
         }
 
 
-        public ActionResult MyRecipes()
+        public ActionResult UserRecipes()
         {
-            UserRecipesContent MyRecipes = new UserRecipesContent();
+            UserRecipeContent MyRecipes = new UserRecipeContent();
             Models.User u = new Models.User();
             Database db = new Database();
             MyRecipes.user = u.GetUserSession();
-            MyRecipes.lstUserRecipes = db.GetUserFavorites(MyRecipes.user.UID);
+            MyRecipes.lstUserRecipes = db.GetUserCreations(MyRecipes.user.UID);
 
 
 

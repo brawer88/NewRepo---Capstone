@@ -133,7 +133,6 @@
     <Compile Include="Models\SearchResultsList.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserRecipeContent.cs" />
-    <Compile Include="Models\UserRecipesContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -227,10 +226,13 @@
     <Content Include="Views\Cart\Quantity" />
     <Content Include="Views\Cart\Remove1" />
     <Content Include="Views\Cart\Remove_Item" />
+    <Content Include="Views\Profile\EditRecipe.cshtml" />
     <None Include="Views\Profile\Favorites.cshtml" />
     <Content Include="Views\Profile\SignIn.cshtml" />
     <Content Include="Views\Profile\SignUp.cshtml" />
     <Content Include="Views\Shared\NotAuthenticated.cshtml" />
+    <Content Include="Views\Profile\UserRecipes.cshtml" />
+    <Content Include="Views\Profile\UserSingleRecipe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
