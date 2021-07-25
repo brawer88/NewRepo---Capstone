@@ -228,6 +228,7 @@
     <Content Include="Views\Cart\Remove1" />
     <Content Include="Views\Cart\Remove_Item" />
     <Content Include="Views\Profile\EditRecipe.cshtml" />
+    <Content Include="Views\Profile\CreateRecipe.cshtml" />
     <None Include="Views\Profile\Favorites.cshtml" />
     <Content Include="Views\Profile\SignIn.cshtml" />
     <Content Include="Views\Profile\SignUp.cshtml" />

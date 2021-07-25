@@ -30,17 +30,18 @@ namespace Reciplease.Controllers {
 			// testing testing testing
 			//Database DB = new Database( );
 
-			//User u = new User( );
+			User u = new User( );
 
-			//u.Username = "Brawer";
-			//u.Password = "reciplease2";
+			u.Username = "Brawer";
+			u.Password = "reciplease2";
 
-			//u = u.Login( );
+			u = u.Login( );
+			u.SaveUserSession( );
 
 			//DB.DeleteAccount( 2 );
 
 			//string authcode = "bj0XRkqi8BMPfzs5BLm8c2gUp2jIgrkbrcApyYwF";
-			
+
 			//return RedirectToAction( "KrogerSignIn", "Cart" );
 			//return RedirectToAction( "AuthCode", "Cart", new { id = authcode } );
 

@@ -182,19 +182,26 @@ namespace Reciplease.Controllers
         public ActionResult UserRecipes()
         {
             UserRecipeContent MyRecipes = new UserRecipeContent();
-            Models.User u = new Models.User();
+			Models.User u = new Models.User( );
             Database db = new Database();
             MyRecipes.user = u.GetUserSession();
             MyRecipes.lstUserRecipes = db.GetUserCreations(MyRecipes.user.UID);
 
-
-
             return View( MyRecipes );
-
         }
 
 
-        [HttpPost]
+		public ActionResult CreateRecipe( ) {
+
+			Models.UserRecipeContent recipeContent = new UserRecipeContent( );
+			User u = new User( );
+			recipeContent.user = u.GetUserSession( );
+			return View( recipeContent );
+		}
+
+
+
+		[HttpPost]
         public ActionResult CreateRecipe(FormCollection col)
         {
             try
@@ -207,22 +214,24 @@ namespace Reciplease.Controllers
 
                 // example of getting data from the page in a post method
                 recipe.title = col["RecipeName"];
-                recipe.instructions = col["Instructions"];
-                recipe.diets = new List<string> { col["Diet"] };
-                recipe.cuisines = new List<string> { col["Cusines"] };
-                recipe.dishTypes = new List<string> { col["dishTypes"] };
-                //recipe.extendedIngredients = new List<Ingredient> { col["Diets"] };
+                recipe.instructions = col["instructions"]; // required
+                recipe.diets = new List<string> { col["diet"] }; // optional default to "-1"
+                recipe.cuisines = new List<string> { col["cuisines"] }; // optional default to "-1"
+				recipe.dishTypes = new List<string> { col["dishTypes"] }; // optional default to "-1"
+				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
+				recipe.servings = (string)col["servings"]; // optional default to "-1"
+				recipe.extendedIngredients = new List<Ingredient>(); // need to update this when we have variable ingredients lists
 
-                if (recipe.title.Length == 0)
+				if (recipe.title.Length == 0)
                 {
                     u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
                     return View(u);
                 }
                 else
-                {
+                { 
                     Database db = new Database();
-                    db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "'/Content/images/no-photo.jpg", int.Parse(recipe.servings), String.Join(",", recipe.cuisines), String.Join(",", recipe.diets), String.Join(",", recipe.dishTypes), "-1", recipeContent.user.UID, 0);
-                    return View(recipeContent);
+                    db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "/Content/images/no-photo.jpg", int.Parse(recipe.servings), String.Join(",", recipe.cuisines), String.Join(",", recipe.diets), String.Join(",", recipe.dishTypes), "-1", recipeContent.user.UID, -1);
+					return RedirectToAction( "UserRecipes" );
                 }
             }
             catch (Exception)

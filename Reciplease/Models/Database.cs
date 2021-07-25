@@ -712,14 +712,14 @@ namespace Reciplease.Models {
 						Recipe r = new Recipe( );
 						r.id = ( (int)dr["intRecipeID"] ).ToString( );
 						r.image = (string)dr["strRecipeImage"];
-						r.readyInMinutes = ( (int)dr["intReadyInMinutes"] ).ToString( );
+						r.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
 						r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
 						recipes.Add( r );
 					}
 				}
 				return recipes;
 			}
-			catch ( Exception ex ) { System.Diagnostics.Debug.WriteLine( ex.ToString( ) ); return null; }
+			catch ( Exception ex ) { System.Diagnostics.Debug.WriteLine( ex.ToString( ) ); return new List<Recipe>(); }
 		}
 
 

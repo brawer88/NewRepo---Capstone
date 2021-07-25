@@ -1,0 +1,36 @@
+﻿@model Reciplease.Models.UserRecipeContent
+
+@{
+	ViewBag.Title = "CreateRecipe";
+}
+
+<h2>CreateRecipe</h2>
+@if ( !Model.user.IsAuthenticated )
+{
+	@Html.Partial( "NotAuthenticated" )
+}
+else
+{
+	using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+	{
+		<label for="RecipeName">Recipe Title</label>
+		<input type="text" name="RecipeName" />
+		<label for="diets">Comma Separated Diets</label>
+		<input type="text" name="diets" />
+		<label for="dishTypes">Comma Separated Dish Types</label>
+		<input type="text" name="dishTypes" />
+		<label for="cuisines">Comma Separated Cuisines</label>
+		<input type="text" name="cuisines" />
+		<label for="readyInMinutes">Ready In Minutes:</label>
+		<input type="number" name="readyInMinutes" />
+		<label for="servings">Servings:</label>
+		<input type="number" name="servings" />
+		<label for="ingredients">Will update this one later</label>
+		<input type="text" name="ingredients" />
+		<label for="instructions">Instructions, will make this a big box one day maybe</label>
+		<hr />
+		<textArea name="instructions" rows="10" cols="50"></textArea>
+		<br />
+		<input type="Submit" id="btnSubmit" name="btnSubmit" />
+	}
+}
