@@ -121,6 +121,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\APIConfig.cs" />
+    <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\CartContent.cs" />
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\FavoritesContent.cs" />
