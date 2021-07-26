@@ -235,6 +235,7 @@
     <Content Include="Views\Shared\NotAuthenticated.cshtml" />
     <Content Include="Views\Profile\UserRecipes.cshtml" />
     <Content Include="Views\Profile\UserSingleRecipe.cshtml" />
+    <Content Include="Views\Profile\UpdateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

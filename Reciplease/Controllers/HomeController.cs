@@ -20,8 +20,8 @@ namespace Reciplease.Controllers {
 				
 			};
 
-			h.User = new Models.User( );
-			h.User = h.User.GetUserSession( );
+			h.user = new Models.User( );
+			h.user = h.user.GetUserSession( );
 
 			return View( h );
 		}
@@ -49,9 +49,9 @@ namespace Reciplease.Controllers {
 
 			Models.HomeContent h = new Models.HomeContent
 			{
-				User = new Models.User( )
+				user = new Models.User( )
 			};
-			h.User = h.User.GetUserSession( );
+			h.user = h.user.GetUserSession( );
 
 			return View( h );
 		}
@@ -89,8 +89,8 @@ namespace Reciplease.Controllers {
 				
 				};
 
-				h.User = new Models.User( );
-				h.User = h.User.GetUserSession( );
+				h.user = new Models.User( );
+				h.user = h.user.GetUserSession( );
 
 				return View( h );
 			}
@@ -99,8 +99,8 @@ namespace Reciplease.Controllers {
 
 		public ActionResult Recipe(  ) {
 			Models.HomeContent h = new Models.HomeContent( );
-			h.User = new Models.User( );
-			h.User = h.User.GetUserSession( );
+			h.user = new Models.User( );
+			h.user = h.user.GetUserSession( );
 
 			Database DB = new Database( );
 

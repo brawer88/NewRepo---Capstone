@@ -15,7 +15,7 @@ namespace Reciplease.Models {
 		public RecipesList RecipesToDisplay { get; internal set; }
 		public SearchResultsList SearchResults { get; internal set; }
 		public SearchItems searchItems;
-		public User User { get; internal set; }
+		public User user { get; internal set; }
 
 		public Recipe SingleRecipe { get; internal set; }
 	}

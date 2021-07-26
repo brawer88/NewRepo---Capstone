@@ -20,9 +20,9 @@
 		<link rel="stylesheet" href="css/style2.css">
 
 		<!--maybe use js to call this? -->
-		@if ( Model.User.IsAuthenticated )
+		@if ( Model.user.IsAuthenticated )
 		{
-			if ( Model.User.IsAFavorite( Model.SingleRecipe.id ) )
+			if ( Model.user.IsAFavorite( Model.SingleRecipe.id ) )
 			{
 				<input type="button" class="btn-dark" id="togglefavorite" onclick="toggle()" value="UnFavorite" />
 			}
@@ -32,25 +32,39 @@
 			}
 		}
 		<!---Display Recipe--->
-		<article>
+				<article>
 
-			<h2>@Model.SingleRecipe.title</h2>
-			<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
-			<p>Servings : @Model.SingleRecipe.servings </p>
-			<p>@Model.SingleRecipe.image</p>
-			<ol>
-				@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
-				{
-					<li>@instruction</li>
-				}
-			</ol>
-			<p>@Model.SingleRecipe.cuisines</p>
-			<p>@Model.SingleRecipe.diets</p>
-			<p>@Model.SingleRecipe.dishTypes</p>
-			<p>@Model.SingleRecipe.GetFractionizedIngredients( )</p>
-			<p>@Model.SingleRecipe.nutrition</p>
 
-		</article>
+
+					<h2>@Model.SingleRecipe.title</h2>
+					<img width="960" src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
+					<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
+					<p>Servings : @Model.SingleRecipe.servings </p>
+
+					<ol>
+						@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
+						{
+							<li>@instruction</li>
+						}
+					</ol>
+					<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
+					<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
+					<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
+					<table>
+						<tr><th>Ingredient:</th><th>Amount:</th></tr>
+						@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
+						{
+							<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
+						}
+					</table>
+					<table>
+						<tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>
+						@foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
+						{
+							<tr><td>@nutrient.Name</td><td>@nutrient.Amount @nutrient.Unit</td><td>@nutrient.PercentOfDailyNeeds %</td></tr>
+						}
+					</table>
+				</article>
 		<!---End Display Recipe--->
 
 		<br>
@@ -89,7 +103,7 @@
       callback: function(value, link) {
         $.ajax({
           type: "POST",
-          url: "/Article/Rate",
+          url: "/Home/RateRecipe",
           data: $("#rate").serialize(),
           dataType: "text/plain",
           success: function(response) {

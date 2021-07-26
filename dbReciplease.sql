@@ -977,7 +977,7 @@ GO
 --EXECUTE uspAddRecipeIngredients 5000004, 1, 20, 'OZ'
 --SELECT * FROM TRecipeIngredients
 
-GO
+--GO
 
 --IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserRecipe 
 --IF OBJECT_ID('uspUpdateUserRecipe')				IS NOT NULL DROP PROCEDURE uspUpdateUserRecipe 

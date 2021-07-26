@@ -1,0 +1,60 @@
+﻿@model Reciplease.Models.User
+
+@{
+	ViewBag.Title = "UpdateUser";
+}
+
+<h2>UpdateUser</h2>
+
+<p>To make changes to your profile enter your information below and click the Update button.</p>
+
+@if ( @Model.IsAuthenticated == true )
+{
+	<div id="user-profile-data">
+		@using ( @Html.BeginForm( "UpdateUser", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+		{
+			<div class="card">
+				<div class="container">
+					<div>@Html.LabelFor( model => model.FirstName )</div>
+					<div>@Html.TextBoxFor( model => model.FirstName, new { @autofocus = "autofocus" } )</div>
+
+					<div>@Html.LabelFor( model => model.LastName )</div>
+					<div>@Html.TextBoxFor( model => model.LastName )</div>
+
+					<div>@Html.LabelFor( model => model.Email )</div>
+					<div>@Html.TextBoxFor( model => model.Email )</div>
+
+					<div>@Html.LabelFor( model => model.Username )</div>
+					<div>@Html.TextBoxFor( model => model.Username )</div>
+
+					<div>@Html.LabelFor( model => model.Password )</div>
+					<div>@Html.TextBoxFor( model => model.Password, new { type = "password" } )</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<button class="button-action" id="btnUpdate" name="btnSubmit" value="update" onclick="updateMe()"><i class='far fa-save'></i> Update</button>
+			</div>
+		}
+	</div>
+	<div id="snackbar">Some text some message..</div>
+
+	if ( Model.ActionType == Reciplease.Models.User.ActionTypes.UpdateSuccessful )
+	{
+		<script>
+			var x = document.getElementById("snackbar");
+
+			// Add the "show" class to DIV
+			x.className = "show";
+
+			x.textContent = "User Updated"
+
+			// After 3 seconds, remove the show class from DIV
+			setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+		</script>
+	}
+}
+else
+{
+	@Html.Partial( "NotAuthenticated" )
+}

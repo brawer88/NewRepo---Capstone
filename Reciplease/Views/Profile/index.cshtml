@@ -8,43 +8,40 @@
 	@Html.Partial("NotAuthenticated")
 }
 else {
-	using (Html.BeginForm("Index", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" })) {
-		<p>To make changes to your profile enter your information below and click the Update button.</p>
-		
-		<div id="user-profile-data">
+	// put something here
 
-			<div class="card">
-				<div class="container">
-					<div>@Html.LabelFor(model => model.FirstName)</div>
-					<div>@Html.TextBoxFor(model => model.FirstName, new { @autofocus = "autofocus" })</div>
-
-					<div>@Html.LabelFor(model => model.LastName)</div>
-					<div>@Html.TextBoxFor(model => model.LastName)</div>
-
-					<div>@Html.LabelFor(model => model.Email)</div>
-					<div>@Html.TextBoxFor(model => model.Email)</div>
-
-					<div>@Html.LabelFor(model => model.Username)</div>
-					<div>@Html.TextBoxFor(model => model.Username)</div>
-
-					<div>@Html.LabelFor(model => model.Password)</div>
-					<div>@Html.TextBoxFor(model => model.Password, new { type = "password" })</div>
-				</div>
-			</div>
-			
-			<div class="card">
-				<button class="button-action" id="btnUpdate" name="btnSubmit" value="update"><i class='far fa-save'></i> Update</button>
-			</div>
-		</div>
-	}	
 }
 
 <a href="~/Profile/CreateRecipe">Create Recipe</a>
+<a href="~/Profile/UpdateUser">Update User</a>
+<a id="delete" onclick="deleteMe()" href="~/Profile/DeleteUser">Delete Account</a>
 
 <script>
 	$(document).ready(function () {
 		SetActiveMenus('profile', 'index');
 	});
+
+	function deleteMe() {
+		let deleteConf = confirm("Are you sure you want to delete your account?");
+
+		if (deleteConf) {
+			$.ajax({
+        type: "GET",
+        url: '@Url.Action( "DeleteUser", "Profile")',
+		async: true,
+        success: function (msg) {
+			alert("Account Deleted")
+			
+        },
+        error: function () {
+            alert("Error deleting account. Please contact developers.")
+        }
+    });
+		}
+
+
+	}
+	
 </script>
 
 

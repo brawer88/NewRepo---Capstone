@@ -19,44 +19,6 @@ namespace Reciplease.Controllers
             return View(u);
         }
 
-        [HttpPost]
-        public ActionResult Index( FormCollection collfrmAttr)
-        {
-            try
-            {
-                Models.User u = new Models.User();
-                u = u.GetUserSession();
-
-                u.FirstName = collfrmAttr["FirstName"];
-                u.LastName = collfrmAttr["LastName"];
-                u.Email = collfrmAttr["Email"];
-                u.Username = collfrmAttr["Username"];
-                u.Password = collfrmAttr["Password"];
-
-                if (u.FirstName.Length == 0 || u.LastName.Length == 0 || u.Email.Length == 0 || u.Username.Length == 0 || u.Password.Length == 0)
-                {
-                    u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
-                    return View(u);
-                }
-                else
-                {
-                    if (collfrmAttr["btnSubmit"] == "update")
-                    { //update button pressed
-                        u.Save();
-                        u.SaveUserSession();
-                        return RedirectToAction("Index");
-                    }
-                    return View(u);
-                }
-            }
-            catch (Exception)
-            {
-                Models.User u = new Models.User();
-                return View(u);
-            }
-
-        }
-
         public ActionResult SignIn()
         {
             Models.User u = new Models.User();
@@ -241,8 +203,65 @@ namespace Reciplease.Controllers
             }
         }
 
+		public ActionResult DeleteUser() {
+			User u = new User( );
+			u = u.GetUserSession( );
+
+			u.RemoveUserSession( );
+
+			Database db = new Database( );
+			db.DeleteAccount( u.UID );
+
+			return RedirectToAction( "Index" );
+		}
+
+		public ActionResult UpdateUser( ) {
+			User u = new Models.User( );
+
+			u = u.GetUserSession( );
+			return View( u );
+		}
+
+		[HttpPost]
+		public ActionResult UpdateUser( FormCollection collfrmAttr ) {
+			try
+			{
+				User u = new User( );
 
 
-    }
+				u = u.GetUserSession( );
+
+				u.FirstName = collfrmAttr["FirstName"];
+				u.LastName = collfrmAttr["LastName"];
+				u.Email = collfrmAttr["Email"];
+				u.Username = collfrmAttr["Username"];
+				u.Password = collfrmAttr["Password"];
+
+				if ( u.FirstName.Length == 0 || u.LastName.Length == 0 || u.Email.Length == 0 || u.Username.Length == 0 || u.Password.Length == 0 )
+				{
+					u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
+					return View( u );
+				}
+				else
+				{
+					if ( collfrmAttr["btnSubmit"] == "update" )
+					{ //update button pressed
+						u.Save( );
+						u.SaveUserSession( );
+						u.ActionType = Models.User.ActionTypes.UpdateSuccessful;
+					}
+
+					return View( u );
+				}
+			}
+			catch ( Exception )
+			{
+				Models.User u = new Models.User( );
+				return View( u );
+			}
+
+		}
+
+	}
 }
 
