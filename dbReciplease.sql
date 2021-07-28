@@ -48,7 +48,7 @@ IF OBJECT_ID('uspAddIngredient')				IS NOT NULL DROP PROCEDURE uspAddIngredient
 IF OBJECT_ID('uspAddRecipeIngredients')			IS NOT NULL DROP PROCEDURE uspAddRecipeIngredients 
 IF OBJECT_ID('uspDeleteUserAccount')			IS NOT NULL DROP PROCEDURE uspDeleteUserAccount 
 IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserRecipe 
-IF OBJECT_ID('uspUpdateUserRecipe')				IS NOT NULL DROP PROCEDURE uspUpdateUserRecipe 
+IF OBJECT_ID('uspUpdateRecipe')					IS NOT NULL DROP PROCEDURE uspUpdateRecipe 
                                                                                                                                                                                                                                                                                                                                                                                                
 -- --------------------------------------------------------------------------------
 -- Step #1: Create Tables
@@ -1102,6 +1102,46 @@ AS
 SET XACT_ABORT ON
 
 BEGIN TRANSACTION
+
+	-- ALL OPTIONAL OUTPUTS will be given a -1 for NULL or another value if not null
+	IF @strRecipeImage = '-1'
+		BEGIN
+			SET @strRecipeImage = NULL
+		END
+	IF @intReadyInMins = -1
+		BEGIN
+			SET @intReadyInMins = NULL
+		END
+
+	IF @intServings = -1
+		BEGIN
+			SET @intServings = NULL
+		END
+				
+	IF @strCuisines = '-1'
+		BEGIN
+			SET @strCuisines = NULL
+		END
+				
+	IF @strDiets = '-1'
+		BEGIN
+			SET @strDiets = NULL
+		END			
+
+	IF @strDishTypes = '-1'
+		BEGIN
+			SET @strDishTypes = NULL
+		END
+				
+	IF @strNutrition = '-1'
+		BEGIN
+			SET @strNutrition = NULL
+		END
+				
+	IF @intUserID = -1
+		BEGIN
+			SET @intUserID = NULL
+		END			
 
 	UPDATE TRecipes
 	SET strName = @strName, strInstructions = @strInstructions, strRecipeImage = @strRecipeImage, intReadyInMins = @intReadyInMins, intServings = @intServings, strCuisines = @strCuisines, strDiets = @strDiets, strDishTypes = @strDishTypes, strNutrition = @strNutrition, intUserID = @intUserID
