@@ -13,24 +13,50 @@ else
 {
 	using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
 	{
-		<label for="RecipeName">Recipe Title</label>
-		<input type="text" name="RecipeName" />
-		<label for="diets">Comma Separated Diets</label>
+		<div id="content" class="p-4 p-md-5 pt-5">
+		<div class="recipe-card">
+			
+	<p>
+		<label for="RecipeName">*Recipe Title</label>
+		<input type="text" name="RecipeName" required/>
+	</p>
+			
+	<p>
+		<label for="readyInMinutes">*Ready In Minutes:</label>
+		<input type="number" name="readyInMinutes" required />
+	</p>
+	
+	<p>
+		<label for="servings">*Servings:</label>
+		<input type="number" name="servings" required/>
+	</p>
+	
+	<p>
+		<label for="diets">Diet</label>
 		<input type="text" name="diets" />
-		<label for="dishTypes">Comma Separated Dish Types</label>
-		<input type="text" name="dishTypes" />
-		<label for="cuisines">Comma Separated Cuisines</label>
+	</p>
+	
+	<p>
+		<label for="dishTypes">*Dish Types</label>
+		<input type="text" name="dishTypes" required />
+	</p>
+			
+	<p>
+		<label for="cuisines">Cuisines</label>
 		<input type="text" name="cuisines" />
-		<label for="readyInMinutes">Ready In Minutes:</label>
-		<input type="number" name="readyInMinutes" />
-		<label for="servings">Servings:</label>
-		<input type="number" name="servings" />
-		<label for="ingredients">Will update this one later</label>
-		<input type="text" name="ingredients" />
-		<label for="instructions">Instructions, will make this a big box one day maybe</label>
-		<hr />
-		<textArea name="instructions" rows="10" cols="50"></textArea>
-		<br />
+	</p>
+	
+	<p>
+		<label for="ingredients">*Ingredients</label>
+		<input type="text" name="ingredients" required/>
+	</p>
+			
+	<p>
+		<label for="instructions">*Instructions</label>
+		<textArea name="instructions" rows="10" cols="50" required></textArea>
+	</p>
+	<br>
+	
 		<input type="Submit" id="btnSubmit" name="btnSubmit" />
 	}
 }
