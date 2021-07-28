@@ -57,13 +57,25 @@
 							<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
 						}
 					</table>
-					<table>
-						<tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>
-						@foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
+					
+					
+					@try
+					{
+
+						var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
+						foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
 						{
-							<tr><td>@nutrient.Name</td><td>@nutrient.Amount @nutrient.Unit</td><td>@nutrient.PercentOfDailyNeeds %</td></tr>
+							nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" +@nutrient.PercentOfDailyNeeds + "%</td></tr>";
 						}
-					</table>
+						nutritionTable += "</table>";
+
+						WriteLiteral( nutritionTable );
+					}
+					catch ( Exception e )
+					{
+							<p> No Nutrition Data Available </p>
+					}
+					
 				</article>
 		<!---End Display Recipe--->
 

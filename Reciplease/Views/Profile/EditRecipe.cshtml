@@ -8,23 +8,22 @@
 
 @using (Html.BeginForm("Edit", "Account"))
 	{
-		@Html.EditorFor(model => Model.UserSingleRecipe.title)
+		@Html.EditorFor(model => Model.SingleRecipe.title)
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.readyInMinutes)
+		@Html.EditorFor(model => Model.SingleRecipe.readyInMinutes)
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.servings)
+		@Html.EditorFor(model => Model.SingleRecipe.servings)
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.SplitInstructions( ))
+		@*@Html.EditorFor(model => Model.SingleRecipe.SplitInstructions( ))*@
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.cuisines)
+		@Html.EditorFor(model => Model.SingleRecipe.cuisines)
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.diets)
+		@Html.EditorFor(model => Model.SingleRecipe.diets)
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.dishTypes)
+		@Html.EditorFor(model => Model.SingleRecipe.dishTypes)
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.GetFractionizedIngredients( ))
+		@*@Html.EditorFor(model => Model.SingleRecipe.GetFractionizedIngredients( ))*@
 		
-		@Html.EditorFor(model => Model.UserSingleRecipe.nutrition)
 		
 		<input type="submit" value="Save"/>
 	}

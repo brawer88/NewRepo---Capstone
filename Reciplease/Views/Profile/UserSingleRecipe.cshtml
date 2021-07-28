@@ -20,26 +20,41 @@
 <div id="content" class="p-4 p-md-5 pt-5">
 	<div class="recipe-card">
 		<link rel="stylesheet" href="css/style2.css">
+		<link rel="stylesheet" href="css/style2.css">
 
-
+		<!--maybe use js to call this? -->
+		@if ( Model.user.IsAuthenticated )
+		{
+			<a href="@Url.Action( "EditRecipe", "Profile", new { id = Model.SingleRecipe.id } )" class="btn-dark">Edit Recipe</a>
+			
+		}
 		<!---Display Recipe--->
 		<article>
 
-			<h2>@Model.UserSingleRecipe.title</h2>
-			<p>Ready in : @Model.UserSingleRecipe.readyInMinutes minutes</p>
-			<p>Servings : @Model.UserSingleRecipe.servings </p>
-			<p>@Model.UserSingleRecipe.image</p>
+
+
+			<h2>@Model.SingleRecipe.title</h2>
+			<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
+			<p>Servings : @Model.SingleRecipe.servings </p>
+
+			<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
+			<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
+			<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
+			<table>
+				<tr><th>Ingredient:</th><th>Amount:</th></tr>
+				@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
+				{
+					<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
+				}
+			</table>
+			<p>Instructions:</p>
 			<ol>
-				@foreach ( String instruction in @Model.USerSingleRecipe.SplitInstructions( ) )
+				@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
 				{
 					<li>@instruction</li>
 				}
 			</ol>
-			<p>@Model.UserSingleRecipe.cuisines</p>
-			<p>@Model.UserSingleRecipe.diets</p>
-			<p>@Model.UserSingleRecipe.dishTypes</p>
-			<p>@Model.UserSingleRecipe.GetFractionizedIngredients( )</p>
-			<p>@Model.UserSingleRecipe.nutrition</p>
+		</article>
 
 		</article>
 		<!---End Display Recipe--->

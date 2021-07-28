@@ -1,4 +1,5 @@
-﻿using Reciplease.Models;
+﻿using Newtonsoft.Json;
+using Reciplease.Models;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -161,6 +162,42 @@ namespace Reciplease.Controllers
 			return View( recipeContent );
 		}
 
+		public ActionResult EditRecipe( ) {
+			Models.UserRecipeContent recipeContent = new Models.UserRecipeContent( );
+			recipeContent.user = new Models.User( );
+			recipeContent.user = recipeContent.user.GetUserSession( );
+
+			Database DB = new Database( );
+
+			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
+
+			// check if recipe id exists
+			if ( DB.RecipeExists( strRecipeID ) == false )
+			{
+				// get recipes to display
+				recipeContent.SingleRecipe = RecipeAPI.GetRecipeById( strRecipeID );
+				// save recipe
+				int intSavedID = DB.SaveRecipe( recipeContent.SingleRecipe.title, recipeContent.SingleRecipe.instructions, int.Parse( recipeContent.SingleRecipe.readyInMinutes ), recipeContent.SingleRecipe.image, int.Parse( recipeContent.SingleRecipe.servings ),
+					String.Join( ", ", recipeContent.SingleRecipe.cuisines ), String.Join( ", ", recipeContent.SingleRecipe.diets ), String.Join( ", ", recipeContent.SingleRecipe.dishTypes ), JsonConvert.SerializeObject( recipeContent.SingleRecipe.nutrition ), -1, int.Parse( recipeContent.SingleRecipe.id ) );
+
+				foreach ( Ingredient ingredient in recipeContent.SingleRecipe.extendedIngredients )
+				{
+					// now save ingredients
+					int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
+
+					DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+				}
+
+
+			}
+			else
+			{
+				// load from db
+				recipeContent.SingleRecipe = DB.LoadRecipe( strRecipeID );
+			}
+
+			return View( recipeContent );
+		}
 
 
 		[HttpPost]
@@ -202,6 +239,49 @@ namespace Reciplease.Controllers
                 return View(recipeContent);
             }
         }
+
+
+		
+
+
+		[HttpPost]
+		public ActionResult EditRecipe( FormCollection col ) {
+			try
+			{
+				Models.User u = new Models.User( );
+				Models.Recipe recipe = new Recipe( );
+				Models.UserRecipeContent recipeContent = new UserRecipeContent( );
+				recipeContent.user = u.GetUserSession( );
+
+
+				// example of getting data from the page in a post method
+				recipe.title = col["RecipeName"];
+				recipe.instructions = col["instructions"]; // required
+				recipe.diets = new List<string> { col["diet"] }; // optional default to "-1"
+				recipe.cuisines = new List<string> { col["cuisines"] }; // optional default to "-1"
+				recipe.dishTypes = new List<string> { col["dishTypes"] }; // optional default to "-1"
+				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
+				recipe.servings = (string)col["servings"]; // optional default to "-1"
+				recipe.extendedIngredients = new List<Ingredient>( ); // need to update this when we have variable ingredients lists
+
+				if ( recipe.title.Length == 0 )
+				{
+					u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
+					return View( u );
+				}
+				else
+				{
+					Database db = new Database( );
+					db.SaveRecipe( recipe.title, recipe.instructions, int.Parse( recipe.readyInMinutes ), "/Content/images/no-photo.jpg", int.Parse( recipe.servings ), String.Join( ",", recipe.cuisines ), String.Join( ",", recipe.diets ), String.Join( ",", recipe.dishTypes ), "-1", recipeContent.user.UID, -1 );
+					return RedirectToAction( "UserRecipes" );
+				}
+			}
+			catch ( Exception )
+			{
+				Models.UserRecipeContent recipeContent = new UserRecipeContent( );
+				return View( recipeContent );
+			}
+		}
 
 		public ActionResult DeleteUser() {
 			User u = new User( );
@@ -260,6 +340,44 @@ namespace Reciplease.Controllers
 				return View( u );
 			}
 
+		}
+
+
+		public ActionResult UserSingleRecipe( ) {
+			Models.UserRecipeContent recipeContent = new Models.UserRecipeContent( );
+			recipeContent.user = new Models.User( );
+			recipeContent.user = recipeContent.user.GetUserSession( );
+
+			Database DB = new Database( );
+
+			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
+
+			// check if recipe id exists
+			if ( DB.RecipeExists( strRecipeID ) == false )
+			{
+				// get recipes to display
+				recipeContent.SingleRecipe = RecipeAPI.GetRecipeById( strRecipeID );
+				// save recipe
+				int intSavedID = DB.SaveRecipe( recipeContent.SingleRecipe.title, recipeContent.SingleRecipe.instructions, int.Parse( recipeContent.SingleRecipe.readyInMinutes ), recipeContent.SingleRecipe.image, int.Parse( recipeContent.SingleRecipe.servings ),
+					String.Join( ", ", recipeContent.SingleRecipe.cuisines ), String.Join( ", ", recipeContent.SingleRecipe.diets ), String.Join( ", ", recipeContent.SingleRecipe.dishTypes ), JsonConvert.SerializeObject( recipeContent.SingleRecipe.nutrition ), -1, int.Parse( recipeContent.SingleRecipe.id ) );
+
+				foreach ( Ingredient ingredient in recipeContent.SingleRecipe.extendedIngredients )
+				{
+					// now save ingredients
+					int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
+
+					DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+				}
+
+
+			}
+			else
+			{
+				// load from db
+				recipeContent.SingleRecipe = DB.LoadRecipe( strRecipeID );
+			}
+
+			return View( recipeContent );
 		}
 
 	}
