@@ -34,7 +34,7 @@ namespace Reciplease.Models {
 				{
 					if ( r.image == null )
 					{
-						r.image = "'/Content/images/no-photo.jpg'";
+						r.image = Database.FailedImagePath;
 					}
 					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
 				}
@@ -63,7 +63,7 @@ namespace Reciplease.Models {
 				Database db = new Database( );
 				if ( clsRecipe.image == null )
 				{
-					clsRecipe.image = "'/Content/images/no-photo.jpg'";
+					clsRecipe.image = Database.FailedImagePath;
 				}
 				clsRecipe.dictRatings = db.GetRecipeRatings( int.Parse( clsRecipe.id ) );
 			}
@@ -118,7 +118,7 @@ namespace Reciplease.Models {
 				{
 					if(r.image == null)
 					{
-						r.image = "'/Content/images/no-photo.jpg'";
+						r.image = Database.FailedImagePath;
 					}
 					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
 				}

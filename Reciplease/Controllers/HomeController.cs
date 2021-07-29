@@ -121,10 +121,13 @@ namespace Reciplease.Controllers {
 
 				foreach ( Ingredient ingredient in h.SingleRecipe.extendedIngredients )
 				{
-					// now save ingredients
-					int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
+					if ( ingredient.name != null )
+					{
+						// now save ingredients
+						int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
 
-					DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+						DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+					}
 				}
 
 

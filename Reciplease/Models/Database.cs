@@ -7,7 +7,9 @@ using System.Linq;
 using Newtonsoft.Json;
 
 namespace Reciplease.Models {
-	public class Database {		
+	public class Database {
+
+		public static string FailedImagePath = "CPDM-WernkeB/Content/images/no-photo.jpg";
 
 		private bool GetDBConnection( ref SqlConnection SQLConn ) {
 			try
@@ -197,9 +199,9 @@ namespace Reciplease.Models {
 					}
 					recipe.extendedIngredients = GetIngredients( strRecipeID );
 
-					if (recipe.image.Length < 5)
+					if (recipe.image.Length < 5 || recipe.image.Equals( "/Content/images/no-photo.jpg") )
 					{
-						recipe.image = "/Content/images/no-photo.jpg";
+						recipe.image = FailedImagePath;
 					}
 
 					return recipe;
@@ -725,9 +727,9 @@ namespace Reciplease.Models {
 						r.title = (string)dr["strName"];
 						r.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
 						r.dictRatings = db.GetRecipeRatings( int.Parse(r.id) );
-						if ( r.image.Length < 5 || r.image == null )
+						if ( r.image.Length < 5 || r.image.Equals( "/Content/images/no-photo.jpg" ) || r.image == null)
 						{
-							r.image = "/Content/images/no-photo.jpg";
+							r.image = FailedImagePath;
 						}
 						recipes.Add( r );
 					}

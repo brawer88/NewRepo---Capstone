@@ -94,9 +94,10 @@ namespace Reciplease.Models {
 
 		public string[] SplitInstructions() {
 			string pattern = @"(?<=[\.!\?])\s+";
+			string patternHtmlTags = @"<ol>";
 			if ( this.instructions != null )
 			{
-				string cleanedInstructions = Regex.Replace( this.instructions, "<[a-zA-Z/]*?>", String.Empty );
+				string cleanedInstructions = Regex.Replace( this.instructions, patternHtmlTags, String.Empty );
 				string[] ainstructions = Regex.Split( this.instructions, pattern );
 
 				return ainstructions;
