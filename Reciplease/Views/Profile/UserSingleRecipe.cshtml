@@ -7,13 +7,13 @@
 <h2>@ViewBag.Title</h2>
 
 @*<head> already on layout page
-	<title>Reciplease</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/style.css">
-</head>*@
+		<title>Reciplease</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/style.css">
+	</head>*@
 
 
 <!-- Page Content  -->
@@ -25,8 +25,8 @@
 		<!--maybe use js to call this? -->
 		@if ( Model.user.IsAuthenticated )
 		{
-			<a href="@Url.Action( "EditRecipe", "Profile", new { id = Model.SingleRecipe.id } )" class="btn-dark">Edit Recipe</a>
-			
+			<a href="@Url.Action( "EditRecipe", "Profile", new { id = Model.SingleRecipe.id } )" class="btn-light">Edit Recipe</a>
+			<a id="delete" onclick="deleteMe()" href="@Url.Action( "DeleteRecipe", "Profile", new { id = Model.SingleRecipe.id } )">Delete Recipe</a>
 		}
 		<!---Display Recipe--->
 		<article>
@@ -69,3 +69,30 @@
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+	$(document).ready(function () {
+		SetActiveMenus('profile', 'index');
+	});
+
+	function deleteMe() {
+		let deleteConf = confirm("Are you sure you want to delete your account?");
+
+		if (deleteConf) {
+			$.ajax({
+        type: "GET",
+        url: '@Url.Action( "DeleteRecipe", "Profile", new { id = Model.SingleRecipe.id } )',
+		async: true,
+        success: function (msg) {
+			alert("Recipe Deleted")
+
+        },
+        error: function () {
+            alert("Error deleting recipe. Please contact developers.")
+        }
+    });
+		}
+
+
+	}
+</script>

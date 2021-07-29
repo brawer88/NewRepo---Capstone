@@ -96,8 +96,8 @@ namespace Reciplease.Models {
 			string pattern = @"(?<=[\.!\?])\s+";
 			if ( this.instructions != null )
 			{
-				string cleanedInstructions = Regex.Replace( this.instructions, "<.*?>", String.Empty );
-				string[] ainstructions = Regex.Split( cleanedInstructions, pattern );
+				string cleanedInstructions = Regex.Replace( this.instructions, "<[a-zA-Z/]*?>", String.Empty );
+				string[] ainstructions = Regex.Split( this.instructions, pattern );
 
 				return ainstructions;
 			}

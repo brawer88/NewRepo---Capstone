@@ -12,7 +12,8 @@ using System.Web.Mvc;
 namespace Reciplease.Controllers
 {
     public class ProfileController : Controller {
-        public ActionResult Index()
+		[HandleError]
+		public ActionResult Index()
         {
             Models.User u = new Models.User();
             u = u.GetUserSession();
@@ -20,13 +21,15 @@ namespace Reciplease.Controllers
             return View(u);
         }
 
-        public ActionResult SignIn()
+		[HandleError]
+		public ActionResult SignIn()
         {
             Models.User u = new Models.User();
             return View(u);
         }
 
-        [HttpPost]
+		[HandleError]
+		[HttpPost]
         public ActionResult SignIn(FormCollection col)
         {
             try
@@ -68,13 +71,15 @@ namespace Reciplease.Controllers
             }
         }
 
-        public ActionResult SignUp()
+		[HandleError]
+		public ActionResult SignUp()
         {
             Models.User u = new Models.User();
             return View(u);
         }
 
-        [HttpPost]
+		[HandleError]
+		[HttpPost]
         public ActionResult SignUp(FormCollection col)
         {
             try
@@ -122,15 +127,16 @@ namespace Reciplease.Controllers
             }
         }
 
-        public ActionResult SignOut()
+		[HandleError]
+		public ActionResult SignOut()
         {
             Models.User u = new Models.User();
             u.RemoveUserSession();
             return RedirectToAction("Index", "Home");
         }
 
-
-        public ActionResult Favorites()
+		[HandleError]
+		public ActionResult Favorites()
         {
             FavoritesContent favorites = new FavoritesContent();
             Models.User u = new Models.User();
@@ -141,8 +147,8 @@ namespace Reciplease.Controllers
             return View(favorites);
         }
 
-
-        public ActionResult UserRecipes()
+		[HandleError]
+		public ActionResult UserRecipes()
         {
             UserRecipeContent MyRecipes = new UserRecipeContent();
 			Models.User u = new Models.User( );
@@ -153,7 +159,7 @@ namespace Reciplease.Controllers
             return View( MyRecipes );
         }
 
-
+		[HandleError]
 		public ActionResult CreateRecipe( ) {
 
 			Models.UserRecipeContent recipeContent = new UserRecipeContent( );
@@ -162,6 +168,7 @@ namespace Reciplease.Controllers
 			return View( recipeContent );
 		}
 
+		[HandleError]
 		public ActionResult EditRecipe( ) {
 			Models.UserRecipeContent recipeContent = new Models.UserRecipeContent( );
 			recipeContent.user = new Models.User( );
@@ -180,7 +187,7 @@ namespace Reciplease.Controllers
 			return View( recipeContent );
 		}
 
-
+		[HandleError]
 		[HttpPost]
         public ActionResult CreateRecipe(FormCollection col)
         {
@@ -198,23 +205,43 @@ namespace Reciplease.Controllers
                 recipe.diets = new List<string> { col["diets"] }; // optional default to "-1"
                 recipe.cuisines = new List<string> { col["cuisines"] }; // optional default to "-1"
 				recipe.dishTypes = new List<string> { col["dishTypes"] }; // optional default to "-1"
+				string[] ingredients = Request.Form.GetValues( "ingredients" );
+				string[] amounts = Request.Form.GetValues( "amounts" );
+				string[] measurements = Request.Form.GetValues( "measurements" );
+				recipe.extendedIngredients = new List<Ingredient>( );
+
+				for (int index=0; index < ingredients.Length; index += 1 )
+				{
+					Ingredient ing = new Ingredient( );
+					ing.name = ingredients[index];
+					ing.amount = amounts[index];
+					ing.unit = measurements[index];
+					recipe.extendedIngredients.Add( ing );
+				}
+
 				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
 				recipe.servings = (string)col["servings"]; // optional default to "-1"
-				recipe.extendedIngredients = new List<Ingredient>(); // need to update this when we have variable ingredients lists
 
 				if (recipe.title.Length == 0)
                 {
-                    u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
-                    return View(u);
+					recipeContent.user.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
+                    return View( recipeContent );
                 }
                 else
                 { 
                     Database db = new Database();
-                    db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "/Content/images/no-photo.jpg", int.Parse(recipe.servings), String.Join(",", recipe.cuisines), String.Join(",", recipe.diets), String.Join(",", recipe.dishTypes), "-1", recipeContent.user.UID, -1);
+                    int intSavedID = db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "/Content/images/no-photo.jpg", int.Parse(recipe.servings), String.Join(",", recipe.cuisines), String.Join(",", recipe.diets), String.Join(",", recipe.dishTypes), "-1", recipeContent.user.UID, -1);
+					foreach ( Ingredient ingredient in recipe.extendedIngredients )
+					{
+						// now save ingredients
+						int IngredientID = db.SaveIngredient( 0, ingredient.name );
+
+						db.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+					}
 					return RedirectToAction( "UserRecipes" );
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Models.UserRecipeContent recipeContent = new UserRecipeContent();
                 return View(recipeContent);
@@ -222,9 +249,9 @@ namespace Reciplease.Controllers
         }
 
 
-		
 
 
+		[HandleError]
 		[HttpPost]
 		public ActionResult EditRecipe( FormCollection col ) {
 			try
@@ -236,6 +263,7 @@ namespace Reciplease.Controllers
 
 
 				// example of getting data from the page in a post method
+				recipe.id = col["RecipeID"];
 				recipe.title = col["RecipeName"];
 				recipe.instructions = col["instructions"]; // required
 				recipe.diets = new List<string> { col["diets"] }; // optional default to "-1"
@@ -253,7 +281,7 @@ namespace Reciplease.Controllers
 				else
 				{
 					Database db = new Database( );
-					db.UpdateRecipe( recipe.title, recipe.instructions, int.Parse( recipe.readyInMinutes ), "/Content/images/no-photo.jpg", int.Parse( recipe.servings ), String.Join( ",", recipe.cuisines ), String.Join( ",", recipe.diets ), String.Join( ",", recipe.dishTypes ), "-1", recipeContent.user.UID, -1 );
+					db.UpdateRecipe( recipe.title, recipe.instructions, int.Parse( recipe.readyInMinutes ), "/Content/images/no-photo.jpg", int.Parse( recipe.servings ), String.Join( ",", recipe.cuisines ), String.Join( ",", recipe.diets ), String.Join( ",", recipe.dishTypes ), "-1", recipeContent.user.UID, int.Parse(recipe.id) );
 					return RedirectToAction( "UserRecipes" );
 				}
 			}
@@ -264,6 +292,8 @@ namespace Reciplease.Controllers
 			}
 		}
 
+
+		[HandleError]
 		public ActionResult DeleteUser() {
 			User u = new User( );
 			u = u.GetUserSession( );
@@ -276,6 +306,8 @@ namespace Reciplease.Controllers
 			return RedirectToAction( "Index" );
 		}
 
+
+		[HandleError]
 		public ActionResult UpdateUser( ) {
 			User u = new Models.User( );
 
@@ -283,6 +315,7 @@ namespace Reciplease.Controllers
 			return View( u );
 		}
 
+		[HandleError]
 		[HttpPost]
 		public ActionResult UpdateUser( FormCollection collfrmAttr ) {
 			try
@@ -323,7 +356,7 @@ namespace Reciplease.Controllers
 
 		}
 
-
+		[HandleError]
 		public ActionResult UserSingleRecipe( ) {
 			Models.UserRecipeContent recipeContent = new Models.UserRecipeContent( );
 			recipeContent.user = new Models.User( );
@@ -359,6 +392,18 @@ namespace Reciplease.Controllers
 			}
 
 			return View( recipeContent );
+		}
+
+		[HandleError]
+		public ActionResult DeleteRecipe( ) {
+			User u = new User( );
+			u = u.GetUserSession( );
+			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
+			Database db = new Database( );
+
+			db.DeleteRecipe( strRecipeID, u.UID );
+
+			return RedirectToAction( "UserRecipes" );
 		}
 
 	}

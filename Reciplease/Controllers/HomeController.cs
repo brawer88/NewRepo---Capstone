@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace Reciplease.Controllers {
 	public class HomeController : Controller {
+		[HandleError]
 		public ActionResult Index( ) {
 			
 			Models.HomeContent h = new Models.HomeContent
@@ -26,6 +27,7 @@ namespace Reciplease.Controllers {
 			return View( h );
 		}
 
+		[HandleError]
 		public ActionResult Search( ) {
 			// testing testing testing
 			//Database DB = new Database( );
@@ -56,6 +58,7 @@ namespace Reciplease.Controllers {
 			return View( h );
 		}
 
+		[HandleError]
 		[HttpPost]
 		public ActionResult Search( FormCollection col ) {
 
@@ -97,6 +100,7 @@ namespace Reciplease.Controllers {
 
 		}
 
+		[HandleError]
 		public ActionResult Recipe(  ) {
 			Models.HomeContent h = new Models.HomeContent( );
 			h.user = new Models.User( );
@@ -134,8 +138,9 @@ namespace Reciplease.Controllers {
 			return View( h );
 		}
 
-        // will update when procedures are in place
-        [HttpPost]
+		// will update when procedures are in place
+		[HandleError]
+		[HttpPost]
 		public JsonResult RateRecipe( int UID, int RecipeID, int intDifficultyRating, int intTasteRating ) {
 			try
 			{
@@ -150,6 +155,7 @@ namespace Reciplease.Controllers {
 			}
 		}
 
+		[HandleError]
 		[HttpPost]
 		public ActionResult ToggleFavorite() {
 			User u = new Models.User( );
@@ -184,12 +190,14 @@ namespace Reciplease.Controllers {
 
 		}
 
-        public ActionResult About( ) {
+		[HandleError]
+		public ActionResult About( ) {
 			ViewBag.Message = "Your application description page.";
 
 			return View( );
 		}
 
+		[HandleError]
 		public ActionResult Contact( ) {
 			ViewBag.Message = "Your contact page.";
 

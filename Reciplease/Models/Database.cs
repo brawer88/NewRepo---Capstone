@@ -436,7 +436,31 @@ namespace Reciplease.Models {
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
+		internal int DeleteRecipe( string strRecipeID, int UID ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspDeleteUserRecipe", cn );
+				int intReturnValue = -1;
 
+				SetParameter( ref cm, "@intRecipeID", int.Parse(strRecipeID), SqlDbType.Int );
+				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int );
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+
+				return intReturnValue;
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return -1; // somethind went wrong, check debug
+			}
+		}
 
 		public List<Rating> GetUserRatings( int intUserID ) {
 			try
@@ -748,6 +772,8 @@ namespace Reciplease.Models {
 						Recipe r = new Recipe( );
 						r.id = ( (int)dr["intRecipeID"] ).ToString( );
 						r.image = (string)dr["strRecipeImage"];
+						r.title = (string)dr["strName"];
+						r.servings = ( (int)dr["intServings"] ).ToString( );
 						r.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
 						r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
 						recipes.Add( r );

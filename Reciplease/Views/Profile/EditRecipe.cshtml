@@ -10,7 +10,7 @@
 {
 	<div id="content" class="p-4 p-md-5 pt-5">
 		<div class="recipe-card">
-
+			<input type="text" name="RecipeID" value=@Model.SingleRecipe.id hidden />
 			<p>
 				<label for="RecipeName">*Recipe Title</label>
 				<input type="text" name="RecipeName" value=@Model.SingleRecipe.title required />
@@ -23,12 +23,12 @@
 
 			<p>
 				<label for="servings">*Servings:</label>
-				<input type="number" name="servings" value=@Model.SingleRecipe.servings  required />
+				<input type="number" name="servings" value=@Model.SingleRecipe.servings required />
 			</p>
 
 			<p>
 				<label for="diets">Diet</label>
-				<input type="text" name="diets" value=@String.Join( ", ", @Model.SingleRecipe.diets)  />
+				<input type="text" name="diets" value=@String.Join( ", ", @Model.SingleRecipe.diets) />
 			</p>
 
 			<p>

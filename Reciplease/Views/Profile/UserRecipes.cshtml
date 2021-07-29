@@ -7,61 +7,21 @@
 @*Iterate over recipes to display them*@
 @if ( @Model.user.IsAuthenticated == true )
 {
-	foreach ( Reciplease.Models.Recipe recipe in Model.lstUserRecipes )
+	if ( Model.lstUserRecipes.Count > 0 )
 	{
+		foreach ( Reciplease.Models.Recipe recipe in Model.lstUserRecipes )
+		{
 		<div class="row">
 			<div class="recipe-card">
-					
-
 				<article>
-					<a href="@Url.Action("UserSingleRecipe", "Profile", new { id = recipe.id })" class="btn-dark">
-						@recipe.title
+					<a href="@Url.Action( "UserSingleRecipe", "Profile", new { id = recipe.id } )">
+						<p>@recipe.title</p>
 					</a>
 					<p>Ready In: @recipe.readyInMinutes minutes</p>
 					<p>Servings: @recipe.servings</p>
 					<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
 					<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
-					
-			        <!---Add to cart button--->
-				
-				<!---Quantity--->
-				<!---Qauntity option may only be needed in the shopping cart view -KC 
-				<div class="container-fluid" style="padding-top: 15px;padding-bottom: 15px;">
-					<div class="row">
-					<div class="col">
-					<div class="form-group mb-2">
-					    <label for="quantity" class="sr-only">Quantity</label>
-					    <select class="form-control qty" id="quantity" name="quantity">
-					      <option value="1" selected>1</option>
-					      <option value="2">2</option>
-					      <option value="3">3</option>
-					      <option value="4">4</option>
-					      <option value="5">5</option>
-					      <option value="6">6</option>
-					      <option value="7">7</option>
-					      <option value="8">8</option>
-					      <option value="9">9</option>
-					      <option value="10">10</option>						    
-					    </select>
-					  </div>
-					</div>
-					<div class="col">
-				--->
-				<!---End quantity--->
-						
-					<!---Button starts here--->
-					<button type="button" class="btn btn-primary salescloud-action" data-action-triggers="click" data-action-method="jsonp" 
-					data-action-endpoint="api/public/1.0/atc" data-action-components='{"product_id": "0a0da48b-4727-47ce-b927-1806327f1719", "channel": "c264b0cb-e130-4907-86a8-eb4d6f113b7f", "quantity": {"type": "selector", "value": ".qty"}, "commit": 1}'
-					data-action-on-processed='[{"type": "prependHTML", "target": ".container-fluid", "html": "<div class=\"alert alert-success\" role=\"alert\">Product has been added to cart!</div>"}]'
-					data-loading-text="Processing...">Add to cart</button>
-					<!---Button ends here--->
-						
-					</div>
-					</div>
-					</div>
-				<!---End add to cart button--->
-					
-					
+									   					 
 					<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
 					<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
 
@@ -70,9 +30,16 @@
 
 			</div>
 		</div>
+
+		}
+	}
+	else
+	{
+		<p>You don't have any recipes yet. Want to <a href="~/Profile/CreateRecipe">create</a> one?</p>
 	}
 }
-else{
+else
+{
 	@Html.Partial( "NotAuthenticated" )
 }
 
