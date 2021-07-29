@@ -1,1 +1,95 @@
 
+@model Reciplease.Models.ShoppingCart	
+@{
+	ViewBag.Title = "Shopping Cart";
+}
+<h2>@ViewBag.Title</h2>
+
+<link rel="stylesheet" href="Reciplease/Reciplease/Views/Profile/Profile.css">
+
+
+	@if ( !Model.user.IsAuthenticated )
+		{
+			@Html.Partial( "NotAuthenticated" )
+		}
+		else
+			{
+				using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+			{
+				<div id="content" class="p-4 p-md-5 pt-5">
+					<div class="recipe-card">
+						
+				<p>
+					<label for="RecipeName"></label>
+				</p>
+				
+				<p>
+					<label for="ingredients">Ingredients</label>
+					
+					<!---Button--->
+						protected void btnDelte_Click(object sender, EventArgs e)
+							{
+								string[] ssid = Request.Cookies["Cart"].Values["id"].Split('#');
+								string[] sspname = Request.Cookies["Cart"].Values["pname"].Split('#');
+
+								DataTable dt = new DataTable();
+								dt.Columns.Add("id");
+								dt.Columns.Add("pname");
+
+								DataRow dr;
+								for (int i = 0; i < ssid.Length; i++)
+								{
+									dr = dt.NewRow();
+									dr["id"] = ssid.GetValue(i);
+									dr["pname"] = sspname.GetValue(i);
+									dt.Rows.Add(dr);
+								}
+								if (ddlCart.SelectedValue.ToString() != "0")
+								{
+									DataRow[] drp = dt.Select("pname = '" + ddlCart.SelectedValue.ToString() + "'");
+									if (drp.Length > 0)
+									{
+										foreach (DataRow dr1 in drp)
+										{
+											dr1.Delete();
+											dt.AcceptChanges();
+										}
+										HttpCookie cookie;
+										cookie = Request.Cookies["Cart"];
+										cookie.Expires = DateTime.Now.AddDays(-1d);
+										Response.Cookies.Add(cookie);
+
+										cookie = Request.Cookies["Cart"];
+
+										for (int j = 0; j < dt.Rows.Count; j++)
+										{
+											if (j == 0)
+											{
+												cookie.Values["id"] = dt.Rows[j]["id"].ToString();
+												cookie.Values["pname"] = dt.Rows[j]["pname"].ToString();
+											}
+											else
+											{
+												cookie.Values["id"] = cookie.Values["id"] + "#" + dt.Rows[j]["id"].ToString();
+												cookie.Values["pname"] = cookie.Values["pname"] + "#" + dt.Rows[j]["pname"].ToString();
+											}
+											cookie.Expires = DateTime.Now.AddDays(1);
+											Response.Cookies.Add(cookie);
+										}
+										ddlShoppingCart.Items.Clear();
+										string[] ss = Request.Cookies["Cart"].Values["pname"].Split('#');
+										ddlCart.DataSource = ss;
+										ddlCart.DataBind();
+										ListItem cart = new ListItem("--Cart Content--", "0");
+										ddlCart.Items.Insert(0, cart);                
+									}
+								}
+							} 
+				<!---End--->
+				</p>
+						
+				<br>
+				<!---Button to first log in to kroger's website then add to cart--->
+				
+	}
+}
