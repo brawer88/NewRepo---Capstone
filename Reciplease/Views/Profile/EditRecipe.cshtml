@@ -6,24 +6,55 @@
 
 <link rel="stylesheet" href="Reciplease/Reciplease/Views/Profile/Profile.css">
 
-@using (Html.BeginForm("Edit", "Account"))
-	{
-		@Html.EditorFor(model => Model.SingleRecipe.title)
-		
-		@Html.EditorFor(model => Model.SingleRecipe.readyInMinutes)
-		
-		@Html.EditorFor(model => Model.SingleRecipe.servings)
-		
-		@*@Html.EditorFor(model => Model.SingleRecipe.SplitInstructions( ))*@
-		
-		@Html.EditorFor(model => Model.SingleRecipe.cuisines)
-		
-		@Html.EditorFor(model => Model.SingleRecipe.diets)
-		
-		@Html.EditorFor(model => Model.SingleRecipe.dishTypes)
-		
-		@*@Html.EditorFor(model => Model.SingleRecipe.GetFractionizedIngredients( ))*@
-		
-		
-		<input type="submit" value="Save"/>
-	}
+@using ( Html.BeginForm( "EditRecipe", "Profile" ) )
+{
+	<div id="content" class="p-4 p-md-5 pt-5">
+		<div class="recipe-card">
+
+			<p>
+				<label for="RecipeName">*Recipe Title</label>
+				<input type="text" name="RecipeName" value=@Model.SingleRecipe.title required />
+			</p>
+
+			<p>
+				<label for="readyInMinutes">*Ready In Minutes:</label>
+				<input type="number" name="readyInMinutes" value=@Model.SingleRecipe.readyInMinutes required />
+			</p>
+
+			<p>
+				<label for="servings">*Servings:</label>
+				<input type="number" name="servings" value=@Model.SingleRecipe.servings  required />
+			</p>
+
+			<p>
+				<label for="diets">Diet</label>
+				<input type="text" name="diets" value=@String.Join( ", ", @Model.SingleRecipe.diets)  />
+			</p>
+
+			<p>
+				<label for="dishTypes">*Dish Types</label>
+				<input type="text" name="dishTypes" value=@String.Join( ", ", @Model.SingleRecipe.dishTypes) required />
+			</p>
+
+			<p>
+				<label for="cuisines">Cuisines</label>
+				<input type="text" name="cuisines" value=@String.Join( ", ", @Model.SingleRecipe.cuisines ) />
+			</p>
+
+			<p>
+				<label for="ingredients">*Ingredients</label>
+				<input type="text" name="ingredients" required />
+			</p>
+
+			<p>
+				<label for="instructions">*Instructions</label>
+				<textArea name="instructions" rows="10" cols="50" required>@Model.SingleRecipe.instructions</textArea>
+			</p>
+			<br>
+
+			<input type="Submit" id="btnSubmit" name="btnSubmit" />
+		</div>
+	</div>
+
+	<input type="submit" value="Save" />
+}

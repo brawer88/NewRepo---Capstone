@@ -172,27 +172,8 @@ namespace Reciplease.Controllers
 			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
 
 			// check if recipe id exists
-			if ( DB.RecipeExists( strRecipeID ) == false )
+			if ( DB.RecipeExists( strRecipeID ) == true )
 			{
-				// get recipes to display
-				recipeContent.SingleRecipe = RecipeAPI.GetRecipeById( strRecipeID );
-				// save recipe
-				int intSavedID = DB.SaveRecipe( recipeContent.SingleRecipe.title, recipeContent.SingleRecipe.instructions, int.Parse( recipeContent.SingleRecipe.readyInMinutes ), recipeContent.SingleRecipe.image, int.Parse( recipeContent.SingleRecipe.servings ),
-					String.Join( ", ", recipeContent.SingleRecipe.cuisines ), String.Join( ", ", recipeContent.SingleRecipe.diets ), String.Join( ", ", recipeContent.SingleRecipe.dishTypes ), JsonConvert.SerializeObject( recipeContent.SingleRecipe.nutrition ), -1, int.Parse( recipeContent.SingleRecipe.id ) );
-
-				foreach ( Ingredient ingredient in recipeContent.SingleRecipe.extendedIngredients )
-				{
-					// now save ingredients
-					int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
-
-					DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
-				}
-
-
-			}
-			else
-			{
-				// load from db
 				recipeContent.SingleRecipe = DB.LoadRecipe( strRecipeID );
 			}
 
@@ -214,7 +195,7 @@ namespace Reciplease.Controllers
                 // example of getting data from the page in a post method
                 recipe.title = col["RecipeName"];
                 recipe.instructions = col["instructions"]; // required
-                recipe.diets = new List<string> { col["diet"] }; // optional default to "-1"
+                recipe.diets = new List<string> { col["diets"] }; // optional default to "-1"
                 recipe.cuisines = new List<string> { col["cuisines"] }; // optional default to "-1"
 				recipe.dishTypes = new List<string> { col["dishTypes"] }; // optional default to "-1"
 				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
@@ -257,7 +238,7 @@ namespace Reciplease.Controllers
 				// example of getting data from the page in a post method
 				recipe.title = col["RecipeName"];
 				recipe.instructions = col["instructions"]; // required
-				recipe.diets = new List<string> { col["diet"] }; // optional default to "-1"
+				recipe.diets = new List<string> { col["diets"] }; // optional default to "-1"
 				recipe.cuisines = new List<string> { col["cuisines"] }; // optional default to "-1"
 				recipe.dishTypes = new List<string> { col["dishTypes"] }; // optional default to "-1"
 				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
@@ -272,7 +253,7 @@ namespace Reciplease.Controllers
 				else
 				{
 					Database db = new Database( );
-					db.SaveRecipe( recipe.title, recipe.instructions, int.Parse( recipe.readyInMinutes ), "/Content/images/no-photo.jpg", int.Parse( recipe.servings ), String.Join( ",", recipe.cuisines ), String.Join( ",", recipe.diets ), String.Join( ",", recipe.dishTypes ), "-1", recipeContent.user.UID, -1 );
+					db.UpdateRecipe( recipe.title, recipe.instructions, int.Parse( recipe.readyInMinutes ), "/Content/images/no-photo.jpg", int.Parse( recipe.servings ), String.Join( ",", recipe.cuisines ), String.Join( ",", recipe.diets ), String.Join( ",", recipe.dishTypes ), "-1", recipeContent.user.UID, -1 );
 					return RedirectToAction( "UserRecipes" );
 				}
 			}

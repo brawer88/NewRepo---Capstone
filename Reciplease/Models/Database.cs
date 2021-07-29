@@ -331,6 +331,42 @@ namespace Reciplease.Models {
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
+		internal int UpdateRecipe( string strName, string strInstructions, int intReadyInMins = -1, string strRecipeImage = "'/Content/images/no-photo.jpg'",
+			int intServings = -1, string strCuisines = "-1", string strDiets = "-1", string strDishTypes = "-1", string strNutrition = "-1", int UID = -1, int intRecipeID = 0 ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspUpdateRecipe", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intRecipeID", intRecipeID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strName", strName, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strInstructions", strInstructions, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strRecipeImage", strRecipeImage, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intReadyInMins", intReadyInMins, SqlDbType.BigInt );
+				SetParameter( ref cm, "@intServings", intServings, SqlDbType.BigInt );
+				SetParameter( ref cm, "@strCuisines", strCuisines, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strDiets", strDiets, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strDishTypes", strDishTypes, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strNutrition", strNutrition, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int );
+
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+
+				return intReturnValue;
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return -1; // something went wrong
+			}
+		}
 
 		public User.ActionTypes UpdateUser( User u ) {
 			try

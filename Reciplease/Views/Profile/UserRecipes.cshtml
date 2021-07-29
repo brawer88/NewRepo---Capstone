@@ -11,16 +11,12 @@
 	{
 		<div class="row">
 			<div class="recipe-card">
-				<aside>
-					<a href="@Url.Action("UserSingleRecipe", "Profile", new { id = recipe.id })" class="button">
-						<span class="icon icon-play">
-							<img width="600" src=@recipe.image alt=@recipe.title ; />
-						</span>
-					</a>
-				</aside>
+					
 
 				<article>
-					<h2>@recipe.title</h2>
+					<a href="@Url.Action("UserSingleRecipe", "Profile", new { id = recipe.id })" class="btn-dark">
+						@recipe.title
+					</a>
 					<p>Ready In: @recipe.readyInMinutes minutes</p>
 					<p>Servings: @recipe.servings</p>
 					<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
