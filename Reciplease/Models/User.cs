@@ -139,6 +139,7 @@ namespace Reciplease.Models {
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
+
 		public int ToggleFavorite( int RecipeID ) {
 			try
 			{
@@ -147,6 +148,7 @@ namespace Reciplease.Models {
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
+
 
 		public bool IsAFavorite( string RecipeID ) {
 			bool blnFavorite = false;

@@ -26,7 +26,8 @@ namespace Reciplease {
                       "~/Scripts/jquery-3.6.0.slim.js",
                       "~/Scripts/jquery-3.6.0.slim.min.js",
                       "~/Scripts/jquery-3.6.0.slim.min.map",
-                      "~/Scripts/jquery-3.6.0.js") );
+                      "~/Scripts/jquery-3.6.0.js",
+					  "~/Scripts/keepAlive.js" ) );
 			bundles.Add( new ScriptBundle( "~/bundles/js" ).Include(
 					  "~/Scripts/main.js",
 					  "~/Scripts/popper.js") );

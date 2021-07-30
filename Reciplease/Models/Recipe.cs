@@ -94,11 +94,16 @@ namespace Reciplease.Models {
 
 		public string[] SplitInstructions() {
 			string pattern = @"(?<=[\.!\?])\s+";
-			string patternHtmlTags = @"<ol>";
+			
+			Regex spaceRegex = new Regex( @"\.(?! |$)", RegexOptions.Compiled );
+			Regex tagStartRegex = new Regex( @"\<(?!.|$)", RegexOptions.Compiled );
+			Regex _htmlRegex = new Regex( "<.*?>", RegexOptions.Compiled );
 			if ( this.instructions != null )
 			{
-				string cleanedInstructions = Regex.Replace( this.instructions, patternHtmlTags, String.Empty );
-				string[] ainstructions = Regex.Split( this.instructions, pattern );
+				string cleanedInstructions = spaceRegex.Replace( this.instructions, ". " );
+				cleanedInstructions = tagStartRegex.Replace( cleanedInstructions, ". <" );
+				cleanedInstructions = _htmlRegex.Replace( cleanedInstructions, String.Empty );
+				string[] ainstructions = Regex.Split( cleanedInstructions, pattern );
 
 				return ainstructions;
 			}

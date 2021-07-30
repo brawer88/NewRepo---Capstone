@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Reciplease.Models {
 	public class Database {
 
-		public static string FailedImagePath = "CPDM-WernkeB/Content/images/no-photo.jpg";
+		public static string FailedImagePath = "http://itd1.cincinnatistate.edu/CPDM-WernkeB/Content/images/no-photo.jpg";
 
 		private bool GetDBConnection( ref SqlConnection SQLConn ) {
 			try
