@@ -49,6 +49,8 @@ IF OBJECT_ID('uspAddRecipeIngredients')			IS NOT NULL DROP PROCEDURE uspAddRecip
 IF OBJECT_ID('uspDeleteUserAccount')			IS NOT NULL DROP PROCEDURE uspDeleteUserAccount 
 IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserRecipe 
 IF OBJECT_ID('uspUpdateRecipe')					IS NOT NULL DROP PROCEDURE uspUpdateRecipe 
+IF OBJECT_ID('uspAddToShoppingList')			IS NOT NULL DROP PROCEDURE uspAddToShoppingList 
+
                                                                                                                                                                                                                                                                                                                                                                                                
 -- --------------------------------------------------------------------------------
 -- Step #1: Create Tables
@@ -101,10 +103,10 @@ CREATE TABLE TIngredients
 
 CREATE TABLE TShoppingList
 (
-	 intShoppingListID	INTEGER			NOT NULL
-	,intUserID			INTEGER			NOT NULL
-	,intRecipeIngredientID INTEGER		NOT NULL
-	,CONSTRAINT RecipeIngredientList_UQ UNIQUE ( intUserID, intRecipeIngredientID )
+	 intShoppingListID		INTEGER			NOT NULL
+	,intUserID				INTEGER			NOT NULL
+	,intRecipeIngredientID	INTEGER			NOT NULL
+	--,CONSTRAINT RecipeIngredientList_UQ UNIQUE ( intUserID, intRecipeIngredientID )
 	,CONSTRAINT TShoppingList_PK PRIMARY KEY ( intShoppingListID )
 )
 
@@ -305,6 +307,15 @@ VALUES					 (1, 'Sweet White Onion' )
 						,(5000002, 9, 1, 'Quart')
 						,(5000002, 10, 1, 'Pint')
 						,(5000002, 8, 1, 'Gallon')
+						,(5000003, 8, 1.75, 'TSP')
+						,(5000003, 9, 1, 'TBSP')
+						,(5000003, 10, 0.75, 'OZ')
+						,(5000002, 11, 3, 'ML')
+						,(5000003, 12, 13, 'Gram')
+						,(5000004, 3, 2, 'Cup')
+						,(5000004, 9, 12, 'Quart')
+						,(5000004, 10, 17, 'Pint')
+						,(5000004, 8, 11, 'Gallon')
 
 INSERT INTO TShoppingList ( intShoppingListID, intUserID, intRecipeIngredientID )
 VALUES						 (1,1,1)
@@ -372,6 +383,8 @@ GO
 Create View VUserShoppingList
 AS
 SELECT	 TU.intUserID
+		,TR.intRecipeID
+		,TSL.intRecipeIngredientID
 		,TRI.intIngredientID
 		,TI.strIngredientName
 		,TRI.dblIngredientQuantity
@@ -1148,3 +1161,71 @@ BEGIN TRANSACTION
 	WHERE intRecipeID = @intRecipeID
 
 COMMIT TRANSACTION
+
+GO
+
+--SELECT * FROM TRecipes
+--EXECUTE uspUpdateRecipe 5000001, 'Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
+--									Step 2; Once the steak is seared reduce heat to Medium - Medium High add butter to the pan and let it melt. Once the butter has melted put in 2-3 "sticks" of rosemary and 3-4 garlic cloves quartered or halved in the butter. Cook the steak an additional 3 - 5 minutes 
+--									depending on how rare youd like it, while cooking spoon the melted butter over the steak. Step 3; Enjoy :)'
+--									, '-1', 40, 4, 'American', '-1', 'Dinner', '-1', 1
+--SELECT * FROM TRecipes
+		
+GO						 
+
+-- --------------------------------------------------------------------------------------------
+
+Create Procedure uspAddToShoppingList
+				 @intRecipeID	as INTEGER OUTPUT
+				,@intUserID		as INTEGER OUTPUT
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+
+	DECLARE @intShoppingListID		as INTEGER
+	DECLARE @intRecipeIngredientID	as INTEGER
+
+	-- Gets a list of RecipeIngredientIDs that do not already exist in the users shoppinglist
+	DECLARE getRecipeIngredientID CURSOR LOCAL FOR
+	SELECT intRecipeIngredientID
+	FROM TRecipeIngredients WHERE intRecipeID = @intRecipeID
+
+	--intRecipeIngredientID NOT IN (SELECT intRecipeIngredientID FROM TShoppingList WHERE intUserID = @intUserID) AND intRecipeID = @intRecipeID
+	OPEN getRecipeIngredientID
+
+	-- fetches first value from the cursor, then runs WHILE LOOP
+	FETCH NEXT FROM getRecipeIngredientID INTO @intRecipeIngredientID
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN	
+		
+
+		SELECT @intShoppingListID = MAX(intShoppingListID) + 1
+		FROM TShoppingList (TABLOCKX) -- Locks table till end of transaction
+
+		-- Defaults to 1 if none exist
+		SELECT @intShoppingListID = COALESCE ( @intShoppingListID, 1)
+
+		-- Inserts Ingredients into Shopping List with USERID where the RecipeIngredientID is tied to the RECIPEID OUTPUT
+		INSERT INTO TShoppingList	(intShoppingListID, intRecipeIngredientID, intUserID)
+		VALUES						(@intShoppinglistID, @intRecipeIngredientID, @intUserID) 
+
+		FETCH NEXT FROM getRecipeIngredientID INTO @intRecipeIngredientID
+	END
+	
+
+COMMIT TRANSACTION
+
+GO
+
+
+
+--Select * from VUserShoppingList WHERE intUserID = 1
+--select * from VRecipeIngredients  WHERE intRecipeID = 5000003
+--EXECUTE uspAddToShoppingList 5000003, 1
+--Select * from VUserShoppingList WHERE intUserID = 1
+--select * from VRecipeIngredients  WHERE intRecipeID = 5000003
+--SELECT *
+--FROM TRecipeIngredients WHERE intRecipeIngredientID NOT IN (SELECT intRecipeIngredientID FROM TShoppingList WHERE intUserID = 1) AND intRecipeID = 5000003

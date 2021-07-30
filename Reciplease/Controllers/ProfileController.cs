@@ -222,7 +222,13 @@ namespace Reciplease.Controllers
 				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
 				recipe.servings = (string)col["servings"]; // optional default to "-1"
 
-				if (recipe.title.Length == 0)
+               // if (col["diet"].Length == 0 || col["cuisines"].Length == 0 || col["dishTypes"].Length == 0 || col["readyinMinutes"].Length == 0 || col["servings"].Length == 0)
+               // {
+                  // return "-1";
+              //  }
+
+
+                if (recipe.title.Length == 0)
                 {
 					recipeContent.user.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
                     return View( recipeContent );
