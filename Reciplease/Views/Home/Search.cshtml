@@ -23,13 +23,17 @@ input[type=text] {
 			<input type="submit" name="btnSubmit" value="submit"/>
 		</div>
 	}
-					function AdvancedSearch() {
-					var AS = document.getElementById("AdvancedSearch");
-					AS.style.display = "block";  // <-- Set it to block
+				function AdvancedSearchToggle() {
+					var AS = document.getElementById("AdvcanedSearch");
+					if (AS.style.display === "none") {
+						AS.style.display = "block";
+					} else {
+						AS.style.display = "none";
 					}
+				}
+
 			
-			
-			<button onclick="AdvancedSearch()">Advanced Search</button>
+			<button onclick="AdvancedSearchToggle()">Advanced Search</button>
 
 			<div id="AdvancedSearch" style="display:none">
 				<label for="RecipeName">Recipe Title</label>
@@ -53,8 +57,6 @@ input[type=text] {
 				<label for="ingredients">Ingredients</label>
 				<input type="text" name="ingredients"  />
 		<br>
-				<label for="instructions">Instructions</label>
-				<textArea name="instructions" rows="10" cols="50" >@Model.SingleRecipe.instructions</textArea>
 			</div>
 
 	@if ( HttpContext.Current.Request.HttpMethod == "POST" )
