@@ -75,6 +75,8 @@
 					{
 							<p> No Nutrition Data Available </p>
 					}
+					       <a href="@Url.Action("CreateRecipe", "Profile", new { id = recipe.id })" class="button">
+          					@using ( Html.BeginForm( "EditRecipe", "Profile" ) ) Edit this recipe </a>
 					
 				</article>
 		
