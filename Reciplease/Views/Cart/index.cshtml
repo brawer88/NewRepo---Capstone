@@ -1,4 +1,3 @@
-
 @model Reciplease.Models.ShoppingCart	
 @{
 	ViewBag.Title = "Shopping Cart";
@@ -29,8 +28,8 @@
 					<!---Button--->
 						protected void btnDelte_Click(object sender, EventArgs e)
 							{
-								string[] ssid = Request.Cookies["Cart"].Values["id"].Split('#');
-								string[] sspname = Request.Cookies["Cart"].Values["pname"].Split('#');
+								string[] ssid = Request.Session["Cart"].Values["id"].Split('#');
+								string[] sspname = Request.Session["Cart"].Values["pname"].Split('#');
 
 								DataTable dt = new DataTable();
 								dt.Columns.Add("id");
@@ -54,30 +53,30 @@
 											dr1.Delete();
 											dt.AcceptChanges();
 										}
-										HttpCookie cookie;
-										cookie = Request.Cookies["Cart"];
-										cookie.Expires = DateTime.Now.AddDays(-1d);
-										Response.Cookies.Add(cookie);
+										HttpSession Session;
+										Session = Request.Session["Cart"];
+										Session.Expires = DateTime.Now.AddDays(-1d);
+										Response.Session.Add(Session);
 
-										cookie = Request.Cookies["Cart"];
+										Session = Request.Session["Cart"];
 
 										for (int j = 0; j < dt.Rows.Count; j++)
 										{
 											if (j == 0)
 											{
-												cookie.Values["id"] = dt.Rows[j]["id"].ToString();
-												cookie.Values["pname"] = dt.Rows[j]["pname"].ToString();
+												Session.Values["id"] = dt.Rows[j]["id"].ToString();
+												Session.Values["pname"] = dt.Rows[j]["pname"].ToString();
 											}
 											else
 											{
-												cookie.Values["id"] = cookie.Values["id"] + "#" + dt.Rows[j]["id"].ToString();
-												cookie.Values["pname"] = cookie.Values["pname"] + "#" + dt.Rows[j]["pname"].ToString();
+												Session.Values["id"] = Session.Values["id"] + "#" + dt.Rows[j]["id"].ToString();
+												Session.Values["pname"] = Session.Values["pname"] + "#" + dt.Rows[j]["pname"].ToString();
 											}
-											cookie.Expires = DateTime.Now.AddDays(1);
-											Response.Cookies.Add(cookie);
+											Session.Expires = DateTime.Now.AddDays(1);
+											Response.Session.Add(Session);
 										}
 										ddlShoppingCart.Items.Clear();
-										string[] ss = Request.Cookies["Cart"].Values["pname"].Split('#');
+										string[] ss = Request.Session["Cart"].Values["pname"].Split('#');
 										ddlCart.DataSource = ss;
 										ddlCart.DataBind();
 										ListItem cart = new ListItem("--Cart Content--", "0");
