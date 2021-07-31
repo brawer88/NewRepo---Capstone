@@ -47,12 +47,19 @@ else
 	</p>
 	
 	<p>
-		<label for="ingredients">*Ingredients</label>
-		<input type="text" name="ingredients" required />
-		<label for="ingredients">*Amount</label>
-		<input type="number" name="amounts" required />
-		<label for="ingredients">Measurement</label>
-		<input type="text" name="measurements" />
+		$('form').on('click', '.addRow', function() {
+                    var start = $('table'),
+                    newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
+                    <td><input type="text" name="measurements" /></td><td><p class="addRow">Add a Row</p></td></tr>');
+                    $(start).append(newRow);
+                });
+
+              })(); 
+
+            });
+		var start = $('table'),
+                newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
+		<td><input type="text" name="measurements" /></td><td><p name="addRow">Add a Row</p></td></tr>');
 		
 	</p>
 			
