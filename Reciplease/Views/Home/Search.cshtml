@@ -9,14 +9,44 @@
 <div id="user-profile-data">
 	@using ( Html.BeginForm( FormMethod.Post ) )
 	{
-	
-		
 		<div class="section">
 			<input type="text" id="query" name="SearchQuery" />
 			<input type="submit" name="btnSubmit" value="submit"/>
 		</div>
 	}
-	<!--Anything to display?-->
+					function AdvancedSearch() {
+					var AS = document.getElementById("AdvancedSearch");
+					AS.style.display = "block";  // <-- Set it to block
+					}
+			
+			
+			<button onclick="AdvancedSearch()">Advanced Search</button>
+
+			<div id="AdvancedSearch" style="display:none">
+				<label for="RecipeName">Recipe Title</label>
+				<input type="text" name="RecipeName" value=@Model.SingleRecipe.title  />
+			</div>
+				<label for="readyInMinutes">Ready In Minutes:</label>
+				<input type="number" name="readyInMinutes" value=@Model.SingleRecipe.readyInMinutes  />
+		<br>
+				<label for="servings">Servings:</label>
+				<input type="number" name="servings" value=@Model.SingleRecipe.servings  />
+		<br>
+				<label for="diets">Diet</label>
+				<input type="text" name="diets" value=@String.Join( ", ", @Model.SingleRecipe.diets) />
+		<br>
+				<label for="dishTypes">Dish Types</label>
+				<input type="text" name="dishTypes" value=@String.Join( ", ", @Model.SingleRecipe.dishTypes)  />
+		<br>
+				<label for="cuisines">Cuisines</label>
+				<input type="text" name="cuisines" value=@String.Join( ", ", @Model.SingleRecipe.cuisines ) />
+		<br>
+				<label for="ingredients">Ingredients</label>
+				<input type="text" name="ingredients"  />
+		<br>
+				<label for="instructions">Instructions</label>
+				<textArea name="instructions" rows="10" cols="50" >@Model.SingleRecipe.instructions</textArea>
+			</div>
 
 	@if ( HttpContext.Current.Request.HttpMethod == "POST" )
 	{
