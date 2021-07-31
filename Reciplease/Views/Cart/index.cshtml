@@ -23,7 +23,16 @@
 				</p>
 				
 				<p>
-					<label for="ingredients">Ingredients</label>
+						<table>
+						<tr><th>Ingredient:   </th>
+						<th>    Amount:       </th></tr>
+						@foreach ( Reciplease.Models.Ingredient ingredient in Model.ShoppingCart.GetFractionizedIngredients( ) )
+						{
+							<tr><td> @ingredient.name	
+							</td><td>@ingredient.amount 
+								 @ingredient.unit   </td></tr>
+						}
+						</table>
 					
 					<!---Button--->
 						protected void btnDelte_Click(object sender, EventArgs e)
@@ -89,6 +98,6 @@
 						
 				<br>
 				<!---Button to first log in to kroger's website then add to cart--->
-				
+				<a href="@Url.Action("KrogerSignin", "Cart", new { id = recipe.id })" class="button"> Check out </a>
 	}
 }
