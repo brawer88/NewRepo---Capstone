@@ -2,6 +2,10 @@
     padding-bottom: 20px;
 }
 
+img {
+  max-width: 60%;
+  height: auto;
+}
 .container { display: block; }
 .button {
   background-color: lightgreen;
