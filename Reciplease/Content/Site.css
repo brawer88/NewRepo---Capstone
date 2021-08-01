@@ -3,14 +3,18 @@
 }
 
 .container { display: block; }
-.button{
-	border: 2px solid black;
-	color:	lightblue;
-	padding: 15px 32px;
-	text-align: center;
-	display; inline-block;
-	font-size: 16px;
-	}
+.button {
+  background-color: lightgreen;
+  border: none;
+  color: black;
+  padding: 4px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 
 /* The snackbar - position it at the bottom and in the middle of the screen */
 #snackbar {
