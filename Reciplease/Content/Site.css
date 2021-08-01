@@ -4,8 +4,8 @@
 
 .container { display: block; }
 .button{
-	border: none;
-	color:	white;
+	border: 2px solid black;
+	color:	lightblue;
 	padding: 15px 32px;
 	text-align: center;
 	display; inline-block;
