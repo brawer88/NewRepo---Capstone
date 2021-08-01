@@ -212,8 +212,8 @@ ul, li {
 
 /*---------------------------------------------*/
 input {
-	outline: none;
-	border: none;
+	outline: 2px solid black;
+	border: 2px solid black;
 }
 
 textarea {
