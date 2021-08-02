@@ -14,6 +14,12 @@ namespace Reciplease.Controllers
         {
             CartContent cart = new CartContent( );
             Models.User u = new Models.User();
+
+			cart.user = u.GetUserSession( );
+			cart.cart = new Models.Cart
+			{
+				ingredients = new List<Ingredient>( )
+			};
             
             return View(cart);
         }
@@ -79,7 +85,7 @@ namespace Reciplease.Controllers
 		public ActionResult AuthCode( ){
 			string authcode = string.Empty;
 		
-			authcode = Convert.ToString( RouteData.Values["id"] );
+			authcode = Convert.ToString( Request["code"] );
 
 			User user = new User( );
 			user = user.GetUserSession( );

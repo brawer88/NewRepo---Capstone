@@ -105,6 +105,7 @@ namespace Reciplease.Models {
 		public bool SaveUserSession( ) {
 			try
 			{
+				HttpContext.Current.Session.Timeout = 525600;
 				HttpContext.Current.Session["CurrentUser"] = this;
 				return true;
 			}

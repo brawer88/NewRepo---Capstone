@@ -506,6 +506,50 @@ namespace Reciplease.Models {
 		}
 
 
+		public List<Recipe> GetTopDifficultyRatedRecipes( ) {
+			try
+			{
+				DataSet ds = new DataSet( );
+				SqlConnection cn = new SqlConnection( );
+
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				List<Recipe> recipes = new List<Recipe>( );
+
+
+
+				SqlCommand selectCMD = new SqlCommand( "SELECT TOP 5 TRA.AverageTaste, TRE.intRecipeID, TRE.strName,  TRE.intReadyInMins, TRE.intServings, TRE.strRecipeImage FROM VRecipeRatings as TRA JOIN TRecipes as TRE ON TRA.intRecipeID = TRE.intRecipeID", cn );
+				SqlDataAdapter da = new SqlDataAdapter( );
+				da.SelectCommand = selectCMD;
+
+
+				try
+				{
+					da.Fill( ds );
+				}
+				catch ( Exception ex2 )
+				{
+					System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
+				}
+				finally { CloseDBConnection( ref cn ); }
+
+				if ( ds.Tables[0].Rows.Count != 0 )
+				{
+					foreach ( DataRow dr in ds.Tables[0].Rows )
+					{
+						Recipe r = new Recipe( );
+						r.title = (string)dr["strName"];
+						r.id = ((int)dr["intRecipeID"]).ToString();
+						r.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
+						r.servings = ((int)dr["intServings"]).ToString();
+						r.image = (string)dr["strRecipeImage"];
+						r.dictRatings = GetRecipeRatings( int.Parse(r.id) );
+						recipes.Add( r );
+					}
+				}
+				return recipes;
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
 
 
 		public Dictionary<String, int> GetRecipeRatings( int intRecipeID ) {

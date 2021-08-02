@@ -13,11 +13,16 @@ namespace Reciplease.Controllers {
 	public class HomeController : Controller {
 		[HandleError]
 		public ActionResult Index( ) {
+
+			RecipesList recipes = new RecipesList( );
+			Database DB = new Database( );
+
+			recipes.recipes = DB.GetTopDifficultyRatedRecipes( );
 			
 			Models.HomeContent h = new Models.HomeContent
 			{
 				// get recipes to display
-				RecipesToDisplay = RecipeAPI.Get5RandomAPIRecipes( )
+				RecipesToDisplay = recipes
 				
 			};
 
@@ -32,13 +37,13 @@ namespace Reciplease.Controllers {
 			// testing testing testing
 			//Database DB = new Database( );
 
-			User u = new User( );
+			//User u = new User( );
 
-			u.Username = "Brawer";
-			u.Password = "reciplease2";
+			//u.Username = "Brawer";
+			//u.Password = "reciplease2";
 
-			u = u.Login( );
-			u.SaveUserSession( );
+			//u = u.Login( );
+			//u.SaveUserSession( );
 
 			//DB.DeleteAccount( 2 );
 

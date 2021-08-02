@@ -8,7 +8,6 @@
 <!-- Page Content  -->
 <div id="content" class="p-4 p-md-5 pt-5">
 	<div class="recipe-card">
-		<link rel="stylesheet" href="css/style2.css">
 
 		<!--maybe use js to call this? -->
 		@if ( Model.user.IsAuthenticated )
@@ -32,12 +31,6 @@
 					<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
 					<p>Servings : @Model.SingleRecipe.servings </p>
 
-					<ol>
-						@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
-						{
-							<li>@instruction</li>
-						}
-					</ol>
 					<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
 					<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
 					<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
@@ -48,35 +41,45 @@
 							<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
 						}
 					</table>
-					
-					
-					@try
-					{
-
-						var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
-						foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
+					<hr />
+					<h3>Instructions:</h3>
+					<ol>
+						@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
 						{
-							nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
+							<li>@instruction</li>
 						}
-						nutritionTable += "</table>";
+					</ol>
 
-						WriteLiteral( nutritionTable );
-					}
-					catch ( Exception e )
-					{
+
+					<div id="nutritionDiv" style="display:none">
+						@try
+						{
+
+							var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
+							foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
+							{
+								nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
+							}
+							nutritionTable += "</table>";
+
+							WriteLiteral( nutritionTable );
+						}
+						catch ( Exception e )
+						{
 							<p> No Nutrition Data Available </p>
-					}
-					
-				</article>
-		
-			
-		 		<!---Add to cart button--->
-		<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
-                       				Add to shopping cart </a>
+						}
+					</div>
+					<button class="button" id="btnNutrition" onclick="showNutrition()">Show Nutrition</button>
 
-				<!---End add to cart button--->
-		
-		
+				</article>
+
+
+		<!---Add to cart button--->
+		<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
+			Add to shopping cart
+		</a>
+
+		<!---End add to cart button--->
 		<!---End Display Recipe--->
 
 		<br>
@@ -131,92 +134,56 @@
 			}
 
 		</form>
-
-		
-<script type="text/javascript">
-  $(function() {
-    $('.star').rating('readOnly', true);
-    $('#rater').hide();
-    $('#rated').mouseover(function() {
-      $('#rated').hide();
-      $('#rater').show();
-    });
-
-    $('.auto-submit-star').rating({
-      callback: function(value, link) {
-        $.ajax({
-          type: "POST",
-          url: "/Home/RateRecipe",
-          data: $("#rate").serialize(),
-          dataType: "text/plain",
-          success: function(response) {
-            if (response != 'false') {
-              var data = eval('(' + response + ')');
-              alert('Your rating has been recorded');
-              $('#currentlyrated').html('Currently rated ' + data.AverageRating.toFixed(2) +
-                ' by ' + data.TotalRaters + ' people');
-            } else {
-              alert('You have already rated this article');
-            }
-            $('#rater').hide();
-            $('#rated').show();
-          },
-          error: function(response) {
-            alert('There was an error.');
-          }
-        });
-      }
-    });
-  });
-		</script>
+		<div id="snackbar">Some text some message..</div>
 
 	</div>
 </div>
-<div id="snackbar">Some text some message..</div>
+	
+
+<script>
+	function toggle() {
+		/**/
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action( "ToggleFavorite", "Home", new { id = Model.SingleRecipe.id } )',
+			async: true,
+			success: function (msg) {
+
+				if (msg.responseText == 0) {
+					$("#togglefavorite").prop("value", "UnFavorite");
+					var x = document.getElementById("snackbar");
+
+					// Add the "show" class to DIV
+					x.className = "show";
+
+					x.textContent = "Recipe Favorited"
+
+					// After 3 seconds, remove the show class from DIV
+					setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+				}
+				else if (msg.responseText == 1) {
+					$("#togglefavorite").prop("value", "Favorite");
+					var x = document.getElementById("snackbar");
+
+					// Add the "show" class to DIV
+					x.className = "show";
+
+					x.textContent = "Recipe UnFavorited"
+
+					// After 3 seconds, remove the show class from DIV
+					setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+				}
+
+			},
+			error: function () {
+				alert("Error toggling the favorite. Please contact developers.")
+			}
+		});
+	}
+
+</script>
+
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
-<script>
-	function toggle() {
-		/**/
-	$.ajax({
-        type: "POST",
-        url: '@Url.Action( "ToggleFavorite", "Home", new { id = Model.SingleRecipe.id } )',
-		async: true,
-        success: function (msg) {
-			
-			if (msg.responseText == 0) {
-				$("#togglefavorite").prop("value", "UnFavorite");
-				var x = document.getElementById("snackbar");
-
-				// Add the "show" class to DIV
-				x.className = "show";
-
-				x.textContent = "Recipe Favorited"
-
-				// After 3 seconds, remove the show class from DIV
-				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-			}
-			else if (msg.responseText == 1) {
-				$("#togglefavorite").prop("value", "Favorite");
-				var x = document.getElementById("snackbar");
-
-				// Add the "show" class to DIV
-				x.className = "show";
-
-				x.textContent = "Recipe UnFavorited"
-
-				// After 3 seconds, remove the show class from DIV
-				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-			}
-			
-        },
-        error: function () {
-            alert("Error toggling the favorite. Please contact developers.")
-        }
-    });
-	/**/
-
-}
-</script>

@@ -1,27 +1,26 @@
 @model Reciplease.Models.User
 @{
-	ViewBag.Title = "Index";
+	ViewBag.Title = "User Account";
 }
 <h2>@ViewBag.Title</h2>
 
-@if (!Model.IsAuthenticated) {
-	@Html.Partial("NotAuthenticated")
+@if ( !Model.IsAuthenticated )
+{
+	@Html.Partial( "NotAuthenticated" )
 }
-else {
+else
+{
 	// put something here
 
+
+
+<a class="button" href="~/Profile/CreateRecipe">Create Recipe</a>
+<a class="button" href="~/Profile/UserRecipes">View Your Recipes</a>
+<a class="button" href="~/Profile/UpdateUser">Update User</a>
+<a class="button-red" id="delete" onclick="deleteMe()" href="~/Profile/DeleteUser">Delete Account</a>
+
 }
-
-<a href="~/Profile/CreateRecipe">Create Recipe</a>
-<a href="~/Profile/UserRecipes">View Your Recipes</a>
-<a href="~/Profile/UpdateUser">Update User</a>
-<a id="delete" onclick="deleteMe()" href="~/Profile/DeleteUser">Delete Account</a>
-
-
 <script>
-	$(document).ready(function () {
-		SetActiveMenus('profile', 'index');
-	});
 
 	function deleteMe() {
 		let deleteConf = confirm("Are you sure you want to delete your account?");

@@ -6,18 +6,14 @@ using System.Web;
 namespace Reciplease.Models {
 	public class Cart {
 		// "milk" : "1 gal"
-		Dictionary<string, string> ingredients { get; set; }
+		public List<Ingredient> ingredients { get; set; }
 
 
-		public void AddToCart( string ingredient, string quantity, string measurement ) {
-			if (this.ingredients.ContainsKey( ingredient ))
+		public void AddToCart( Ingredient ingredient ) {
+			if (this.ingredients.Contains( ingredient ))
 			{
 				// combine ingredients
 
-			}
-			else
-			{
-				this.ingredients[ingredient] = quantity + " " + measurement;
 			}
 		}
 

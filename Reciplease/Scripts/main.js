@@ -18,6 +18,17 @@
 
 })(jQuery);
 
+function showNutrition() {
+	var AS = document.getElementById("nutritionDiv");
+	if (AS.style.display === "none") {
+		$("#btnNutrition").html("Hide Nutrition");
+		AS.style.display = "block";
+	} else {
+		$("#btnNutrition").html("Show Nutrition");
+		AS.style.display = "none";
+	}
+}
+
 // will update when procedures are in place
 function rateRecipe(UID, RecipeID, intDifficultyRating, intTasteRating) { // rating type is 1 for difficulty and 2 for taste
 	try {
