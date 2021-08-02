@@ -25,6 +25,8 @@ namespace Reciplease.Controllers
 		public ActionResult SignIn()
         {
             Models.User u = new Models.User();
+			u.previousPage = System.Web.HttpContext.Current.Request.UrlReferrer;
+			u.SaveUserSession( );
             return View(u);
         }
 
@@ -34,13 +36,15 @@ namespace Reciplease.Controllers
         {
             try
             {
+				string previous;
                 Models.User u = new Models.User();
+				
 
                 if (col["btnSubmit"] == "signin")
                 {
                     u.Username = col["Username"];
                     u.Password = col["Password"];
-
+					previous = col["previousPage"];
                     if (u.Username.Length == 0 || u.Password.Length == 0)
                     {
                         u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
@@ -52,7 +56,7 @@ namespace Reciplease.Controllers
                         if (u != null && u.UID > 0)
                         {
                             u.SaveUserSession();
-                            return RedirectToAction("Index");
+                            return Redirect(previous);
                         }
                         else
                         {

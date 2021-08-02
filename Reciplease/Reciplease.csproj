@@ -234,14 +234,7 @@
     <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Home\Recipe.cshtml" />
     <Content Include="Views\Profile\index.cshtml" />
-    <Content Include="Views\Account_Settings\Edit_Email" />
-    <Content Include="Views\Account_Settings\Edit_Info" />
-    <Content Include="Views\Cart\Add1" />
     <Content Include="Views\Cart\index.cshtml" />
-    <Content Include="Views\Cart\Price" />
-    <Content Include="Views\Cart\Quantity" />
-    <Content Include="Views\Cart\Remove1" />
-    <Content Include="Views\Cart\Remove_Item" />
     <Content Include="Views\Profile\EditRecipe.cshtml" />
     <Content Include="Views\Profile\CreateRecipe.cshtml" />
     <None Include="Views\Profile\Favorites.cshtml" />

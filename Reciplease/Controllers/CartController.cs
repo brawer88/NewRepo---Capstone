@@ -70,31 +70,20 @@ namespace Reciplease.Controllers
 			return Redirect( url );
 		}
 
-		public ActionResult GetKrogerAuthToken( ) {
-			User user = new User( );
-			user = user.GetUserSession( );
-
-			user.KrogerAuthTokens = KrogerAPI.GetKrogerToken( user.KrogerAuthCode );
-
-			user.SaveUserSession( );
-
-			return RedirectToAction( "index" );
-		}
-
-
 		public ActionResult AuthCode( ){
 			string authcode = string.Empty;
 		
-			authcode = Convert.ToString( Request["code"] );
+			authcode = Request["code"];
 
 			User user = new User( );
 			user = user.GetUserSession( );
 
 			user.KrogerAuthCode = authcode;
+			user.KrogerAuthTokens = KrogerAPI.GetKrogerToken( authcode );
 
 			user.SaveUserSession( );
 
-			return RedirectToAction( "GetKrogerAuthToken" );
+			return RedirectToAction( "index" );
 		}
 
         public ActionResult ShoppingCart()

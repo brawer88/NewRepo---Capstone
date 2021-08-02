@@ -24,6 +24,7 @@ namespace Reciplease.Models {
 		public List<Rating> Ratings;
 		public string KrogerAuthCode { get; set; }
 		public AuthCodes KrogerAuthTokens { get; set; }
+		public Uri previousPage { get; set; }
 
 
 		public enum ActionTypes {

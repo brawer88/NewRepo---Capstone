@@ -16,8 +16,12 @@ else
 	{
 		<div id="content" class="p-4 p-md-5 pt-5">
 			<div class="recipe-card">
-				<p>Auth Code: @Model.user.KrogerAuthCode</p>
-				<p>Access Tokens: @Model.user.KrogerAuthTokens</p>
+				@if ( @Model.user.KrogerAuthCode != null )
+				{
+					<p>Auth Code: @Model.user.KrogerAuthCode</p>
+					<p>Access Tokens: @Model.user.KrogerAuthTokens.ToString( )</p>
+				}
+
 				<p>
 					<table>
 						<tr>
