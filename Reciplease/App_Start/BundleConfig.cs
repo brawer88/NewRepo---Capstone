@@ -26,18 +26,14 @@ namespace Reciplease {
                       "~/Scripts/jquery-3.6.0.slim.js",
                       "~/Scripts/jquery-3.6.0.slim.min.js",
                       "~/Scripts/jquery-3.6.0.slim.min.map",
-                      "~/Scripts/jquery-3.6.0.js",
-					  "~/Scripts/keepAlive.js" ) );
+                      "~/Scripts/jquery-3.6.0.js") );
 			bundles.Add( new ScriptBundle( "~/bundles/js" ).Include(
 					  "~/Scripts/main.js",
 					  "~/Scripts/popper.js") );
 
 			bundles.Add( new StyleBundle( "~/Content/css" ).Include(
 					  "~/Content/bootstrap.min.css",
-					  "~/Content/site.css",
-					  "~/Content/profile.css",
-					  "~/Content/cartstyle.css",
-					  "~/Content/util1.css" ) );
+					  "~/Content/site.css" ) );
 		}
 	}
 }

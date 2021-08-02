@@ -105,8 +105,11 @@ namespace Reciplease.Controllers {
 			Models.HomeContent h = new Models.HomeContent( );
 			h.user = new Models.User( );
 			h.user = h.user.GetUserSession( );
+			
 
 			Database DB = new Database( );
+
+			h.user.Ratings = DB.GetUserRatings( h.user.UID );
 
 			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
 
@@ -144,12 +147,12 @@ namespace Reciplease.Controllers {
 		// will update when procedures are in place
 		[HandleError]
 		[HttpPost]
-		public JsonResult RateRecipe( int UID, int RecipeID, int intDifficultyRating, int intTasteRating ) {
+		public JsonResult RateRecipe( int UID, string RecipeID, int intDifficultyRating, int intTasteRating ) {
 			try
 			{
 				Models.Database db = new Models.Database( );
 				int intReturn = 0;
-				intReturn = db.RateRecipe( UID, RecipeID, intDifficultyRating, intTasteRating );
+				intReturn = db.RateRecipe( UID, int.Parse(RecipeID), intDifficultyRating, intTasteRating );
 				return Json( new { Status = intReturn } );
 			}
 			catch ( Exception ex )

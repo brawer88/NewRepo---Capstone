@@ -23,41 +23,14 @@ input[type=text] {
 			<input type="submit" name="btnSubmit" value="submit"/>
 		</div>
 	}
-				function AdvancedSearchToggle() {
-					var AS = document.getElementById("AdvcanedSearch");
-					if (AS.style.display === "none") {
-						AS.style.display = "block";
-					} else {
-						AS.style.display = "none";
-					}
-				}
 
 			
 			<button onclick="AdvancedSearchToggle()">Advanced Search</button>
 
 			<div id="AdvancedSearch" style="display:none">
-				<label for="RecipeName">Recipe Title</label>
-				<input type="text" name="RecipeName" value=@Model.SingleRecipe.title  />
+				<p>Testing the hidden part of the page</p>
 			</div>
-				<label for="readyInMinutes">Ready In Minutes:</label>
-				<input type="number" name="readyInMinutes" value=@Model.SingleRecipe.readyInMinutes  />
-		<br>
-				<label for="servings">Servings:</label>
-				<input type="number" name="servings" value=@Model.SingleRecipe.servings  />
-		<br>
-				<label for="diets">Diet</label>
-				<input type="text" name="diets" value=@String.Join( ", ", @Model.SingleRecipe.diets) />
-		<br>
-				<label for="dishTypes">Dish Types</label>
-				<input type="text" name="dishTypes" value=@String.Join( ", ", @Model.SingleRecipe.dishTypes)  />
-		<br>
-				<label for="cuisines">Cuisines</label>
-				<input type="text" name="cuisines" value=@String.Join( ", ", @Model.SingleRecipe.cuisines ) />
-		<br>
-				<label for="ingredients">Ingredients</label>
-				<input type="text" name="ingredients"  />
-		<br>
-			</div>
+
 
 	@if ( HttpContext.Current.Request.HttpMethod == "POST" )
 	{
@@ -70,7 +43,7 @@ input[type=text] {
 				<aside>
 					<a href="@Url.Action("Recipe", new { id = recipe.id })">
 						<span class="icon icon-play">
-							<img width="600" src="https://spoonacular.com/recipeImages/@recipe.image" alt=@recipe.title onerror="this.onerror = null; this.src = '/Content/images/no-photo.jpg'" ; />
+							<img src="https://spoonacular.com/recipeImages/@recipe.image" alt=@recipe.title onerror="this.onerror = null; this.src = '/Content/images/no-photo.jpg'" ; />
 						</span>
 					</a>
 				</aside>
@@ -104,3 +77,13 @@ input[type=text] {
 				}
 				}
 			</div>
+<script>				
+	function AdvancedSearchToggle() {
+		var AS = document.getElementById("AdvancedSearch");
+		if (AS.style.display === "none") {
+			AS.style.display = "block";
+		} else {
+			AS.style.display = "none";
+		}
+	}
+</script>

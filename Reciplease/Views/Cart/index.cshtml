@@ -1,4 +1,4 @@
-@model Reciplease.Models.ShoppingCart	
+@model Reciplease.Models.CartContent	
 @{
 	ViewBag.Title = "Shopping Cart";
 }
@@ -7,97 +7,105 @@
 <link rel="stylesheet" href="Reciplease/Reciplease/Views/Profile/Profile.css">
 
 
-	@if ( !Model.user.IsAuthenticated )
-		{
-			@Html.Partial( "NotAuthenticated" )
-		}
-		else
-			{
-				using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
-			{
-				<div id="content" class="p-4 p-md-5 pt-5">
-					<div class="recipe-card">
-						
-				<p>
-					<label for="RecipeName"></label>
-				</p>
-				
-				<p>
-						<table>
-						<tr><th>Ingredient:   </th>
-						<th>    Amount:       </th></tr>
-						@foreach ( Reciplease.Models.Ingredient ingredient in Model.ShoppingCart.GetFractionizedIngredients( ) )
-						{
-							<tr><td> @ingredient.name	
-							</td><td>@ingredient.amount 
-								 @ingredient.unit   </td></tr>
-						}
-						</table>
-					
-					<!---Button--->
-						protected void btnDelte_Click(object sender, EventArgs e)
-							{
-								string[] ssid = Request.Session["Cart"].Values["id"].Split('#');
-								string[] sspname = Request.Session["Cart"].Values["pname"].Split('#');
-
-								DataTable dt = new DataTable();
-								dt.Columns.Add("id");
-								dt.Columns.Add("pname");
-
-								DataRow dr;
-								for (int i = 0; i < ssid.Length; i++)
-								{
-									dr = dt.NewRow();
-									dr["id"] = ssid.GetValue(i);
-									dr["pname"] = sspname.GetValue(i);
-									dt.Rows.Add(dr);
-								}
-								if (ddlCart.SelectedValue.ToString() != "0")
-								{
-									DataRow[] drp = dt.Select("pname = '" + ddlCart.SelectedValue.ToString() + "'");
-									if (drp.Length > 0)
-									{
-										foreach (DataRow dr1 in drp)
-										{
-											dr1.Delete();
-											dt.AcceptChanges();
-										}
-										HttpSession Session;
-										Session = Request.Session["Cart"];
-										Session.Expires = DateTime.Now.AddDays(-1d);
-										Response.Session.Add(Session);
-
-										Session = Request.Session["Cart"];
-
-										for (int j = 0; j < dt.Rows.Count; j++)
-										{
-											if (j == 0)
-											{
-												Session.Values["id"] = dt.Rows[j]["id"].ToString();
-												Session.Values["pname"] = dt.Rows[j]["pname"].ToString();
-											}
-											else
-											{
-												Session.Values["id"] = Session.Values["id"] + "#" + dt.Rows[j]["id"].ToString();
-												Session.Values["pname"] = Session.Values["pname"] + "#" + dt.Rows[j]["pname"].ToString();
-											}
-											Session.Expires = DateTime.Now.AddDays(1);
-											Response.Session.Add(Session);
-										}
-										ddlShoppingCart.Items.Clear();
-										string[] ss = Request.Session["Cart"].Values["pname"].Split('#');
-										ddlCart.DataSource = ss;
-										ddlCart.DataBind();
-										ListItem cart = new ListItem("--Cart Content--", "0");
-										ddlCart.Items.Insert(0, cart);                
-									}
-								}
-							} 
-				<!---End--->
-				</p>
-						
-				<br>
-				<!---Button to first log in to kroger's website then add to cart--->
-				<a href="@Url.Action("KrogerSignin", "Cart", new { id = recipe.id })" class="button"> Check out </a>
+@if ( !Model.user.IsAuthenticated )
+	{
+		@Html.Partial( "NotAuthenticated" )
 	}
-}
+else
+	{
+		@using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+		{
+			<div id="content" class="p-4 p-md-5 pt-5">
+				<div class="recipe-card">
+						
+			<p>
+				<label for="RecipeName"></label>
+			</p>
+				
+			<p>
+					<table>
+					<tr><th>Ingredient:   </th>
+					<th>    Amount:       </th></tr>
+					@foreach ( Reciplease.Models.Ingredient ingredient in Model.ingredients )
+					{
+						<tr><td> @ingredient.name	
+						</td><td>@ingredient.amount 
+								@ingredient.unit   </td></tr>
+					}
+					</table>
+					
+				<!---Button--->
+					
+			<!---End--->
+			</p>
+						
+			<br>
+			<!---Button to first log in to kroger's website then add to cart--->
+			<a href="@Url.Action("KrogerSignin", "Cart")" class="button"> Check out </a>
+
+				</div>
+			</div>
+		}
+	}
+
+
+<script>
+protected void btnDelte_Click(object sender, EventArgs e)
+	{
+		string[] ssid = Request.Session["Cart"].Values["id"].Split('#');
+		string[] sspname = Request.Session["Cart"].Values["pname"].Split('#');
+
+		DataTable dt = new DataTable();
+		dt.Columns.Add("id");
+		dt.Columns.Add("pname");
+
+		DataRow dr;
+		for (int i = 0; i < ssid.Length; i++)
+		{
+			dr = dt.NewRow();
+			dr["id"] = ssid.GetValue(i);
+			dr["pname"] = sspname.GetValue(i);
+			dt.Rows.Add(dr);
+		}
+		if (ddlCart.SelectedValue.ToString() != "0")
+		{
+			DataRow[] drp = dt.Select("pname = '" + ddlCart.SelectedValue.ToString() + "'");
+			if (drp.Length > 0)
+			{
+				foreach (DataRow dr1 in drp)
+				{
+					dr1.Delete();
+					dt.AcceptChanges();
+				}
+				HttpSession Session;
+				Session = Request.Session["Cart"];
+				Session.Expires = DateTime.Now.AddDays(-1d);
+				Response.Session.Add(Session);
+
+				Session = Request.Session["Cart"];
+
+				for (int j = 0; j < dt.Rows.Count; j++)
+				{
+					if (j == 0)
+					{
+						Session.Values["id"] = dt.Rows[j]["id"].ToString();
+						Session.Values["pname"] = dt.Rows[j]["pname"].ToString();
+					}
+					else
+					{
+						Session.Values["id"] = Session.Values["id"] + "#" + dt.Rows[j]["id"].ToString();
+						Session.Values["pname"] = Session.Values["pname"] + "#" + dt.Rows[j]["pname"].ToString();
+					}
+					Session.Expires = DateTime.Now.AddDays(1);
+					Response.Session.Add(Session);
+				}
+				ddlShoppingCart.Items.Clear();
+				string[] ss = Request.Session["Cart"].Values["pname"].Split('#');
+				ddlCart.DataSource = ss;
+				ddlCart.DataBind();
+				ListItem cart = new ListItem("--Cart Content--", "0");
+				ddlCart.Items.Insert(0, cart);                
+			}
+		}
+	} 
+</script>

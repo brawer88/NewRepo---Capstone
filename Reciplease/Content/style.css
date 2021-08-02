@@ -161,6 +161,19 @@ pre {
   margin-bottom: 1rem;
   overflow: auto; }
 
+.button {
+  background-color: lightgreen;
+  border: none;
+  color: black;
+  padding: 4px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 figure {
   margin: 0 0 1rem; }
 

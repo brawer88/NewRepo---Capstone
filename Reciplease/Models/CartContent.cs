@@ -5,8 +5,8 @@ using System.Web;
 
 namespace Reciplease.Models {
 	public class CartContent {
-		Cart cart { get; set; }
-		User user { get; set; }
-
+		public Cart cart { get; set; }
+		public User user { get; set; }
+		public List<Ingredient> ingredients {get; set;}
 	}
 }
