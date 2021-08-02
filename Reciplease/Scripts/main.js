@@ -19,12 +19,13 @@
 })(jQuery);
 
 // will update when procedures are in place
-function rateRecipe(UID, RecipeID, Rating, intDifficultyRating, intTasteRating) { // rating type is 1 for difficulty and 2 for taste
+function rateRecipe(UID, RecipeID, intDifficultyRating, intTasteRating) { // rating type is 1 for difficulty and 2 for taste
 	try {
 		var ajaxData = { //json structure
-			UID: uid,
-			ID: id,
-			Rating: rating
+			UID: UID,
+			RecipeID: RecipeID,
+			intDifficultyRating: intDifficultyRating,
+			intTasteRating: intTasteRating
 		}
 
 		$.ajax({

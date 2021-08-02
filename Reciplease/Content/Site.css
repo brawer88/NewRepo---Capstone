@@ -3,8 +3,9 @@
 }
 
 img {
-  max-width: 60%;
-  height: auto;
+	width: 350px;
+	height: 350px;
+	object-fit: cover;
 }
 .container { display: block; }
 .button {

@@ -1,17 +1,10 @@
-@model Reciplease.Models.HomeContent
+﻿@model Reciplease.Models.HomeContent
 
 @{
 	ViewBag.Title = "Recipe";
 }
 <h2>@ViewBag.Title</h2>
-@*<head> already on layout page
-	<title>Reciplease</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/style.css">
-</head>*@
+
 <!-- Page Content  -->
 <div id="content" class="p-4 p-md-5 pt-5">
 	<div class="recipe-card">
@@ -22,11 +15,11 @@
 		{
 			if ( Model.user.IsAFavorite( Model.SingleRecipe.id ) )
 			{
-				<input type="button" class="btn-dark" id="togglefavorite" onclick="toggle()" value="UnFavorite" />
+				<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="UnFavorite" />
 			}
 			else
 			{
-				<input type="button" class="btn-dark" id="togglefavorite" onclick="toggle()" value="Favorite" />
+				<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="Favorite" />
 			}
 		}
 		<!---Display Recipe--->
@@ -35,7 +28,7 @@
 
 
 					<h2>@Model.SingleRecipe.title</h2>
-					<img width="960" src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
+					<img src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
 					<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
 					<p>Servings : @Model.SingleRecipe.servings </p>
 
@@ -63,7 +56,7 @@
 						var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
 						foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
 						{
-							nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" +@nutrient.PercentOfDailyNeeds + "%</td></tr>";
+							nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
 						}
 						nutritionTable += "</table>";
 
@@ -78,44 +71,9 @@
 		
 			
 		 		<!---Add to cart button--->
-		<a href="@Url.Action("AddToCart", "Cart", new { id = recipe.id })" class="button">
+		<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
                        				Add to shopping cart </a>
-				
-				<!---Quantity--->
-				<!---
-					<div class="container-fluid" style="padding-top: 15px;padding-bottom: 15px;">
-					<div class="row">
-					<div class="col">
-					<div class="form-group mb-2">
-					    <label for="quantity" class="sr-only">Quantity</label>
-					    <select class="form-control qty" id="quantity" name="quantity">
-					      <option value="1" selected>1</option>
-					      <option value="2">2</option>
-					      <option value="3">3</option>
-					      <option value="4">4</option>
-					      <option value="5">5</option>
-					      <option value="6">6</option>
-					      <option value="7">7</option>
-					      <option value="8">8</option>
-					      <option value="9">9</option>
-					      <option value="10">10</option>						    
-					    </select>
-					  </div>
-					</div>
-					<div class="col">
-				Commented out because I'm not exactly sure the quantity is needed here and may just be needed in the shopping cart--->
-				<!---End quantity--->
-						
-					<!---Button starts here--->
-					<button type="button" class="btn btn-primary salescloud-action" data-action-triggers="click" data-action-method="jsonp" 
-					data-action-endpoint="api/public/1.0/atc" data-action-components='{"product_id": "0a0da48b-4727-47ce-b927-1806327f1719", "channel": "c264b0cb-e130-4907-86a8-eb4d6f113b7f", "quantity": {"type": "selector", "value": ".qty"}, "commit": 1}'
-					data-action-on-processed='[{"type": "prependHTML", "target": ".container-fluid", "html": "<div class=\"alert alert-success\" role=\"alert\">Product has been added to cart!</div>"}]'
-					data-loading-text="Processing...">Add to cart</button>
-					<!---Button ends here--->
-						
-					</div>
-					</div>
-					</div>
+
 				<!---End add to cart button--->
 		
 		
@@ -124,25 +82,56 @@
 		<br>
 		<!---Rating System--->
 		<form id="Form1" method="post">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<style>
-			.checked {
-				color: orange;
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+			<style>
+				.checked {
+					color: orange;
+				}
+			</style>
+			@{
+				int DifficultyRate = 0;
+				int TasteRate = 0;
+
+				foreach ( Reciplease.Models.Rating r in Model.user.Ratings )
+				{
+					if ( r.intRecipeID == int.Parse( Model.SingleRecipe.id ) )
+					{
+						DifficultyRate = r.intDifficultyRating;
+						TasteRate = r.intTasteRating;
+					}
+				}
+
+				string[] DifficultyRates = new string[5];
+				if ( DifficultyRate > 0 ) { DifficultyRates[0] = "checked"; }
+				if ( DifficultyRate > 1 ) { DifficultyRates[1] = "checked"; }
+				if ( DifficultyRate > 2 ) { DifficultyRates[2] = "checked"; }
+				if ( DifficultyRate > 3 ) { DifficultyRates[3] = "checked"; }
+				if ( DifficultyRate > 4 ) { DifficultyRates[4] = "checked"; }
+				<p><b>Difficulty</b></p>
+				<span id="rate1" class="fa fa-star @DifficultyRates[0] rate-star"></span>
+				<span id="rate2" class="fa fa-star @DifficultyRates[1] rate-star"></span>
+				<span id="rate3" class="fa fa-star @DifficultyRates[2] rate-star"></span>
+				<span id="rate4" class="fa fa-star @DifficultyRates[3] rate-star"></span>
+				<span id="rate5" class="fa fa-star @DifficultyRates[4] rate-star"></span>
+
+				string[] TasteRatings = new string[5];
+				if ( TasteRate > 0 ) { TasteRatings[0] = "checked"; }
+				if ( TasteRate > 1 ) { TasteRatings[1] = "checked"; }
+				if ( TasteRate > 2 ) { TasteRatings[2] = "checked"; }
+				if ( TasteRate > 3 ) { TasteRatings[3] = "checked"; }
+				if ( TasteRate > 4 ) { TasteRatings[4] = "checked"; }
+				<p><b>Taste</b></p>
+				<span id="rate1" class="fa fa-star @TasteRatings[0] rate-star"></span>
+				<span id="rate2" class="fa fa-star @TasteRatings[1] rate-star"></span>
+				<span id="rate3" class="fa fa-star @TasteRatings[2] rate-star"></span>
+				<span id="rate4" class="fa fa-star @TasteRatings[3] rate-star"></span>
+				<span id="rate5" class="fa fa-star @TasteRatings[4] rate-star"></span>
+
+				<button id="rate11" onclick="rateRecipe(@Model.user.UID, @Model.SingleRecipe.id, 1, 2);" class="fa fa-star checked rate-star">test</button>
 			}
-		</style>
-		<p><b>Difficulty</b></p>
-		<span class="fa fa-star checked"></span>
-		<span class="fa fa-star checked"></span>
-		<span class="fa fa-star checked"></span>
-		<span class="fa fa-star"></span>
-		<span class="fa fa-star"></span>
-			
+
 		</form>
-		
-		<p id="currentlyrated" style="float:left;padding-left:20px;">
-   		 <%= Model.AverageRating > 0 ? "Currently rated " + Model.AverageRating.ToString("f") + " by " + Model.TotalRaters + " people" : "<span style=\"color:red\">No ratings</span>"%>
-   		 </p>
-		<!---- --->
+
 		
 <script type="text/javascript">
   $(function() {

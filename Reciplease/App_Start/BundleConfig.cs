@@ -33,10 +33,7 @@ namespace Reciplease {
 
 			bundles.Add( new StyleBundle( "~/Content/css" ).Include(
 					  "~/Content/bootstrap.min.css",
-					  "~/Content/site.css",
-					  "~/Content/profile.css",
-					  "~/Content/cartstyle.css",
-					  "~/Content/util1.css" ) );
+					  "~/Content/site.css" ) );
 		}
 	}
 }
