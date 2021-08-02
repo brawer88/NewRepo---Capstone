@@ -91,31 +91,25 @@ namespace Reciplease.Controllers
 			return RedirectToAction( "GetKrogerAuthToken" );
 		}
 
-        public ActionResult RecipeID()
+        public ActionResult ShoppingCart()
         {
             Models.HomeContent h = new Models.HomeContent();
             h.user = new Models.User();
             h.user = h.user.GetUserSession();
-
             Database DB = new Database();
 
             string RecipeID = Convert.ToString(RouteData.Values["id"]);
+            h.SingleRecipe = RecipeAPI.GetRecipeById(RecipeID);
 
-
-            string recipeID = string.Empty;
-
-            Database DB = new Database();
-
-           // recipeContent.SingleRecipe = DB.LoadRecipe(strRecipeID);
-
-            recipeID = Convert.ToString(RouteData.Values["id"]);
-
-            User user = new User();
-            user = user.GetUserSession();
-
+            if (RecipeID.Length > 0)
+                {
+                Database db = new Database();
+               // db.shoppingCart(int.Parse(RecipeID));
+                }
+          
             // user.ShoppingCart = recipeID;
-
-            user.SaveUserSession();
+           
+            h.user.SaveUserSession();
 
             return RedirectToAction("GetShoppingCart");
 
