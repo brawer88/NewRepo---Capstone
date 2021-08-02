@@ -13,64 +13,69 @@ else
 {
 	using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
 	{
-	<div id="content" class="p-4 p-md-5 pt-5">
-		<div class="recipe-card">
-			
-	<p>
-		<label for="RecipeName">*Recipe Title</label>
-		<input type="text" name="RecipeName" required/>
-	</p>
-			
-	<p>
-		<label for="readyInMinutes">*Ready In Minutes:</label>
-		<input type="number" name="readyInMinutes" required />
-	</p>
-	
-	<p>
-		<label for="servings">*Servings:</label>
-		<input type="number" name="servings" required/>
-	</p>
-	
-	<p>
-		<label for="diets">Diet</label>
-		<input type="text" name="diets" />
-	</p>
-	
-	<p>
-		<label for="dishTypes">*Dish Types</label>
-		<input type="text" name="dishTypes" required />
-	</p>
-			
-	<p>
-		<label for="cuisines">Cuisines</label>
-		<input type="text" name="cuisines" />
-	</p>
-	
-	<script>
-		$('form').on('click', '.addRow', function() {
-                    var start = $('table'),
-                    newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
-                    <td><input type="text" name="measurements" /></td><td><p class="addRow">Add a Row</p></td></tr>');
-                    $(start).append(newRow);
-                });
+		<div id="content" class="p-4 p-md-5 pt-5">
+			<div class="recipe-card">
 
-              })(); 
+				<p>
+					<label for="RecipeName">*Recipe Title</label>
+					<input type="text" name="RecipeName" required />
+				</p>
 
-            });
-		var start = $('table'),
-                newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
-		<td><input type="text" name="measurements" /></td><td><p name="addRow">Add a Row</p></td></tr>');
-		
-	</script>
-			
-	<p>
-		<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
-		<textArea name="instructions" rows="10" cols="50" required></textArea>
-	</p>
-	<br>
-	
-		<input type="Submit" class="button" id="btnSubmit" name="btnSubmit" />
+				<p>
+					<label for="readyInMinutes">Ready In Minutes:</label>
+					<input type="number" name="readyInMinutes" />
+				</p>
+
+				<p>
+					<label for="servings">*Servings:</label>
+					<input type="number" name="servings" required />
+				</p>
+
+				<p>
+					<label for="diets">Diet</label>
+					<input type="text" name="diets" />
+				</p>
+
+				<p>
+					<label for="dishTypes">Dish Types</label>
+					<input type="text" name="dishTypes" />
+				</p>
+
+				<p>
+					<label for="cuisines">Cuisines</label>
+					<input type="text" name="cuisines" />
+				</p>
+
+				<p>
+					<label for="ingredients">*Ingredients</label>
+					<input type="text" name="cuisines" required/>
+				</p>
+
+				<p>
+					<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
+					<textArea name="instructions" rows="25" cols="50" required></textArea>
+				</p>
+				<br>
+
+				<input type="Submit" class="button" id="btnSubmit" name="btnSubmit" />
+			</div>
 		</div>
-	</div>
 	}
 }
+
+<script>
+	$('form').on('click', '.addRow', function () {
+		var start = $('table'),
+			newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
+				< td > <input type="text" name="measurements" /></td > <td><p class="addRow">Add a Row</p></td></tr > ');
+					$(start).append(newRow);
+	});
+
+			  }) ();
+
+			});
+	var start = $('table'),
+		newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
+			< td > <input type="text" name="measurements" /></td > <td><p name="addRow">Add a Row</p></td></tr > ');
+
+</script>

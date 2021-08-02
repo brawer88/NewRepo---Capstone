@@ -517,7 +517,7 @@ namespace Reciplease.Models {
 
 
 
-				SqlCommand selectCMD = new SqlCommand( "SELECT TOP 5 TRA.AverageTaste, TRE.intRecipeID, TRE.strName,  TRE.intReadyInMins, TRE.intServings, TRE.strRecipeImage FROM VRecipeRatings as TRA JOIN TRecipes as TRE ON TRA.intRecipeID = TRE.intRecipeID", cn );
+				SqlCommand selectCMD = new SqlCommand( " SELECT TOP 5 TRA.AverageTaste, TRE.intRecipeID, TRE.strName,  TRE.intReadyInMins, TRE.intServings, TRE.strRecipeImage FROM VRecipeRatings as TRA JOIN TRecipes as TRE ON TRA.intRecipeID = TRE.intRecipeID ORDER BY AverageTaste DESC", cn );
 				SqlDataAdapter da = new SqlDataAdapter( );
 				da.SelectCommand = selectCMD;
 
@@ -543,6 +543,11 @@ namespace Reciplease.Models {
 						r.servings = ((int)dr["intServings"]).ToString();
 						r.image = (string)dr["strRecipeImage"];
 						r.dictRatings = GetRecipeRatings( int.Parse(r.id) );
+						if ( r.image.Length < 5 || r.image.Equals( "/Content/images/no-photo.jpg" ) )
+						{
+							r.image = FailedImagePath;
+						}
+
 						recipes.Add( r );
 					}
 				}

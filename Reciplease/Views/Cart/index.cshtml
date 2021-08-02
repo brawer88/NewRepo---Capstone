@@ -19,7 +19,8 @@ else
 				@if ( @Model.user.KrogerAuthCode != null )
 				{
 					<p>Auth Code: @Model.user.KrogerAuthCode</p>
-					<p>Access Tokens: @Model.user.KrogerAuthTokens.ToString( )</p>
+					<p>Access Token: @Model.user.KrogerAuthTokens.access_token</p>
+					<p>Refresh Token: @Model.user.KrogerAuthTokens.refresh_token</p>
 				}
 
 				<p>
