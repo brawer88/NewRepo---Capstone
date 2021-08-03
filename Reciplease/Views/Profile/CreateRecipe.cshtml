@@ -16,48 +16,103 @@ else
 		<div id="content" class="p-4 p-md-5 pt-5">
 			<div class="recipe-card">
 
-				<p>
-					<label for="RecipeName">*Recipe Title</label>
-					<input type="text" name="RecipeName" required />
-				</p>
+				@if ( Model.SingleRecipe != null )
+				{
+					<p>
+						<label for="RecipeName">*Recipe Title</label>
+						<input type="text" name="RecipeName" value="@Model.SingleRecipe.title" required />
+					</p>
 
-				<p>
-					<label for="readyInMinutes">Ready In Minutes:</label>
-					<input type="number" name="readyInMinutes" />
-				</p>
+					<p>
+						<label for="readyInMinutes">Ready In Minutes:</label>
+						<input type="number" name="readyInMinutes" value="@Model.SingleRecipe.readyInMinutes" required />
+					</p>
 
-				<p>
-					<label for="servings">*Servings:</label>
-					<input type="number" name="servings" required />
-				</p>
+					<p>
+						<label for="servings">*Servings:</label>
+						<input type="number" name="servings" value="@Model.SingleRecipe.servings" required />
+					</p>
 
-				<p>
-					<label for="diets">Diet</label>
-					<input type="text" name="diets" />
-				</p>
+					<p>
+						<label for="diets">Diet</label>
+						<input type="text" name="diets" value="@String.Join(",", Model.SingleRecipe.diets)" />
+					</p>
 
-				<p>
-					<label for="dishTypes">Dish Types</label>
-					<input type="text" name="dishTypes" />
-				</p>
+					<p>
+						<label for="dishTypes">Dish Types</label>
+						<input type="text" name="dishTypes" value="@String.Join(",", Model.SingleRecipe.dishTypes)" />
+					</p>
 
-				<p>
-					<label for="cuisines">Cuisines</label>
-					<input type="text" name="cuisines" />
-				</p>
+					<p>
+						<label for="cuisines">Cuisines</label>
+						<input type="text" name="cuisines" value="@String.Join(",", Model.SingleRecipe.cuisines)" />
+					</p>
 
-				<p>
-					<label for="ingredients">*Ingredients</label>
-					<input type="text" name="cuisines" required/>
-				</p>
+					<p>
+						@*<label for="ingredients">*Ingredients</label>
+						<input type="text" name="ingredients" required />
+						<label for="amounts">*Amount</label>
+						<input type="text" name="amounts" required />
+						<label for="measurements">*Measurement</label>
+						<input type="text" name="measurements" required />*@
+					</p>
 
-				<p>
-					<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
-					<textArea name="instructions" rows="25" cols="50" required></textArea>
-				</p>
-				<br>
+					<p>
+						<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
+						<textArea name="instructions" rows="10" cols="50" required>@String.Join("\n", Model.SingleRecipe.SplitInstructions())</textArea>
+					</p>
+					<br />
+				}
+				else
+				{
+					<p>
+						<label for="RecipeName">*Recipe Title</label>
+						<input type="text" name="RecipeName" required />
+					</p>
+
+					<p>
+						<label for="readyInMinutes">Ready In Minutes:</label>
+						<input type="number" name="readyInMinutes" required />
+					</p>
+
+					<p>
+						<label for="servings">*Servings:</label>
+						<input type="number" name="servings" required />
+					</p>
+
+					<p>
+						<label for="diets">Diet</label>
+						<input type="text" name="diets" />
+					</p>
+
+					<p>
+						<label for="dishTypes">Dish Types</label>
+						<input type="text" name="dishTypes" />
+					</p>
+
+					<p>
+						<label for="cuisines">Cuisines</label>
+						<input type="text" name="cuisines" />
+					</p>
+
+					<p>
+						<label for="ingredients">*Ingredients</label>
+						<input type="text" name="ingredients" required />
+						<label for="amounts">*Amount</label>
+						<input type="text" name="amounts" required />
+						<label for="measurements">*Measurement</label>
+						<input type="text" name="measurements" required />
+					</p>
+
+					<p>
+						<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
+						<textArea name="instructions" rows="10" cols="50" required></textArea>
+					</p>
+					<br />
+				}
 
 				<input type="Submit" class="button" id="btnSubmit" name="btnSubmit" />
+
 			</div>
 		</div>
 	}

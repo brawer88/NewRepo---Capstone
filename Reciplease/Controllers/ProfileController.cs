@@ -25,7 +25,7 @@ namespace Reciplease.Controllers
 		public ActionResult SignIn()
         {
             Models.User u = new Models.User();
-			u.previousPage = System.Web.HttpContext.Current.Request.UrlReferrer;
+			u.previousPage = System.Web.HttpContext.Current.Request.UrlReferrer.ToString();
 			u.SaveUserSession( );
             return View(u);
         }
@@ -36,15 +36,15 @@ namespace Reciplease.Controllers
         {
             try
             {
-				string previous;
                 Models.User u = new Models.User();
-				
 
-                if (col["btnSubmit"] == "signin")
+				u.previousPage = col["previousPage"];
+
+				if (col["btnSubmit"] == "signin")
                 {
                     u.Username = col["Username"];
                     u.Password = col["Password"];
-					previous = col["previousPage"];
+					
                     if (u.Username.Length == 0 || u.Password.Length == 0)
                     {
                         u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
@@ -52,15 +52,18 @@ namespace Reciplease.Controllers
                     }
                     else
                     {
-                        u = u.Login();
+						User newUser = new User( );
+						newUser = u.Login();
+						newUser.previousPage = u.previousPage;
+						u = newUser;
                         if (u != null && u.UID > 0)
                         {
                             u.SaveUserSession();
-                            return Redirect(previous);
+                            return Redirect( u.previousPage );
                         }
                         else
                         {
-                            u = new Models.User();
+							u.Password = String.Empty;
                             u.Username = col["Username"];
                             u.ActionType = Models.User.ActionTypes.LoginFailed;
                         }
@@ -163,14 +166,6 @@ namespace Reciplease.Controllers
             return View( MyRecipes );
         }
 
-		[HandleError]
-		public ActionResult CreateRecipe( ) {
-
-			Models.UserRecipeContent recipeContent = new UserRecipeContent( );
-			User u = new User( );
-			recipeContent.user = u.GetUserSession( );
-			return View( recipeContent );
-		}
 
 		[HandleError]
 		public ActionResult EditRecipe( ) {
@@ -191,6 +186,26 @@ namespace Reciplease.Controllers
 			return View( recipeContent );
 		}
 
+
+		[HandleError]
+		public ActionResult CreateRecipe( ) {
+
+			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
+
+			Models.UserRecipeContent recipeContent = new UserRecipeContent( );
+
+			if(strRecipeID.Length > 0)
+			{
+				Database db = new Database( );
+				recipeContent.SingleRecipe = db.LoadRecipe( strRecipeID );
+			}
+				
+
+			User u = new User( );
+			recipeContent.user = u.GetUserSession( );
+			return View( recipeContent );
+		}
+
 		[HandleError]
 		[HttpPost]
         public ActionResult CreateRecipe(FormCollection col)
@@ -202,13 +217,37 @@ namespace Reciplease.Controllers
                 Models.UserRecipeContent recipeContent = new UserRecipeContent();
                 recipeContent.user = u.GetUserSession();
 
+				string diets = "-1";
+				string cuisines = "-1";
+				string dishTypes = "-1";
+				recipe.readyInMinutes = "-1";
+				recipe.servings = "-1";
 
-                // example of getting data from the page in a post method
-                recipe.title = col["RecipeName"];
+
+				// example of getting data from the page in a post method
+				recipe.title = col["RecipeName"];
                 recipe.instructions = col["instructions"]; // required
-                recipe.diets = new List<string> { col["diets"] }; // optional default to "-1"
-                recipe.cuisines = new List<string> { col["cuisines"] }; // optional default to "-1"
-				recipe.dishTypes = new List<string> { col["dishTypes"] }; // optional default to "-1"
+				if ( col["diets"].Length > 0 )
+				{
+					diets = col["diets"]; // optional default to "-1"
+				}
+				if ( col["cuisines"].Length > 0 )
+				{
+					cuisines = col["cuisines"]; // optional default to "-1"
+				}
+				if ( col["dishTypes"].Length > 0 )
+				{
+					dishTypes = col["dishTypes"]; // optional default to "-1"
+				}
+				if ( col["readyinMinutes"].Length > 0 )
+				{
+					recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
+				}
+				if ( col["servings"].Length > 0 )
+				{
+					recipe.servings = col["servings"]; // optional default to "-1"
+				}
+
 				string[] ingredients = Request.Form.GetValues( "ingredients" );
 				string[] amounts = Request.Form.GetValues( "amounts" );
 				string[] measurements = Request.Form.GetValues( "measurements" );
@@ -222,34 +261,18 @@ namespace Reciplease.Controllers
 					ing.unit = measurements[index];
 					recipe.extendedIngredients.Add( ing );
 				}
+				
+                Database db = new Database();
+                int intSavedID = db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "/Content/images/no-photo.jpg", int.Parse(recipe.servings), cuisines, diets, dishTypes, "-1", recipeContent.user.UID, -1);
+				foreach ( Ingredient ingredient in recipe.extendedIngredients )
+				{
+					// now save ingredients
+					int IngredientID = db.SaveIngredient( 0, ingredient.name );
 
-				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
-				recipe.servings = (string)col["servings"]; // optional default to "-1"
-
-               // if (col["diet"].Length == 0 || col["cuisines"].Length == 0 || col["dishTypes"].Length == 0 || col["readyinMinutes"].Length == 0 || col["servings"].Length == 0)
-               // {
-                  // return "-1";
-              //  }
-
-
-                if (recipe.title.Length == 0)
-                {
-					recipeContent.user.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
-                    return View( recipeContent );
-                }
-                else
-                { 
-                    Database db = new Database();
-                    int intSavedID = db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "/Content/images/no-photo.jpg", int.Parse(recipe.servings), String.Join(",", recipe.cuisines), String.Join(",", recipe.diets), String.Join(",", recipe.dishTypes), "-1", recipeContent.user.UID, -1);
-					foreach ( Ingredient ingredient in recipe.extendedIngredients )
-					{
-						// now save ingredients
-						int IngredientID = db.SaveIngredient( 0, ingredient.name );
-
-						db.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
-					}
-					return RedirectToAction( "UserRecipes" );
-                }
+					db.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+				}
+				return RedirectToAction( "UserRecipes" );
+                
             }
             catch (Exception ex)
             {
@@ -257,9 +280,7 @@ namespace Reciplease.Controllers
                 return View(recipeContent);
             }
         }
-
-
-
+			   
 
 		[HandleError]
 		[HttpPost]

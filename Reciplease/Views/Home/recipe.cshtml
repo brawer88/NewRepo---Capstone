@@ -22,62 +22,63 @@
 			}
 		}
 		<!---Display Recipe--->
-				<article>
+		<article>
+					   
+			<h2>@Model.SingleRecipe.title</h2>
+			<img src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
+			<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
+			<p>Servings : @Model.SingleRecipe.servings </p>
+
+			<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
+			<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
+			<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
+			<table>
+				<tr><th>Ingredient:</th><th>Amount:</th></tr>
+				@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
+				{
+					<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
+				}
+			</table>
+			<hr />
+			<h3>Instructions:</h3>
+			<ol>
+				@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
+				{
+					<li>@instruction</li>
+				}
+			</ol>
 
 
+			<div id="nutritionDiv" style="display:none">
+				@try
+				{
 
-					<h2>@Model.SingleRecipe.title</h2>
-					<img src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
-					<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
-					<p>Servings : @Model.SingleRecipe.servings </p>
+					var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
+					foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
+					{
+						nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
+					}
+					nutritionTable += "</table>";
 
-					<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
-					<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
-					<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
-					<table>
-						<tr><th>Ingredient:</th><th>Amount:</th></tr>
-						@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
-						{
-							<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
-						}
-					</table>
-					<hr />
-					<h3>Instructions:</h3>
-					<ol>
-						@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
-						{
-							<li>@instruction</li>
-						}
-					</ol>
+					WriteLiteral( nutritionTable );
+				}
+				catch ( Exception e )
+				{
+					<p> No Nutrition Data Available </p>
+				}
+			</div>
+			<button class="button" id="btnNutrition" onclick="showNutrition()">Show Nutrition</button>
 
-
-					<div id="nutritionDiv" style="display:none">
-						@try
-						{
-
-							var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
-							foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
-							{
-								nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
-							}
-							nutritionTable += "</table>";
-
-							WriteLiteral( nutritionTable );
-						}
-						catch ( Exception e )
-						{
-							<p> No Nutrition Data Available </p>
-						}
-					</div>
-					<button class="button" id="btnNutrition" onclick="showNutrition()">Show Nutrition</button>
-
-				</article>
+		</article>
 
 
 		<!---Add to cart button--->
-		<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
-			Add to shopping cart
-		</a>
+		@if ( Model.user.IsAuthenticated )
+		{
+			<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
+				Add to shopping cart
+			</a>
+		}
 
 		<!---End add to cart button--->
 		<!---End Display Recipe--->

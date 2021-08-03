@@ -9,12 +9,8 @@ namespace Reciplease.Models {
 		public List<Ingredient> ingredients { get; set; }
 
 
-		public void AddToCart( Ingredient ingredient ) {
-			if (this.ingredients.Contains( ingredient ))
-			{
-				// combine ingredients
-
-			}
+		public void AddToCart( string strRecipeID ) {
+			
 		}
 
 		// method to update
