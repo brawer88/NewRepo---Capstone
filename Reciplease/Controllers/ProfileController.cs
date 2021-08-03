@@ -176,11 +176,21 @@ namespace Reciplease.Controllers
 			Database DB = new Database( );
 
 			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
-
-			// check if recipe id exists
-			if ( DB.RecipeExists( strRecipeID ) == true )
+			if ( strRecipeID.Length > 0 )
 			{
-				recipeContent.SingleRecipe = DB.LoadRecipe( strRecipeID );
+				// check if recipe id exists
+				if ( DB.RecipeExists( strRecipeID ) == true )
+				{
+					recipeContent.SingleRecipe = DB.LoadRecipe( strRecipeID );
+				}
+				else
+				{
+					recipeContent.SingleRecipe = null;
+				}
+			}
+			else
+			{
+				recipeContent.SingleRecipe = null;
 			}
 
 			return View( recipeContent );
@@ -268,13 +278,35 @@ namespace Reciplease.Controllers
 				{
 					// now save ingredients
 					int IngredientID = db.SaveIngredient( 0, ingredient.name );
+					
 
-					db.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+					try
+					{
+						db.AddRecipeIngredients( intSavedID, IngredientID, double.Parse(ingredient.amount), ingredient.unit );
+					}
+					catch (Exception)
+					{
+						char[] charSeparators = new char[] { '\\', '/', ' ' };
+						string[] splitAmounts = ingredient.amount.Split( charSeparators );
+						double dblAmount = 0;
+						if (splitAmounts.Length > 2 )
+						{
+							splitAmounts[1] = (double.Parse( splitAmounts[1] ) + double.Parse( splitAmounts[0] ) * double.Parse( splitAmounts[2] )).ToString();
+							dblAmount = double.Parse( splitAmounts[1] ) / double.Parse( splitAmounts[2] );
+						}
+						else
+						{
+							dblAmount = double.Parse( splitAmounts[0] ) / double.Parse( splitAmounts[1] );
+						}
+
+						db.AddRecipeIngredients( intSavedID, IngredientID, dblAmount, ingredient.unit );
+					}
+					
 				}
 				return RedirectToAction( "UserRecipes" );
                 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Models.UserRecipeContent recipeContent = new UserRecipeContent();
                 return View(recipeContent);

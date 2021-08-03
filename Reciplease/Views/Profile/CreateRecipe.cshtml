@@ -48,15 +48,17 @@ else
 						<input type="text" name="cuisines" value="@String.Join(",", Model.SingleRecipe.cuisines)" />
 					</p>
 
-					<p>
-						@*<label for="ingredients">*Ingredients</label>
-						<input type="text" name="ingredients" required />
-						<label for="amounts">*Amount</label>
-						<input type="text" name="amounts" required />
-						<label for="measurements">*Measurement</label>
-						<input type="text" name="measurements" required />*@
-					</p>
-
+					foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.extendedIngredients )
+					{
+						<p>
+							<label for="ingredients">*Ingredients</label>
+							<input type="text" name="ingredients" value="@ingredient.name" required />
+							<label for="amounts">*Amount</label>
+							<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" value="@ingredient.amount" required />
+							<label for="measurements">*Measurement</label>
+							<input type="text" name="measurements" value="@ingredient.unit" required />
+						</p>
+					}
 					<p>
 						<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
 						<textArea name="instructions" rows="10" cols="50" required>@String.Join("\n", Model.SingleRecipe.SplitInstructions())</textArea>
@@ -99,7 +101,7 @@ else
 						<label for="ingredients">*Ingredients</label>
 						<input type="text" name="ingredients" required />
 						<label for="amounts">*Amount</label>
-						<input type="text" name="amounts" required />
+						<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" required />
 						<label for="measurements">*Measurement</label>
 						<input type="text" name="measurements" required />
 					</p>
