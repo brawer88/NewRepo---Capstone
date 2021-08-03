@@ -10,7 +10,36 @@ namespace Reciplease.Models {
 
 
 		public void AddToCart( string strRecipeID ) {
-			
+			Database db = new Database( );
+
+			List<Ingredient> incomingIngredients = db.GetIngredients( strRecipeID );
+
+			foreach (Ingredient i in incomingIngredients)
+			{
+				Ingredient found = null;
+				foreach ( Ingredient c in ingredients )
+				{
+					if ( i.name == c.name )
+					{
+						found = c;
+					}
+				}
+
+				if ( found != null )
+				{
+					int foundIndex = ingredients.IndexOf( found );
+					found.amount = (double.Parse(found.amount) + double.Parse( i.amount)).ToString();
+					ingredients[foundIndex] = found;
+				}
+				else
+				{
+					ingredients.Add( i );
+				}				
+			}
+			User u = new User( );
+			u = u.GetUserSession();
+
+			SaveCartSession( );
 		}
 
 		// method to update
@@ -23,6 +52,7 @@ namespace Reciplease.Models {
 		public bool SaveCartSession( ) {
 			try
 			{
+				HttpContext.Current.Session.Timeout = 525600; 
 				HttpContext.Current.Session["Cart"] = this;
 				return true;
 			}
@@ -33,7 +63,10 @@ namespace Reciplease.Models {
 		public Cart GetCartSession( ) {
 			try
 			{
-				Cart cart= new Cart( );
+				Cart cart= new Cart
+				{
+					ingredients = new List<Ingredient>()
+				};
 				if ( HttpContext.Current.Session["Cart"] == null )
 				{
 					return cart;

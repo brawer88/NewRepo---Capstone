@@ -14,8 +14,8 @@
 		<div class="row">
 			<div class="recipe-card">
 				<article>
-					<a href="@Url.Action( "UserSingleRecipe", "Profile", new { id = recipe.id } )">
-						<p>@recipe.title</p>
+					<a href="@Url.Action( "UserSingleRecipe", "Profile", new { id = recipe.id } )" class="button">
+						@recipe.title
 					</a>
 					<p>Ready In: @recipe.readyInMinutes minutes</p>
 					<p>Servings: @recipe.servings</p>

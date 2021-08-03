@@ -16,10 +16,8 @@ namespace Reciplease.Controllers
             Models.User u = new Models.User();
 
 			cart.user = u.GetUserSession( );
-			cart.cart = new Models.Cart
-			{
-				ingredients = new List<Ingredient>( )
-			};
+			cart.cart = new Cart( );
+			cart.cart = cart.cart.GetCartSession( );
             
             return View(cart);
         }

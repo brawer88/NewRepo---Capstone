@@ -212,7 +212,7 @@ namespace Reciplease.Models {
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
-		private List<Ingredient> GetIngredients( string strRecipeID ) {
+		public List<Ingredient> GetIngredients( string strRecipeID ) {
 			List<Ingredient> ingredients = new List<Ingredient>( );
 			DataSet ds = new DataSet( );
 			SqlConnection cn = new SqlConnection( );
