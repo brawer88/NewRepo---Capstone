@@ -1,4 +1,4 @@
-﻿@model Reciplease.Models.HomeContent
+@model Reciplease.Models.HomeContent
 
 @{
 	ViewBag.Title = "Search";
@@ -14,6 +14,7 @@ input[type=text] {
 </style>
 
 <h2>Search</h2>
+<br />
 
 <div id="user-profile-data">
 	@using ( Html.BeginForm( FormMethod.Post ) )
@@ -24,12 +25,49 @@ input[type=text] {
 		</div>
 	}
 
+			<br />
 			
 			<button onclick="AdvancedSearchToggle()">Advanced Search</button>
 
-			<div id="AdvancedSearch" style="display:none">
-				<p>Testing the hidden part of the page</p>
-			</div>
+		<br />
+	<br />
+
+			
+			@using (Html.BeginForm(FormMethod.Post))
+			{
+				<div id="AdvancedSearch" style="display:none">
+
+					<label for="intolerances">Intolerances:</label>
+					<input type='text' name="hintolerances" value=@Model.searchItems.intolerances />
+
+					<label for="diets">Diet:</label>
+					<input type='text' name="hdiets" value=@Model.searchItems.diets />
+
+					<label for="cuisine">Cuisine:</label>
+					<input type='text' name="hcuisine" value=@Model.searchItems.cuisine />
+
+					<label for="ingredients">Ingredient:</label>
+					<input type='text' name="hingredients" value=@Model.searchItems.ingredients />
+
+					<label for="intolerances">Intolerances:</label>
+					<input type='text' name="hintolerances" value=@Model.searchItems.intolerances />
+
+					<label for="">Excluded Ingredient:</label>
+					<input type='text' name="hexcludedIngredients" value=@Model.searchItems.excludedIngredients />
+
+					<label for="">Dish Type:</label>
+					<input type='text' name="htype" value=@Model.searchItems.type />
+
+					<br />
+					<br />
+
+					<input type="submit" name="btnSubmit" value="Search" />
+
+					<br />
+
+				</div>
+			}
+		
 
 
 	@if ( HttpContext.Current.Request.HttpMethod == "POST" )
