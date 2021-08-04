@@ -11,121 +11,127 @@ using (@Html.BeginForm("CreateRecipe", "Profile", FormMethod.Post, new { enctype
 	<div class="recipe-card">
 
 		@if (Model.SingleRecipe != null) {
-<p>
-	<label for="RecipeName">*Recipe Title</label>
-	<input type="text" name="RecipeName" value="@Model.SingleRecipe.title" required />
-</p>
+			<p>
+				<label for="RecipeName">*Recipe Title</label>
+				<input type="text" name="RecipeName" value="@Model.SingleRecipe.title" required />
+			</p>
 
-						<p>
-							<label for="readyInMinutes">Ready In Minutes:</label>
-							<input type="number" name="readyInMinutes" value="@Model.SingleRecipe.readyInMinutes" required />
-						</p>
+			<p>
+				<label for="readyInMinutes">Ready In Minutes:</label>
+				<input type="number" name="readyInMinutes" value="@Model.SingleRecipe.readyInMinutes" required />
+			</p>
 
-												<p>
-													<label for="servings">*Servings:</label>
-													<input type="number" name="servings" value="@Model.SingleRecipe.servings" required />
-												</p>
+			<p>
+			<label for="servings">*Servings:</label>
+			<input type="number" name="servings" value="@Model.SingleRecipe.servings" required />
+			</p>
 
-																		<p>
-																			<label for="diets">Diet</label>
-																			<input type="text" name="diets" value="@String.Join(",", Model.SingleRecipe.diets)" />
-																		</p>
+			<p>
+				<label for="diets">Diet</label>
+				<input type="text" name="diets" value="@String.Join(",", Model.SingleRecipe.diets)" />
+			</p>
 
-																								<p>
-																									<label for="dishTypes">Dish Types</label>
-																									<input type="text" name="dishTypes" value="@String.Join(",", Model.SingleRecipe.dishTypes)" />
-																								</p>
+			<p>
+				<label for="dishTypes">Dish Types</label>
+				<input type="text" name="dishTypes" value="@String.Join(",", Model.SingleRecipe.dishTypes)" />
+			</p>
 
-																														<p>
-																															<label for="cuisines">Cuisines</label>
-																															<input type="text" name="cuisines" value="@String.Join(",", Model.SingleRecipe.cuisines)" />
-																														</p> foreach (Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.extendedIngredients) {
-																								<p>
-																									<label for="ingredients">*Ingredients</label>
-																									<input type="text" name="ingredients" value="@ingredient.name" required />
-																									<label for="amounts">*Amount</label>
-																									<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" value="@ingredient.amount" required />
-																									<label for="measurements">*Measurement</label>
-																									<input type="text" name="measurements" value="@ingredient.unit" required />
-																								</p> }
-																	<p>
-																		<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
-																		<textArea name="instructions" rows="10" cols="50" required>@String.Join("\n", Model.SingleRecipe.SplitInstructions())</textArea>
-																	</p>
-																							<br /> }
-																						else {
-																	<p>
-																		<label for="RecipeName">*Recipe Title</label>
-																		<input type="text" name="RecipeName" required />
-																	</p>
+			<p>
+				<label for="cuisines">Cuisines</label>
+				<input type="text" name="cuisines" value="@String.Join(",", Model.SingleRecipe.cuisines)" />
+			</p> 
 
-																							<p>
-																								<label for="readyInMinutes">Ready In Minutes:</label>
-																								<input type="number" name="readyInMinutes" required />
-																							</p>
+			foreach (Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.extendedIngredients) {
+				<p>
+					<label for="ingredients">*Ingredients</label>
+					<input type="text" name="ingredients" value="@ingredient.name" required />
+					<label for="amounts">*Amount</label>
+					<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" value="@ingredient.amount" required />
+					<label for="measurements">*Measurement</label>
+					<input type="text" name="measurements" value="@ingredient.unit" required />
+				</p> 
+			}
 
-																													<p>
-																														<label for="servings">*Servings:</label>
-																														<input type="number" name="servings" required />
-																													</p>
+			<p>
+				<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
+				<textArea name="instructions" rows="10" cols="50" required>@String.Join("\n", Model.SingleRecipe.SplitInstructions())</textArea>
+			</p>
+			<br /> 
+		}
+		else
+		{
+		<p>
+			<label for="RecipeName">*Recipe Title</label>
+			<input type="text" name="RecipeName" required />
+		</p>
 
-																																			<p>
-																																				<label for="diets">Diet</label>
-																																				<input type="text" name="diets" />
-																																			</p>
+		<p>
+			<label for="readyInMinutes">Ready In Minutes:</label>
+			<input type="number" name="readyInMinutes" required />
+		</p>
 
-																																									<p>
-																																										<label for="dishTypes">Dish Types</label>
-																																										<input type="text" name="dishTypes" />
-																																									</p>
+		<p>
+			<label for="servings">*Servings:</label>
+			<input type="number" name="servings" required />
+		</p>
 
-																																															<p>
-																																																<label for="cuisines">Cuisines</label>
-																																																<input type="text" name="cuisines" />
-																																															</p>
+		<p>
+			<label for="diets">Diet</label>
+			<input type="text" name="diets" />
+		</p>
 
-																																																					<p>
-																																																						<label for="ingredients">*Ingredients</label>
-																																																						<input type="text" name="ingredients" required />
-																																																						<label for="amounts">*Amount</label>
-																																																						<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" required />
-																																																						<label for="measurements">*Measurement</label>
-																																																						<input type="text" name="measurements" required />
-																																																					</p>
+		<p>
+			<label for="dishTypes">Dish Types</label>
+			<input type="text" name="dishTypes" />
+		</p>
 
-																																																											<p>
-																																																												<label for="instructions">*Instructions (separated steps with a period or other punctuation to create a list of steps when viewing)</label>
-																																																												<textArea name="instructions" rows="10" cols="50" required></textArea>
-																																																											</p>
-																																																																	<br />}
+		<p>
+			<label for="cuisines">Cuisines</label>
+			<input type="text" name="cuisines" />
+		</p>
 
+		<p>
+			<label for="ingredients">*Ingredients</label>
+			<input type="text" name="ingredients" required />
+			<label for="amounts">*Amount</label>
+			<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]" required />
+			<label for="measurements">*Measurement</label>
+			<input type="text" name="measurements" required />
+		</p>
 
+		<p>
+			<label for="instructions">*Instructions <span class=instr>(separated steps with a period to create a list of steps when viewing)</span></label>
+			<textArea name="instructions" rows="10" cols="50" required></textArea>
+		</p>
+		<br />
+		}
+
+		<div class="container pt-4">
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="text-center">Ingredient</th>
+							<th class="text-center">Amount</th>
+							<th class="text-center">Measurement</th>
+						</tr>
+					</thead>
+					<tbody id="tbody"></tbody>
+				</table>
+			</div>
+			<button class="btn btn-md btn-primary"
+					id="addBtn" type="button">
+				Add Ingredient
+			</button>
+			<br />
+			<br />
+			<input type="Submit" class="button" id="btnSubmit" name="btnSubmit" />
+		</div>
 
 	</div>
 </div>}
 }
-<div class="container pt-4">
-	<div class="table-responsive">
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th class="text-center">Ingredient</th>
-					<th class="text-center">Amount</th>
-					<th class="text-center">Measurement</th>
-				</tr>
-			</thead>
-			<tbody id="tbody">
-			</tbody>
-		</table>
-	</div>
-	<button class="btn btn-md btn-primary"
-			id="addBtn" type="button">
-		Add Ingredient
-	</button>
-	<br />
-	<br />
-	<input type="Submit" class="button" id="btnSubmit" name="btnSubmit" />
-</div>
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

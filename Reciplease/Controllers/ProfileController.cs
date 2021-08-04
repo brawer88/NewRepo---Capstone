@@ -113,6 +113,7 @@ namespace Reciplease.Controllers
                         switch (at)
                         {
                             case Models.User.ActionTypes.InsertSuccessful:
+								u = u.Login( );
                                 u.SaveUserSession();
                                 return RedirectToAction("Index");
                             //break;

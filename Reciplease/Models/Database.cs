@@ -251,6 +251,46 @@ namespace Reciplease.Models {
 
 		}
 
+		public ShoppingList GetShoppingList( int UID ) {
+			ShoppingList list = new ShoppingList( );
+			DataSet ds = new DataSet( );
+			SqlConnection cn = new SqlConnection( );
+			if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+			Recipe recipe = new Recipe( );
+
+			SqlCommand selectCMD = new SqlCommand( "SELECT * FROM VUserShoppingList WHERE intUserID=" + UID, cn );
+			SqlDataAdapter da = new SqlDataAdapter( );
+			da.SelectCommand = selectCMD;
+
+
+			try
+			{
+				da.Fill( ds );
+			}
+			catch ( Exception ex2 )
+			{
+				System.Diagnostics.Debug.WriteLine( "getting user shopping list error: " + ex2.Message );
+			}
+			finally { CloseDBConnection( ref cn ); }
+
+			if ( ds.Tables[0].Rows.Count != 0 )
+			{
+				foreach ( DataRow dr in ds.Tables[0].Rows )
+				{
+					Ingredient ingredient = new Ingredient( );
+					ingredient.amount = ( (double)dr["dblIngredientQuantity"] ).ToString( );
+					ingredient.unit = (string)dr["strUnitOfMeasurement"];
+					ingredient.name = (string)dr["strIngredientName"];
+					list.AddIngredient( ingredient );
+					list.RecipeName = (string)dr["strName"];
+					list.RecipeName = ((int)dr["intServings"]).ToString();
+				}
+			}
+
+			return list;
+
+		}
+
 		internal bool RecipeExists( string recipeID ) {
 			bool exists = false;
 			DataSet ds = new DataSet( );
@@ -858,6 +898,34 @@ namespace Reciplease.Models {
 			{
 				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
 				return -1; // somethind went wrong, check debug
+			}
+		}
+
+		public int AddToShoppingList( int intRecipeID, int intUserID ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspAddToShoppingList", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intRecipeID", intRecipeID, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intUserID", intUserID, SqlDbType.NVarChar );
+
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+
+				CloseDBConnection( ref cn );
+
+				return intReturnValue;
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+				return -1; // something went wrong
 			}
 		}
 	}

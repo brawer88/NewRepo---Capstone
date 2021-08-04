@@ -16,20 +16,13 @@ else
 	{
 		<div id="content" class="p-4 p-md-5 pt-5">
 			<div class="recipe-card">
-				@if ( @Model.user.KrogerAuthCode != null )
-				{
-					<p>Auth Code: @Model.user.KrogerAuthCode</p>
-					<p>Access Token: @Model.user.KrogerAuthTokens.access_token</p>
-					<p>Refresh Token: @Model.user.KrogerAuthTokens.refresh_token</p>
-				}
-
 				<p>
 					<table>
 						<tr>
 							<th>Ingredient:</th>
 							<th>Amount:</th>
 						</tr>
-						@foreach ( Reciplease.Models.Ingredient ingredient in Model.cart.ingredients )
+						@foreach ( Reciplease.Models.Ingredient ingredient in Model.cart.GetFractionizedIngredients() )
 						{
 							<tr>
 								<td>

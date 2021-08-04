@@ -51,6 +51,9 @@ namespace Reciplease.Controllers
 
             string RecipeID = Convert.ToString(RouteData.Values["id"]);
 
+			User u = new User( );
+			u = u.GetUserSession( );
+
             if (RecipeID.Length > 0)
             {
 				Cart cart = new Cart();
