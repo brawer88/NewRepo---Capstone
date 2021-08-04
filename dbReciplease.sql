@@ -50,6 +50,7 @@ IF OBJECT_ID('uspDeleteUserAccount')			IS NOT NULL DROP PROCEDURE uspDeleteUserA
 IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserRecipe 
 IF OBJECT_ID('uspUpdateRecipe')					IS NOT NULL DROP PROCEDURE uspUpdateRecipe 
 IF OBJECT_ID('uspAddToShoppingList')			IS NOT NULL DROP PROCEDURE uspAddToShoppingList 
+IF OBJECT_ID('uspDropUserShoppingList')			IS NOT NULL DROP PROCEDURE uspDropUserShoppingList 
 
                                                                                                                                                                                                                                                                                                                                                                                                
 -- --------------------------------------------------------------------------------
@@ -317,14 +318,14 @@ VALUES					 (1, 'Sweet White Onion' )
 						,(5000004, 10, 17, 'Pint')
 						,(5000004, 8, 11, 'Gallon')
 
-INSERT INTO TShoppingList ( intShoppingListID, intUserID, intRecipeIngredientID )
-VALUES						 (1,1,1)
-							,(2,1,2)
-							,(3,1,3)
-							,(4,1,4)
-							,(5,1,5)
-							,(6,1,6)
-							,(7,2,8)
+--INSERT INTO TShoppingList ( intShoppingListID, intUserID, intRecipeIngredientID )
+--VALUES						 (1,1,1)
+--							,(2,1,2)
+--							,(3,1,3)
+--							,(4,1,4)
+--							,(5,1,5)
+--							,(6,1,6)
+--							,(7,2,8)
 
 
 
@@ -384,7 +385,7 @@ Create View VUserShoppingList
 AS
 SELECT	 TU.intUserID
 		,TR.intRecipeID
-		,TSL.intRecipeIngredientID
+		--,TSL.intRecipeIngredientID
 		,TRI.intIngredientID
 		,TI.strIngredientName
 		,TRI.dblIngredientQuantity
@@ -401,6 +402,8 @@ FROM	TUsers as TU JOIN TShoppingList TSL
 
 		JOIN TIngredients as TI
 		ON TI.intIngredientID = TRI.intIngredientID
+
+		GROUP BY TU.intUserID, TR.intRecipeID, tRI.intIngredientID, TI.strIngredientName, TRI.dblIngredientQuantity, TRI.strUnitOfMeasurement
 
 		--JOIN TMeasurementUnits as TMU
 		--ON TMU.intMeasurementUnitID = TRI.intMeasurementUnitID	
@@ -1198,10 +1201,15 @@ BEGIN TRANSACTION
 	-- fetches first value from the cursor, then runs WHILE LOOP
 	FETCH NEXT FROM getRecipeIngredientID INTO @intRecipeIngredientID
 
+	-- If shopping list contains a recipes ingredients it will delete it before populating it with desired recipe ingredients
+	IF @@ROWCOUNT > 0
+		BEGIN
+			DELETE FROM TShoppingList WHERE @intUserID = intUserID
+		END
+
 	WHILE @@FETCH_STATUS = 0
 	BEGIN	
 		
-
 		SELECT @intShoppingListID = MAX(intShoppingListID) + 1
 		FROM TShoppingList (TABLOCKX) -- Locks table till end of transaction
 
@@ -1220,12 +1228,36 @@ COMMIT TRANSACTION
 
 GO
 
+-- --------------------------------------------------------------------------------------------
 
-
---Select * from VUserShoppingList WHERE intUserID = 1
---select * from VRecipeIngredients  WHERE intRecipeID = 5000003
+--Select * from VUserShoppingList
 --EXECUTE uspAddToShoppingList 5000003, 1
---Select * from VUserShoppingList WHERE intUserID = 1
---select * from VRecipeIngredients  WHERE intRecipeID = 5000003
---SELECT *
---FROM TRecipeIngredients WHERE intRecipeIngredientID NOT IN (SELECT intRecipeIngredientID FROM TShoppingList WHERE intUserID = 1) AND intRecipeID = 5000003
+--Select * from VUserShoppingList
+-- --------------------------------------------------------------------------------------------
+GO
+
+-- simple USP to delete a users shopping list
+Create Procedure uspDropUserShoppingList
+				@intUserID as INTEGER OUTPUT
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+
+	DELETE FROM TShoppingList WHERE @intUserID = intUserID
+
+COMMIT TRANSACTION
+
+GO
+
+-- --------------------------------------------------------------------------------------------
+
+--SELECT * FROM TShoppingList
+--EXECUTE uspDropUserShoppingList 1
+--SELECT * FROM TShoppingList
+--GO
+
+-- --------------------------------------------------------------------------------------------
+
+
