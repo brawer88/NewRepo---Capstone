@@ -12,33 +12,40 @@
 }
 else
 {
-	using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post ) )
+	if ( Model.cart.IsEmpty( ) == false )
 	{
-		<div id="content" class="p-4 p-md-5 pt-5">
-			<div class="recipe-card">
-				<p>
-					<table>
-						<tr>
-							<th>Ingredient:</th>
-							<th>Amount:</th>
-						</tr>
-						@foreach ( Reciplease.Models.Ingredient ingredient in Model.cart.GetFractionizedIngredients() )
-						{
+		using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post ) )
+		{
+			<div id="content" class="p-4 p-md-5 pt-5">
+				<div class="recipe-card">
+					<p>
+						<table>
 							<tr>
-								<td>
-									@ingredient.name
-								</td>
-								<td>
-									@ingredient.amount
-									@ingredient.unit
-								</td>
+								<th>Ingredient:</th>
+								<th>Amount:</th>
 							</tr>
-						}
-					</table>
-				</p>
-				<br />
-				<a href="@Url.Action( "KrogerSignin", "Cart" )" class="button"> Check out </a>
+							@foreach ( Reciplease.Models.Ingredient ingredient in Model.cart.GetFractionizedIngredients( ) )
+							{
+								<tr>
+									<td>
+										@ingredient.name
+									</td>
+									<td>
+										@ingredient.amount
+										@ingredient.unit
+									</td>
+								</tr>
+							}
+						</table>
+					</p>
+					<br />
+					<a href="@Url.Action( "KrogerSignin", "Cart" )" class="button"> Check out </a>
+				</div>
 			</div>
-		</div>
+		}
+	}
+	else
+	{
+		<p>You don't have a recipe added to the cart yet. Want to <a href="~/Home/Search">search</a> for one?</p>
 	}
 }

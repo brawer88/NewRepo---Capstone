@@ -94,7 +94,7 @@ using (@Html.BeginForm("CreateRecipe", "Profile", FormMethod.Post, new { enctype
 			<label for="ingredients">*Ingredients</label>
 			<input type="text" name="ingredients" required />
 			<label for="amounts">*Amount</label>
-			<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]" required />
+			<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]*" required />
 			<label for="measurements">*Measurement</label>
 			<input type="text" name="measurements" required />
 		</p>

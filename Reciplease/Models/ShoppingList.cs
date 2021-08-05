@@ -9,6 +9,10 @@ namespace Reciplease.Models {
 		public string RecipeServings { get; set; }
 		private List<Ingredient> ingredients { get; set; }
 
+		public ShoppingList( ) {
+			ingredients = new List<Ingredient>( );
+		}
+
 		internal void AddIngredient( Ingredient ingredient ) {
 			ingredients.Add( ingredient );
 		}

@@ -40,8 +40,11 @@ namespace Reciplease.Controllers
 
 			user.KrogerAuthCode = authcode;
 			user.KrogerAuthTokens = KrogerAPI.GetKrogerToken( authcode );
-
 			user.SaveUserSession( );
+
+			// code to add to kroger cart
+			Cart c = new Cart( );
+			c = c.GetCartSession( );
 
 			return RedirectToAction( "index" );
 		}

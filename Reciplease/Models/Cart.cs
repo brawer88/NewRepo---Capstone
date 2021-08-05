@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Reciplease.Models {
 	public class Cart {
@@ -9,6 +10,10 @@ namespace Reciplease.Models {
 		public int Servings { get; set; }
 
 		private List<Ingredient> ingredients { get; set; }
+
+		public Cart( ) {
+			this.ingredients = new List<Ingredient>( );
+		}
 
 		public void AddToCart( string strRecipeID ) {
 			Database db = new Database( );
@@ -32,7 +37,7 @@ namespace Reciplease.Models {
 		}
 
 		// method to remove
-		public void EmptyCart( string strRecipeID ) {
+		public void EmptyCart( ) {
 			// will update when there is a usp to do this
 		}
 
@@ -84,7 +89,6 @@ namespace Reciplease.Models {
 		}
 
 
-
 		// convert single to fraction string
 		private string ConvertToFraction( string strUnit ) {
 			string fraction = string.Empty;
@@ -125,6 +129,17 @@ namespace Reciplease.Models {
 			{
 				return strUnit;
 			}
+		}
+
+		public bool IsEmpty() {
+			bool blnEmpty = false;
+
+			if (ingredients.Count == 0)
+			{
+				blnEmpty = true;
+			}
+
+			return blnEmpty;
 		}
 	}
 
