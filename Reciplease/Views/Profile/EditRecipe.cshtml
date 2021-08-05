@@ -70,7 +70,7 @@
 												</td>
 
 												<td class="text-center">
-													<input type="text" name="amounts" value="@ingredient.amount" pattern="[^a-zA-Z][0-9]*[' ']*[0-9]*[\/]*[0-9]*" required />
+													<input type="text" name="amounts" value="@ingredient.amount" pattern="[^a-zA-Z][0-9]*[' ']*[0-9]*[\./]*[0-9]*" title="Please enter a number with decimals or fraction only." required />
 												</td>
 
 												<td class="text-center">
@@ -134,11 +134,11 @@ else
 						 </td>
 
 						 <td class="text-center">
-						 <input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" required />
+						 <input type="text" name="amounts" pattern="[^a-zA-Z][0-9]*[' ']*[0-9]*[\./]*[0-9]*" title="Please enter a number with decimals or fraction only." required />
 						 </td>
 
 						 <td class="text-center">
-						 <input type="text" name="measurements" required />
+						 <input type="text" name="measurements" />
 						 </td>
 
 						  <td class="text-center">
