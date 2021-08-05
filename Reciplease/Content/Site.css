@@ -174,7 +174,7 @@ td{
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 440px;
 }
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
@@ -255,8 +255,8 @@ input[type=text] {
 }
 
 textarea {
-  outline: none;
-  border: none;
+  outline: inset;
+  border: inset;
 }
 
 textarea:focus, input:focus {

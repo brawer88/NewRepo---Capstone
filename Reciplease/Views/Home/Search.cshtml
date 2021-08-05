@@ -21,9 +21,11 @@ input[type=text] {
 	{
 		<div class="section">
 			<input type="text" id="SearchQuery" name="SearchQuery" value=@Model.searchItems.query />
-			<input id="standardSearch" type="submit" name="btnSubmit" value="submit" />
-		</div> 
-		
+			<input id="standardSearch" type="submit" class="button" name="btnSubmit" value="submit" />
+		</div>
+
+		<button class="button" onclick="AdvancedSearchToggle()">Advanced Search</button>
+
 		<div id="AdvancedSearch" style="display:none">
 
 			<label for="intolerances">Intolerances:</label>
@@ -47,7 +49,7 @@ input[type=text] {
 			<br />
 			<br />
 
-			<input type="submit" name="btnSubmit" value="Search" />
+			<input type="submit" class="button" name="btnSubmit" value="Search" />
 
 			<br />
 
@@ -56,7 +58,7 @@ input[type=text] {
 
 	<br />
 
-	<button onclick="AdvancedSearchToggle()">Advanced Search</button>
+
 
 	<br />
 	<br />
@@ -71,26 +73,26 @@ input[type=text] {
 		@*Iterate over recipes to display them*@
 		foreach ( Reciplease.Models.Result recipe in Model.SearchResults.results )
 		{
-				<div class="row">
-					<div class="recipe-card">
-						<aside>
-							<a href="@Url.Action( "Recipe", new { id = recipe.id } )">
-								<span class="icon icon-play">
-									<img src="https://spoonacular.com/recipeImages/@recipe.image" alt=@recipe.title onerror="this.onerror = null; this.src = '/Content/images/no-photo.jpg'" />
-								</span>
-							</a>
-						</aside>
+			<div class="row">
+				<div class="recipe-card">
+					<aside>
+						<a href="@Url.Action( "Recipe", new { id = recipe.id } )">
+							<span class="icon icon-play">
+								<img src="https://spoonacular.com/recipeImages/@recipe.image" alt=@recipe.title onerror="this.onerror = null; this.src = '/Content/images/no-photo.jpg'" />
+							</span>
+						</a>
+					</aside>
 
-						<article>
-							<h2>@recipe.title</h2>
-							<p>Ready In: @recipe.readyInMinutes minutes</p>
-							<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
-							<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
-							<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
-							<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
-						</article>
-					</div>
+					<article>
+						<h2>@recipe.title</h2>
+						<p>Ready In: @recipe.readyInMinutes minutes</p>
+						<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
+						<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
+						<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
+						<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
+					</article>
 				</div>
+			</div>
 		}
 
 		if ( Model.SearchResults.results.Count > 0 )
@@ -108,7 +110,7 @@ input[type=text] {
 				<input type='text' hidden name="hindex" value=@Model.searchItems.index />
 				<input type="submit" name="btnSubmit" value="Next Page" />
 
-				
+
 			}
 		}
 		else
@@ -141,4 +143,8 @@ input[type=text] {
 			AS.style.display = "none";
 		}
 	}
+
+	$(document).ready(function () {
+		if ($("#SearchQuery").val() == "/") { $("#SearchQuery").val(""); };
+	});
 </script>

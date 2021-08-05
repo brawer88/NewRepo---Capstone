@@ -290,7 +290,7 @@ namespace Reciplease.Controllers
 						char[] charSeparators = new char[] { '\\', '/', ' ' };
 						string[] splitAmounts = ingredient.amount.Split( charSeparators );
 						double dblAmount = 0;
-						if (splitAmounts.Length > 2 )
+						if (splitAmounts.Length > 2 && splitAmounts[0] != "")
 						{
 							splitAmounts[1] = (double.Parse( splitAmounts[1] ) + double.Parse( splitAmounts[0] ) * double.Parse( splitAmounts[2] )).ToString();
 							dblAmount = double.Parse( splitAmounts[1] ) / double.Parse( splitAmounts[2] );

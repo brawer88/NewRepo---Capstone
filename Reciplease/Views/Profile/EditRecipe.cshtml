@@ -16,7 +16,7 @@
 					<input type="text" name="RecipeID" value=@Model.SingleRecipe.id hidden />
 					<p>
 						<label for="RecipeName">*Recipe Title</label>
-						<input type="text" name="RecipeName" value=@Model.SingleRecipe.title required />
+						<input type="text" name="RecipeName" value="@Model.SingleRecipe.title" required />
 					</p>
 
 					<p>
@@ -44,45 +44,68 @@
 						<input type="text" name="cuisines" value=@String.Join( ", ", @Model.SingleRecipe.cuisines ) />
 					</p>
 
-					@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.extendedIngredients )
-					{
+					<div class="container pt-4">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="text-center">Ingredient</th>
+										<th class="text-center">Amount</th>
+										<th class="text-center">Measurement</th>
+									</tr>
+								</thead>
+
+								<tbody id="tbody">
+									@{
+										int rowIdx = 0;
+
+
+										foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
+										{
+
+
+											<tr id="R" + @rowIdx>
+												<td class="row-index text-center">
+													<input type="text" name="ingredients" value="@ingredient.name" required />
+												</td>
+
+												<td class="text-center">
+													<input type="text" name="amounts" value="@ingredient.amount" pattern="[^a-zA-Z][0-9]*[' ']*[0-9]*[\/]*[0-9]*" required />
+												</td>
+
+												<td class="text-center">
+													<input type="text" value="@ingredient.unit" name="measurements" />
+												</td>
+												<td class="text-center">
+													<button class="btn btn-danger remove"
+															type="button">
+														Remove
+													</button>
+												</td>
+											</tr>
+
+											rowIdx += 1;
+
+										}
+									}
+								</tbody>
+							</table>
+						</div>
+						<button class="btn btn-md btn-primary"
+								id="addBtn" type="button">
+							Add Ingredient
+						</button>
+
 						<p>
-							<label for="ingredients">*Ingredients</label>
-							<input type="text" name="ingredients" value="@ingredient.name" required />
-							<label for="amounts">*Amount</label>
-							<input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" value="@ingredient.amount" required />
-							<label for="measurements">*Measurement</label>
-							<input type="text" name="measurements" value="@ingredient.unit" required />
+							<label for="instructions">*Instructions <span class=instr>(separated steps with a period to create a list of steps when viewing)</span></label>
+							<textArea name="instructions" rows="8" cols="96" required>@String.Join( "\n", Model.SingleRecipe.SplitInstructions( ) )</textArea>
 						</p>
-					}
+						<br>
 
-					<script>
-						$('form').on('click', '.addRow', function () {
-							var start = $('table'),
-								newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
-									< td > <input type="text" name="measurements" /></td > <td><p class="addRow">Add a Row</p></td></tr > ');
-														$(start).append(newRow);
-						});
-
-													  }) ();
-
-													});
-						var start = $('table'),
-							newRow = $('<tr><td><input type="text" name="ingredient" /></td><td><input type="text" name="number" />
-								< td > <input type="text" name="measurements" /></td > <td><p name="addRow">Add a Row</p></td></tr > ');
-
-					</script>
-
-					<p>
-						<label for="instructions">*Instructions</label>
-						<textArea name="instructions" rows="10" cols="50" required>@Model.SingleRecipe.instructions</textArea>
-					</p>
-					<br>
-
-					<input type="Submit" class="button" id="btnSubmit" name="btnSubmit" value="Save" />
+						<input type="Submit" class="button" id="btnSubmit" name="btnSubmit" value="Save" />
+					</div>
 				</div>
 			</div>
-			
 		}
 	}
 	else
@@ -94,3 +117,52 @@ else
 {
 	@Html.Partial( "NotAuthenticated" )
 }
+
+<script>
+	$(document).ready(function () {
+
+		// Denotes total number of rows
+		var rowIdx = 0;
+
+		// jQuery button click event to add a row
+		$('#addBtn').on('click', function () {
+
+			// Adding a row inside the tbody.
+			$('#tbody').append(`<tr id="R${++rowIdx}">
+						 <td class="row-index text-center">
+						 <input type="text" name="ingredients" required />
+						 </td>
+
+						 <td class="text-center">
+						 <input type="text" name="amounts" pattern="[^a-zA-Z]+[0-9\/]+" required />
+						 </td>
+
+						 <td class="text-center">
+						 <input type="text" name="measurements" required />
+						 </td>
+
+						  <td class="text-center">
+							<button class="btn btn-danger remove"
+							  type="button">Remove</button>
+							</td>
+						  </tr>`);
+		});
+
+		// jQuery button click event to remove a row.
+		$('#tbody').on('click', '.remove', function () {
+
+			// Getting all the rows next to the row
+			// containing the clicked button
+			var child = $(this).closest('tr').nextAll();
+
+
+
+
+			// Removing the current row.
+			$(this).closest('tr').remove();
+
+			// Decreasing total number of rows by 1.
+			rowIdx--;
+		});
+	});
+</script>
