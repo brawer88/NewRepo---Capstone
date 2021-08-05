@@ -168,35 +168,6 @@ namespace Reciplease.Controllers
         }
 
 
-		[HandleError]
-		public ActionResult EditRecipe( ) {
-			Models.UserRecipeContent recipeContent = new Models.UserRecipeContent( );
-			recipeContent.user = new Models.User( );
-			recipeContent.user = recipeContent.user.GetUserSession( );
-
-			Database DB = new Database( );
-
-			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
-			if ( strRecipeID.Length > 0 )
-			{
-				// check if recipe id exists
-				if ( DB.RecipeExists( strRecipeID ) == true )
-				{
-					recipeContent.SingleRecipe = DB.LoadRecipe( strRecipeID );
-				}
-				else
-				{
-					recipeContent.SingleRecipe = null;
-				}
-			}
-			else
-			{
-				recipeContent.SingleRecipe = null;
-			}
-
-			return View( recipeContent );
-		}
-
 
 		[HandleError]
 		public ActionResult CreateRecipe( ) {
@@ -279,7 +250,10 @@ namespace Reciplease.Controllers
 				{
 					// now save ingredients
 					int IngredientID = db.SaveIngredient( 0, ingredient.name );
-					
+
+					// trim 
+					ingredient.amount = ingredient.amount.Trim( );
+
 
 					try
 					{
@@ -313,7 +287,36 @@ namespace Reciplease.Controllers
                 return View(recipeContent);
             }
         }
-			   
+
+		[HandleError]
+		public ActionResult EditRecipe( ) {
+			Models.UserRecipeContent recipeContent = new Models.UserRecipeContent( );
+			recipeContent.user = new Models.User( );
+			recipeContent.user = recipeContent.user.GetUserSession( );
+
+			Database DB = new Database( );
+
+			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
+			if ( strRecipeID.Length > 0 )
+			{
+				// check if recipe id exists
+				if ( DB.RecipeExists( strRecipeID ) == true )
+				{
+					recipeContent.SingleRecipe = DB.LoadRecipe( strRecipeID );
+				}
+				else
+				{
+					recipeContent.SingleRecipe = null;
+				}
+			}
+			else
+			{
+				recipeContent.SingleRecipe = null;
+			}
+
+			return View( recipeContent );
+		}
+
 
 		[HandleError]
 		[HttpPost]
@@ -326,28 +329,84 @@ namespace Reciplease.Controllers
 				recipeContent.user = u.GetUserSession( );
 
 
+				string diets = "-1";
+				string cuisines = "-1";
+				string dishTypes = "-1";
+				recipe.readyInMinutes = "-1";
+				recipe.servings = "-1";
+
+
 				// example of getting data from the page in a post method
 				recipe.id = col["RecipeID"];
 				recipe.title = col["RecipeName"];
 				recipe.instructions = col["instructions"]; // required
-				recipe.diets = new List<string> { col["diets"] }; // optional default to "-1"
-				recipe.cuisines = new List<string> { col["cuisines"] }; // optional default to "-1"
-				recipe.dishTypes = new List<string> { col["dishTypes"] }; // optional default to "-1"
-				recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
-				recipe.servings = (string)col["servings"]; // optional default to "-1"
-				recipe.extendedIngredients = new List<Ingredient>( ); // need to update this when we have variable ingredients lists
+				if ( col["diets"].Length > 0 )
+				{
+					diets = col["diets"]; // optional default to "-1"
+				}
+				if ( col["cuisines"].Length > 0 )
+				{
+					cuisines = col["cuisines"]; // optional default to "-1"
+				}
+				if ( col["dishTypes"].Length > 0 )
+				{
+					dishTypes = col["dishTypes"]; // optional default to "-1"
+				}
+				if ( col["readyinMinutes"].Length > 0 )
+				{
+					recipe.readyInMinutes = col["readyinMinutes"]; // optional default to "-1"
+				}
+				if ( col["servings"].Length > 0 )
+				{
+					recipe.servings = col["servings"]; // optional default to "-1"
+				}
 
-				if ( recipe.title.Length == 0 )
+				string[] ingredients = Request.Form.GetValues( "ingredients" );
+				string[] amounts = Request.Form.GetValues( "amounts" );
+				string[] measurements = Request.Form.GetValues( "measurements" );
+				recipe.extendedIngredients = new List<Ingredient>( );
+
+				for ( int index = 0; index < ingredients.Length; index += 1 )
 				{
-					u.ActionType = Models.User.ActionTypes.RequiredFieldsMissing;
-					return View( u );
+					Ingredient ing = new Ingredient( );
+					ing.name = ingredients[index];
+					ing.amount = amounts[index];
+					ing.unit = measurements[index];
+					recipe.extendedIngredients.Add( ing );
 				}
-				else
+
+				Database db = new Database( );
+				db.UpdateRecipe( recipe.title, recipe.instructions, int.Parse( recipe.readyInMinutes ), "/Content/images/no-photo.jpg", int.Parse( recipe.servings ), cuisines, diets, dishTypes, "-1", recipeContent.user.UID, int.Parse(recipe.id) );
+				foreach ( Ingredient ingredient in recipe.extendedIngredients )
 				{
-					Database db = new Database( );
-					db.UpdateRecipe( recipe.title, recipe.instructions, int.Parse( recipe.readyInMinutes ), "/Content/images/no-photo.jpg", int.Parse( recipe.servings ), String.Join( ",", recipe.cuisines ), String.Join( ",", recipe.diets ), String.Join( ",", recipe.dishTypes ), "-1", recipeContent.user.UID, int.Parse(recipe.id) );
-					return RedirectToAction( "UserRecipes" );
+					// now save ingredients
+					int IngredientID = db.SaveIngredient( 0, ingredient.name );
+
+
+					try
+					{
+						db.AddRecipeIngredients( int.Parse(recipe.id), IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+					}
+					catch ( Exception )
+					{
+						char[] charSeparators = new char[] { '\\', '/', ' ' };
+						string[] splitAmounts = ingredient.amount.Split( charSeparators );
+						double dblAmount = 0;
+						if ( splitAmounts.Length > 2 && splitAmounts[0] != "" )
+						{
+							splitAmounts[1] = ( double.Parse( splitAmounts[1] ) + double.Parse( splitAmounts[0] ) * double.Parse( splitAmounts[2] ) ).ToString( );
+							dblAmount = double.Parse( splitAmounts[1] ) / double.Parse( splitAmounts[2] );
+						}
+						else
+						{
+							dblAmount = double.Parse( splitAmounts[0] ) / double.Parse( splitAmounts[1] );
+						}
+
+						db.AddRecipeIngredients( int.Parse( recipe.id ), IngredientID, dblAmount, ingredient.unit );
+					}
+
 				}
+				return RedirectToAction( "UserRecipes" );
 			}
 			catch ( Exception )
 			{

@@ -25,8 +25,8 @@
 		<!--maybe use js to call this? -->
 		@if ( Model.user.IsAuthenticated )
 		{
-			<a href="@Url.Action( "EditRecipe", "Profile", new { id = Model.SingleRecipe.id } )" class="btn-light">Edit Recipe</a>
-			<a id="delete" onclick="deleteMe()" href="@Url.Action( "DeleteRecipe", "Profile", new { id = Model.SingleRecipe.id } )">Delete Recipe</a>
+			<a href="@Url.Action( "EditRecipe", "Profile", new { id = Model.SingleRecipe.id } )" class="button">Edit Recipe</a>
+			<a id="delete" class="button-red" onclick="deleteMe()" href="@Url.Action( "DeleteRecipe", "Profile", new { id = Model.SingleRecipe.id } )">Delete Recipe</a>
 		}
 		<!---Display Recipe--->
 		<article>

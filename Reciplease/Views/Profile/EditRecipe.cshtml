@@ -31,17 +31,17 @@
 
 					<p>
 						<label for="diets">Diet</label>
-						<input type="text" name="diets" value=@String.Join( ", ", @Model.SingleRecipe.diets ) />
+						<input type="text" id="cdiets" name="diets" value=@String.Join( ", ", @Model.SingleRecipe.diets ) />
 					</p>
 
 					<p>
 						<label for="dishTypes">*Dish Types</label>
-						<input type="text" name="dishTypes" value=@String.Join( ", ", @Model.SingleRecipe.dishTypes ) required />
+						<input type="text" id="cdishTypes" name="dishTypes" value=@String.Join( ", ", @Model.SingleRecipe.dishTypes ) required />
 					</p>
 
 					<p>
 						<label for="cuisines">Cuisines</label>
-						<input type="text" name="cuisines" value=@String.Join( ", ", @Model.SingleRecipe.cuisines ) />
+						<input type="text" id="ccuisines" name="cuisines" value=@String.Join( ", ", @Model.SingleRecipe.cuisines ) />
 					</p>
 
 					<div class="container pt-4">
@@ -123,6 +123,10 @@ else
 
 		// Denotes total number of rows
 		var rowIdx = 0;
+		if ($("#cdiets").val() == "/") { $("#cdiets").val(""); };
+		if ($("#ccuisines").val() == "/") { $("#ccuisines").val(""); };
+		if ($("#cdishTypes").val() == "/") { $("#cdishTypes").val(""); };
+
 
 		// jQuery button click event to add a row
 		$('#addBtn').on('click', function () {
