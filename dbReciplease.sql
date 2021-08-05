@@ -385,6 +385,8 @@ Create View VUserShoppingList
 AS
 SELECT	 TU.intUserID
 		,TR.intRecipeID
+		,TR.strName
+		,TR.intServings
 		--,TSL.intRecipeIngredientID
 		,TRI.intIngredientID
 		,TI.strIngredientName
@@ -403,7 +405,7 @@ FROM	TUsers as TU JOIN TShoppingList TSL
 		JOIN TIngredients as TI
 		ON TI.intIngredientID = TRI.intIngredientID
 
-		GROUP BY TU.intUserID, TR.intRecipeID, tRI.intIngredientID, TI.strIngredientName, TRI.dblIngredientQuantity, TRI.strUnitOfMeasurement
+		GROUP BY TU.intUserID, TR.intRecipeID, TR.strName, TR.intServings, TRI.intIngredientID, TI.strIngredientName, TRI.dblIngredientQuantity, TRI.strUnitOfMeasurement
 
 		--JOIN TMeasurementUnits as TMU
 		--ON TMU.intMeasurementUnitID = TRI.intMeasurementUnitID	
@@ -1161,6 +1163,9 @@ BEGIN TRANSACTION
 
 	UPDATE TRecipes
 	SET strName = @strName, strInstructions = @strInstructions, strRecipeImage = @strRecipeImage, intReadyInMins = @intReadyInMins, intServings = @intServings, strCuisines = @strCuisines, strDiets = @strDiets, strDishTypes = @strDishTypes, strNutrition = @strNutrition, intUserID = @intUserID
+	WHERE intRecipeID = @intRecipeID
+
+	DELETE FROM TRecipeIngredients
 	WHERE intRecipeID = @intRecipeID
 
 COMMIT TRANSACTION
