@@ -2,8 +2,6 @@
 @{
 	ViewBag.Title = "Sign-In";
 }
-<h2>Sign-In</h2>
-<p>Enter your information and click the Sign-In button.</p>
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 <style>
 	body {
@@ -11,6 +9,10 @@
 	}
 </style>
 
+<h2>Sign-In</h2>
+<p>Enter your information and click the Sign-In button.</p>
+
+<br />
 
 
 @using (Html.BeginForm(FormMethod.Post)) {
@@ -45,7 +47,7 @@
 		<input type="text" name="previousPage" value=@Model.previousPage.ToString() hidden />
 	}
 
-
+<br />
 	<div>
 		<button id="btnSignIn" name="btnSubmit" value="signin" class="button"><i class="fas fa-sign-in-alt"></i> Sign-In</button>
 	</div>
