@@ -1,8 +1,14 @@
 ﻿@model Reciplease.Models.UserRecipeContent
 
-@{ ViewBag.Title = "CreateRecipe"; }
 
-<h2>CreateRecipe</h2>
+@{ ViewBag.Title = "Create Recipe"; }
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+<style>
+	body {
+		font-family: 'Montserrat';
+	}
+</style>
+<h2>    Create Recipe</h2>
 @if ( !Model.user.IsAuthenticated )
 {
 	@Html.Partial( "NotAuthenticated" ) }
@@ -69,7 +75,7 @@ else
 												<td class="row-index text-center">
 													<input type="text" name="ingredients" value="@ingredient.name" required />
 												</td>
-
+												<br />
 												<td class="text-center">
 													<input type="text" name="amounts" value="@ingredient.amount" pattern="[^a-zA-Z][0-9]*[' ']*[0-9]*[\./]*[0-9]*" title="Please enter a number with decimals or fraction only." required />
 												</td>
@@ -168,7 +174,8 @@ else
 								id="addBtn" type="button">
 							Add Ingredient
 						</button>
-
+						<br />
+						<br />
 						<p>
 							<label for="instructions">*Instructions <span class=instr>(separated steps with a period to create a list of steps when viewing)</span></label>
 							<textArea name="instructions" rows="8" cols="60" required></textArea>
