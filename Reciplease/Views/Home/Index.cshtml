@@ -1,40 +1,47 @@
 ﻿@model Reciplease.Models.HomeContent
 
-@{
-	ViewBag.Title = "Home Page";
-}
+@{ ViewBag.Title = "Home Page"; }
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+<style>
+	body {
+		font-family: 'Montserrat';
+	}
+</style>
 
 <div class="jumbotron">
 	<h1>Reciplease</h1>
+	<br />
 	<p class="lead">Shop for your next meal.</p>
 	<p>View our top 5 rated recipes:</p>
+	<br />
 </div>
+<br />
 
 @*Iterate over recipes to display them*@
-@foreach ( Reciplease.Models.Recipe recipe in Model.RecipesToDisplay.recipes )
-{
-	<div class="row">
-		<div class="recipe-card">
-			<aside>
-				<a href="@Url.Action("Recipe", new { id = recipe.id })" class="button">
-					<span class="icon icon-play">
-						<img src=@recipe.image alt=@recipe.title />
-					</span>
-				</a>
-			</aside>
+@foreach (Reciplease.Models.Recipe recipe in Model.RecipesToDisplay.recipes) {
+<div class="row">
+	<div class="recipe-card">
+		<aside>
+			<a href="@Url.Action("Recipe", new { id = recipe.id })" class="button">
+				<span class="icon icon-play">
+					<img src=@recipe.image alt=@recipe.title />
+				</span>
+			</a>
+		</aside>
 
-			<article>
-				<h2>@recipe.title</h2>
-				<p>Ready In: @recipe.readyInMinutes minutes</p>
-				<p>Servings: @recipe.servings</p>
-				<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
-				<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
-				<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
-				<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
+		<article>
+			<h2>@recipe.title</h2>
+			<p>Ready In: @recipe.readyInMinutes minutes</p>
+			<p>Servings: @recipe.servings</p>
+			<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
+			<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
+			<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
+			<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
 
 
-			</article>
-			
-		</div>
+		</article>
+		<br />
+		<br />
+
 	</div>
-}
+</div>}
