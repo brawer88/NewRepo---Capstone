@@ -252,13 +252,14 @@ else {
 			<br />
 
 		</form>
-		<button class="button" onclick="RateToggle()">Rate</button>
+		
 		@*Begin popup*@
 
 
 
 		@if ( Model.user.IsAuthenticated )
 		{
+			<button class="button" onclick="RateToggle()">Rate</button>
 			<div id="popupForm" style="display:none">
 				<form id="Form1" method="post">
 					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -311,7 +312,6 @@ else {
 		function RateToggle() {
 			var AS = document.getElementById("popupForm");
 			if (AS.style.display === "none") {
-			
 				AS.style.display = "block";
 			} else {
 			

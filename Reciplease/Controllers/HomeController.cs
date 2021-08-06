@@ -35,35 +35,35 @@ namespace Reciplease.Controllers {
 		[HandleError]
 		public ActionResult Search( ) {
 
-			CartMappedToKrogerUPC cart = new CartMappedToKrogerUPC( );
+			//CartMappedToKrogerUPC cart = new CartMappedToKrogerUPC( );
 
-			Item item = new Item( );
-			item.upc = "0001111041700";
-			item.quantity = 2;
-
-
-			cart.addItem( item );
-			item.upc = "0004900002891";
-			item.quantity = 2;
-			cart.addItem( item );
-
-			item.upc = "0007283000100";
-			item.quantity = 2;
-			cart.addItem( item );
+			//Item item = new Item( );
+			//item.upc = "0001111041700";
+			//item.quantity = 2;
 
 
-			item.upc = "0074236526480";
-			item.quantity = 2;
-			cart.addItem( item );
+			//cart.addItem( item );
+			//item.upc = "0004900002891";
+			//item.quantity = 2;
+			//cart.addItem( item );
+
+			//item.upc = "0007283000100";
+			//item.quantity = 2;
+			//cart.addItem( item );
 
 
-			item.upc = "0004310033106";
-			item.quantity = 2;
-			cart.addItem( item );
+			//item.upc = "0074236526480";
+			//item.quantity = 2;
+			//cart.addItem( item );
+
+
+			//item.upc = "0004310033106";
+			//item.quantity = 2;
+			//cart.addItem( item );
 
 
 
-			KrogerAPI.AddToKrogerCart( cart.convertToJson() );
+			//KrogerAPI.AddToKrogerCart( cart.convertToJson() );
 
 
 			Models.HomeContent h = new Models.HomeContent
