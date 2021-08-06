@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,23 +9,22 @@ namespace Reciplease.Models {
 	public class Cart {
 		public string RecipeName { get; set; }
 		public int Servings { get; set; }
+		public ShoppingList list { get; set; }
 
-		private List<Ingredient> ingredients { get; set; }
+		public List<Ingredient> ingredients { get; set; }
 
 		public Cart( ) {
 			this.ingredients = new List<Ingredient>( );
+
 		}
 
 		public void AddToCart( string strRecipeID ) {
 			Database db = new Database( );
 			User u = new User( );
-			u = u.GetUserSession();
-
-			ShoppingList list = new ShoppingList( );
+			u = u.GetUserSession( );
+				
 
 			db.AddToShoppingList( int.Parse( strRecipeID ), u.UID );
-
-			list = db.GetShoppingList( u.UID );
 
 			ingredients = db.GetIngredients( strRecipeID );
 
@@ -43,25 +43,26 @@ namespace Reciplease.Models {
 
 
 		public bool SaveCartSession( ) {
-		try
-		{
-			HttpContext.Current.Session.Timeout = 525600; 
-			HttpContext.Current.Session["Cart"] = this;
-			return true;
-		}
-		catch ( Exception ex ) { throw new Exception( ex.Message ); }
+			try
+			{
+				HttpContext.Current.Session.Timeout = 525600;
+				HttpContext.Current.Session["Cart"] = this;
+				return true;
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
 		}
 
 
 		public Cart GetCartSession( ) {
 			try
 			{
-				Cart cart= new Cart
+				Cart cart = new Cart
 				{
-					ingredients = new List<Ingredient>()
+					ingredients = new List<Ingredient>( )
 				};
 				if ( HttpContext.Current.Session["Cart"] == null )
 				{
+
 					return cart;
 				}
 				cart = (Cart)HttpContext.Current.Session["Cart"];
@@ -131,16 +132,68 @@ namespace Reciplease.Models {
 			}
 		}
 
-		public bool IsEmpty() {
+		public bool IsEmpty( ) {
 			bool blnEmpty = false;
 
-			if (ingredients.Count == 0)
+			if ( ingredients.Count == 0 )
 			{
 				blnEmpty = true;
 			}
 
 			return blnEmpty;
 		}
+	}
+
+	// following classes used for kroger cart
+
+	public struct Item {
+		public string upc { get; set; }
+		public long quantity { get; set; }
+	}
+
+
+	public class CartMappedToKrogerUPC {
+
+
+		public Dictionary<string, Item[]> dictItems { get; set; }
+
+		public CartMappedToKrogerUPC( ) {
+			dictItems = new Dictionary<string, Item[]>( );
+			dictItems.Add( "items", new Item[0] );
+		}
+
+
+		public string convertToJson( ) {
+			return Newtonsoft.Json.JsonConvert.SerializeObject( dictItems );
+		}
+
+		public void addItem( Item item ) {
+			Item[] oldItems = dictItems["items"];
+			int newLength = oldItems.Length + 1;
+			Item[] newItems = new Item[newLength];
+
+			if ( oldItems.Length > 0 )
+			{
+
+				// copy original to new
+				for ( int i = 0; i < newLength - 1; i += 1 )
+				{
+					newItems[i] = oldItems[i];
+				}
+				// add new item
+				newItems[newLength - 1] = item;
+			}
+
+			if( oldItems.Length == 0)
+			{
+				newItems[0] = item;
+			}
+			
+
+			// replace current 
+			dictItems["items"] = newItems;
+		}
+
 	}
 
 }

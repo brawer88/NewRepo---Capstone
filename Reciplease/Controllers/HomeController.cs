@@ -34,24 +34,36 @@ namespace Reciplease.Controllers {
 
 		[HandleError]
 		public ActionResult Search( ) {
-			// testing testing testing
-			//Database DB = new Database( );
 
-			//User u = new User( );
+			CartMappedToKrogerUPC cart = new CartMappedToKrogerUPC( );
 
-			//u.Username = "Brawer";
-			//u.Password = "reciplease2";
+			Item item = new Item( );
+			item.upc = "0001111041700";
+			item.quantity = 2;
 
-			//u = u.Login( );
-			//u.SaveUserSession( );
 
-			//DB.DeleteAccount( 2 );
+			cart.addItem( item );
+			item.upc = "0004900002891";
+			item.quantity = 2;
+			cart.addItem( item );
 
-			//string authcode = "bj0XRkqi8BMPfzs5BLm8c2gUp2jIgrkbrcApyYwF";
+			item.upc = "0007283000100";
+			item.quantity = 2;
+			cart.addItem( item );
 
-			//return RedirectToAction( "KrogerSignIn", "Cart" );
-			//return RedirectToAction( "AuthCode", "Cart", new { id = authcode } );
 
+			item.upc = "0074236526480";
+			item.quantity = 2;
+			cart.addItem( item );
+
+
+			item.upc = "0004310033106";
+			item.quantity = 2;
+			cart.addItem( item );
+
+
+
+			KrogerAPI.AddToKrogerCart( cart.convertToJson() );
 
 
 			Models.HomeContent h = new Models.HomeContent

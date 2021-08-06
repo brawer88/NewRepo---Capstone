@@ -18,8 +18,13 @@ namespace Reciplease.Controllers
 			cart.user = u.GetUserSession( );
 			cart.cart = new Cart( );
 			cart.cart = cart.cart.GetCartSession( );
-            
-            return View(cart);
+			Database db = new Database( );
+
+			cart.cart.list = db.GetShoppingList( cart.user.UID );
+
+			cart.cart.ingredients = db.GetIngredients( cart.cart.list.intRecipeID.ToString( ) );
+
+			return View(cart);
         }
 
 

@@ -283,7 +283,8 @@ namespace Reciplease.Models {
 					ingredient.name = (string)dr["strIngredientName"];
 					list.AddIngredient( ingredient );
 					list.RecipeName = (string)dr["strName"];
-					list.RecipeName = ((int)dr["intServings"]).ToString();
+					list.intRecipeID = (int)dr["intRecipeID"];
+					list.RecipeServings = ((int)dr["intServings"]).ToString();
 				}
 			}
 

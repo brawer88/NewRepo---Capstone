@@ -19,6 +19,18 @@ else
 			<div id="content" class="p-4 p-md-5 pt-5">
 				<div class="recipe-card">
 					<p>
+						@if ( @Model.user.KrogerAuthCode != null )
+						{
+							try
+							{
+							<p>auth:  @Model.user.KrogerAuthCode</p>
+							<p>Access:  @Model.user.KrogerAuthTokens.access_token.ToString( )</p>
+						}
+						catch
+						{
+							<p>sommtin happened here</p>
+						}
+					}
 						<table>
 							<tr>
 								<th>Ingredient:</th>
@@ -37,10 +49,10 @@ else
 								</tr>
 							}
 						</table>
-					</p>
-					<br />
-					<a href="@Url.Action( "KrogerSignin", "Cart" )" class="button"> Check out </a>
-				</div>
+						</p>
+						<br />
+						<a href="@Url.Action( "KrogerSignin", "Cart" )" class="button"> Check out </a>
+					</div>
 			</div>
 		}
 	}
