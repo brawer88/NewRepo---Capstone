@@ -1,71 +1,71 @@
 ﻿@model Reciplease.Models.HomeContent
 
-@{
-	ViewBag.Title = "Recipe";
-}
-<h2>@ViewBag.Title</h2>
+@{ ViewBag.Title = "Recipe"; }
 
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+<style>
+	body {
+		font-family: 'Montserrat';
+	}
+</style>
 <!-- Page Content  -->
-<div id="content" class="p-4 p-md-5 pt-5">
+<div id="content" class="p-4 p-md-5 pt-5" style="content:align-center;">
 	<div class="recipe-card">
 
 		<!--maybe use js to call this? -->
-		@if ( Model.user.IsAuthenticated )
-		{
-			if ( Model.user.IsAFavorite( Model.SingleRecipe.id ) )
-			{
-				<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="UnFavorite" />
-			}
-			else
-			{
-				<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="Favorite" />
-			}
-		}
+		@if (Model.user.IsAuthenticated) {
+			if (Model.user.IsAFavorite(Model.SingleRecipe.id)) {
+<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="UnFavorite" /> }
+else {
+<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="Favorite" />}
+}
 		<!---Display Recipe--->
 		<article>
-					   
+
 			<h2>@Model.SingleRecipe.title</h2>
+			<br />
 			<img src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
+			<br />
+			<br />
 			<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
 			<p>Servings : @Model.SingleRecipe.servings </p>
 
-			<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
-			<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
-			<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
+			<p>Cuisines: @String.Join(", ", @Model.SingleRecipe.cuisines)</p>
+			<p>Diets: @String.Join(", ", @Model.SingleRecipe.diets)</p>
+			<p>Dish Types: @String.Join(", ", @Model.SingleRecipe.dishTypes)</p>
+
 			<table>
+				<br />
+
 				<tr><th>Ingredient:</th><th>Amount:</th></tr>
-				@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
-				{
-					<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
-				}
+				<br />
+				<br />
+				@foreach (Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients()) {
+	<tr><td>@ingredient.name</td>  <td>        @ingredient.amount @ingredient.unit</td></tr>
+}
 			</table>
 			<hr />
 			<h3>Instructions:</h3>
 			<ol>
-				@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
-				{
-					<li>@instruction</li>
-				}
+				@foreach (String instruction in @Model.SingleRecipe.SplitInstructions()) {
+	<li>@instruction</li>
+}
 			</ol>
 
 
 			<div id="nutritionDiv" style="display:none">
-				@try
-				{
+				@try {
 
 					var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
-					foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
-					{
+					foreach (Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients) {
 						nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
 					}
 					nutritionTable += "</table>";
 
-					WriteLiteral( nutritionTable );
+					WriteLiteral(nutritionTable);
 				}
-				catch ( Exception e )
-				{
-					<p> No Nutrition Data Available </p>
-				}
+				catch (Exception e) {
+	<p> No Nutrition Data Available </p>}
 			</div>
 			<button class="button" id="btnNutrition" onclick="showNutrition()">Show Nutrition</button>
 
@@ -73,12 +73,10 @@
 
 
 		<!---Add to cart button--->
-		@if ( Model.user.IsAuthenticated )
-		{
-			<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
-				Add to shopping cart
-			</a>
-		}
+		@if (Model.user.IsAuthenticated) {
+<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
+	Add to shopping cart
+</a>}
 
 		<!---End add to cart button--->
 		<!---End Display Recipe--->
@@ -92,54 +90,48 @@
 					color: orange;
 				}
 			</style>
-			@{
-				int DifficultyRate = 0;
+			@{ int DifficultyRate = 0;
 				int TasteRate = 0;
 
-				foreach ( Reciplease.Models.Rating r in Model.user.Ratings )
-				{
-					if ( r.intRecipeID == int.Parse( Model.SingleRecipe.id ) )
-					{
+				foreach (Reciplease.Models.Rating r in Model.user.Ratings) {
+					if (r.intRecipeID == int.Parse(Model.SingleRecipe.id)) {
 						DifficultyRate = r.intDifficultyRating;
 						TasteRate = r.intTasteRating;
 					}
 				}
 
 				string[] DifficultyRates = new string[5];
-				if ( DifficultyRate > 0 ) { DifficultyRates[0] = "checked"; }
-				if ( DifficultyRate > 1 ) { DifficultyRates[1] = "checked"; }
-				if ( DifficultyRate > 2 ) { DifficultyRates[2] = "checked"; }
-				if ( DifficultyRate > 3 ) { DifficultyRates[3] = "checked"; }
-				if ( DifficultyRate > 4 ) { DifficultyRates[4] = "checked"; }
-				<p><b>Difficulty</b></p>
+				if (DifficultyRate > 0) { DifficultyRates[0] = "checked"; }
+				if (DifficultyRate > 1) { DifficultyRates[1] = "checked"; }
+				if (DifficultyRate > 2) { DifficultyRates[2] = "checked"; }
+				if (DifficultyRate > 3) { DifficultyRates[3] = "checked"; }
+				if (DifficultyRate > 4) { DifficultyRates[4] = "checked"; }
+	<p><b>Difficulty</b></p>
 				<span id="rate1" class="fa fa-star @DifficultyRates[0] rate-star"></span>
-				<span id="rate2" class="fa fa-star @DifficultyRates[1] rate-star"></span>
-				<span id="rate3" class="fa fa-star @DifficultyRates[2] rate-star"></span>
-				<span id="rate4" class="fa fa-star @DifficultyRates[3] rate-star"></span>
-				<span id="rate5" class="fa fa-star @DifficultyRates[4] rate-star"></span>
+							<span id="rate2" class="fa fa-star @DifficultyRates[1] rate-star"></span>
+										<span id="rate3" class="fa fa-star @DifficultyRates[2] rate-star"></span>
+													<span id="rate4" class="fa fa-star @DifficultyRates[3] rate-star"></span>
+																<span id="rate5" class="fa fa-star @DifficultyRates[4] rate-star"></span> string[] TasteRatings = new string[5];
+																if (TasteRate > 0) { TasteRatings[0] = "checked"; }
+																if (TasteRate > 1) { TasteRatings[1] = "checked"; }
+																if (TasteRate > 2) { TasteRatings[2] = "checked"; }
+																if (TasteRate > 3) { TasteRatings[3] = "checked"; }
+																if (TasteRate > 4) { TasteRatings[4] = "checked"; }
+													<p><b>Taste</b></p>
+																<span id="rate1" class="fa fa-star @TasteRatings[0] rate-star"></span>
+																			<span id="rate2" class="fa fa-star @TasteRatings[1] rate-star"></span>
+																						<span id="rate3" class="fa fa-star @TasteRatings[2] rate-star"></span>
+																									<span id="rate4" class="fa fa-star @TasteRatings[3] rate-star"></span>
+																												<span id="rate5" class="fa fa-star @TasteRatings[4] rate-star"></span>
 
-				string[] TasteRatings = new string[5];
-				if ( TasteRate > 0 ) { TasteRatings[0] = "checked"; }
-				if ( TasteRate > 1 ) { TasteRatings[1] = "checked"; }
-				if ( TasteRate > 2 ) { TasteRatings[2] = "checked"; }
-				if ( TasteRate > 3 ) { TasteRatings[3] = "checked"; }
-				if ( TasteRate > 4 ) { TasteRatings[4] = "checked"; }
-				<p><b>Taste</b></p>
-				<span id="rate1" class="fa fa-star @TasteRatings[0] rate-star"></span>
-				<span id="rate2" class="fa fa-star @TasteRatings[1] rate-star"></span>
-				<span id="rate3" class="fa fa-star @TasteRatings[2] rate-star"></span>
-				<span id="rate4" class="fa fa-star @TasteRatings[3] rate-star"></span>
-				<span id="rate5" class="fa fa-star @TasteRatings[4] rate-star"></span>
-
-				<button id="rate11" onclick="rateRecipe(@Model.user.UID, @Model.SingleRecipe.id, 1, 2);" class="fa fa-star checked rate-star">test</button>
-			}
+																															<button id="rate11" onclick="rateRecipe(@Model.user.UID, @Model.SingleRecipe.id, 1, 2);" class="fa fa-star checked rate-star">test</button> }
 
 		</form>
 		<div id="snackbar">Some text some message..</div>
 
 	</div>
 </div>
-	
+
 
 <script>
 	function toggle() {
