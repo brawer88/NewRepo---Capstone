@@ -1,9 +1,15 @@
 @model Reciplease.Models.User
 @{
-	ViewBag.Title = "User Account";
+	ViewBag.Title = "Your Account";
 }
-<h2>@ViewBag.Title</h2>
-
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+<style>
+	body {
+		font-family: 'Montserrat';
+	}
+</style>
+<h2>Your Account</h2>
+<br />
 @if ( !Model.IsAuthenticated )
 {
 	@Html.Partial( "NotAuthenticated" )

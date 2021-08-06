@@ -1,4 +1,4 @@
-﻿body {
+body {
     padding-bottom: 20px;
 }
 
@@ -13,37 +13,42 @@ td{
 	padding: 4px;
 	margin: 2px;
 }
-
-.instr {
-	color: blue;
-	font-style: italic;
-	font-weight: 300;
+th {
+	border-color: inherit;
+	border-style: solid;
+	border-width: 0;
+	padding-right: 85px;
 }
 
+
 .button {
-	background-color: lightgreen;
-	border: none;
-	color: black;
-	padding: 4px 10px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 12px;
-	margin: 4px 2px;
-	cursor: pointer;
+  background-color: lightgray;
+  border: 0.5px solid;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  padding: 5px;
+  margin: 4px 2px;
+  cursor: pointer;
+  outline: 0.5px solid black;
+  font-weight: bold;
 }
 
 .button-red {
-	background-color: orangered;
-	border: none;
+	background-color: red;
+	border: 0.5px solid;
 	color: black;
-	padding: 4px 10px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
-	font-size: 12px;
+	font-size: 15px;
+	padding: 5px;
 	margin: 4px 2px;
 	cursor: pointer;
+	outline: 0.5px solid black;
+	font-weight: bold;
 }
 
 /* The snackbar - position it at the bottom and in the middle of the screen */
@@ -174,19 +179,19 @@ td{
 input,
 select,
 textarea {
-    max-width: 440px;
+    max-width: 280px;
 }
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
 
 @font-face {
-  font-family: sans-serif;
-  src: url('../fonts/ubuntu/Ubuntu-Regular.ttf'); 
+	font-family: Montserrat;
+	src: url('https://fonts.googleapis.com/css?family=Montserrat');
 }
 
 @font-face {
-  font-family: sans-serif;
-  src: url('../fonts/ubuntu/Ubuntu-Bold.ttf'); 
+	font-family: Montserrat;
+	src: url('https://fonts.googleapis.com/css?family=Montserrat');
 }
 
 /*//////////////////////////////////////////////////////////////////
@@ -246,8 +251,9 @@ ul, li {
 
 /*---------------------------------------------*/
 input {
-	outline: 2px solid black;
-	border: 2px solid black;
+	border: 1px solid black;
+	padding: 5px;
+	
 }
 input[type=text] {
   border: .5px solid black;
@@ -255,8 +261,8 @@ input[type=text] {
 }
 
 textarea {
-  outline: inset;
-  border: inset;
+  outline: none;
+  border: none;
 }
 
 textarea:focus, input:focus {
@@ -328,7 +334,7 @@ iframe {
   
   background-position: center;
   background-size: cover;
-  background-repeat: no-repeat;;
+  background-repeat: no-repeat;
 }
 
 

@@ -1,11 +1,20 @@
 @model Reciplease.Models.User
 @{
-	ViewBag.Title = "SignUp";
+	ViewBag.Title = "Sign Up";
 }
 
-<h2>@ViewBag.Title</h2>
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+<style>
+	body {
+		font-family: 'Montserrat';
+	}
+</style>
+
+<h2>Sign Up</h2>
 
 <p>Enter your information and click the Sign-Up button to sign up.</p>
+<br />
+<br />
 
 @using (Html.BeginForm(FormMethod.Post)) {
 
@@ -32,26 +41,30 @@
 			<div>@Html.LabelFor(model => model.FirstName)</div>
 			<div>@Html.TextBoxFor(model => model.FirstName, new { @autofocus = "autofocus" })</div>
 		</div>
+		<br />
 		<div class="item">
 			<div>@Html.LabelFor(model => model.LastName)</div>
 			<div>@Html.TextBoxFor(model => model.LastName)</div>
 		</div>
+		<br />
 		<div class="item">
 			<div>@Html.LabelFor(model => model.Email)</div>
 			<div>@Html.TextBoxFor(model => model.Email)</div>
 		</div>
 	</div>
+	<br />
 	<div class="section">
 		<div class="item">
 			<div>@Html.LabelFor(model => model.Username)</div>
 			<div>@Html.TextBoxFor(model => model.Username)</div>
 		</div>
+		<br />
 		<div class="item">
 			<div>@Html.LabelFor(model => model.Password)</div>
 			<div>@Html.TextBoxFor(model => model.Password, new { type = "password" })</div>
 		</div>
 	</div>
-
+<br />
 	<div>
 		<button id="btnSignUp" name="btnSubmit" value="signup" class="button"><i class="fas fa-user-plus"></i> Sign-Up</button>
 	</div>

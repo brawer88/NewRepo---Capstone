@@ -3,11 +3,18 @@
 @{
 	ViewBag.Title = "UpdateUser";
 }
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+<style>
+	body {
+		font-family: 'Montserrat';
+	}
+</style>
 
-<h2>UpdateUser</h2>
-
+<h2>Update Your Account</h2>
 <p>To make changes to your profile enter your information below and click the Update button.</p>
 
+<br />
+<br />
 @if ( @Model.IsAuthenticated == true )
 {
 	<div id="user-profile-data">
@@ -17,24 +24,26 @@
 				<div class="container">
 					<div>@Html.LabelFor( model => model.FirstName )</div>
 					<div>@Html.TextBoxFor( model => model.FirstName, new { @autofocus = "autofocus" } )</div>
-
+					<br />
 					<div>@Html.LabelFor( model => model.LastName )</div>
 					<div>@Html.TextBoxFor( model => model.LastName )</div>
-
+					<br />
 					<div>@Html.LabelFor( model => model.Email )</div>
 					<div>@Html.TextBoxFor( model => model.Email )</div>
-
+<br />
 					<div>@Html.LabelFor( model => model.Username )</div>
 					<div>@Html.TextBoxFor( model => model.Username )</div>
-
+<br />
 					<div>@Html.LabelFor( model => model.Password )</div>
 					<div>@Html.TextBoxFor( model => model.Password, new { type = "password" } )</div>
 				</div>
 			</div>
-
+<br />
 			<div class="card">
-				<button class="button-action" id="btnUpdate" name="btnSubmit" value="update" onclick="updateMe()"><i class='far fa-save'></i> Update</button>
-			</div>
+				<br />
+				<button class="button-action" id="btnUpdate" name="btnSubmit" value="update" onclick="updateMe()" style="font-size:20px; font-weight:bold; "><i class='far fa-save'></i> Update</button>
+			<br />
+		</div>
 		}
 	</div>
 	<div id="snackbar">Some text some message..</div>
