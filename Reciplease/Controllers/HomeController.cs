@@ -14,6 +14,28 @@ namespace Reciplease.Controllers {
 		[HandleError]
 		public ActionResult Index( ) {
 
+			//CartMappedToKrogerUPC cart = new CartMappedToKrogerUPC( );
+
+			//User u = new User( );
+			//u.Username = "Brawer";
+			//u.Password = "reciplease2";
+			//u = u.Login( );
+			//u.KrogerAuthTokens = new AuthCodes( );
+			//u.KrogerAuthTokens.access_token = "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vYXBpLmtyb2dlci5jb20vdjEvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiWjRGZDNtc2tJSDg4aXJ0N0xCNWM2Zz09IiwidHlwIjoiSldUIn0.eyJhdWQiOiJyZWNpcGxlYXNlLWNmZjk0ZjRmNjA0MWRlYTEyOTA5NWQxYjkzNjE4MDAxNjI5MDQzOTg2MjY0OTk0ODEzOCIsImV4cCI6MTYyODM0MzU5NiwiaWF0IjoxNjI4MzQxNzkxLCJpc3MiOiJhcGkua3JvZ2VyLmNvbSIsInN1YiI6ImQ5NzhlOGYyLTA5Y2MtNDk5My04NWRhLTQ5Njc3YzU3ZmViNCIsInNjb3BlIjoiY2FydC5iYXNpYzp3cml0ZSIsImF1dGhBdCI6MTYyODM0MTc5NjgwNjAwMjcwNSwicGZjeCI6InVybjprcm9nZXJjbzpwcm9maWxlOnNob3BwZXI6M2Q2OTJmMDctNWZlMy05MTc1LTcxNzYtZDYzZDI0MDgyNjFhIiwiYXpwIjoicmVjaXBsZWFzZS1jZmY5NGY0ZjYwNDFkZWExMjkwOTVkMWI5MzYxODAwMTYyOTA0Mzk4NjI2NDk5NDgxMzgifQ.Dc8JCEhmO_M5BPBncnUsGtlJ7mchYBGAlpFVbo11VfS7XDwrw6C1Oec21fGIRPV-gplqeybFHvf9FQky6bl0dtR_VkAdtUnkMIPJ2aQ9Z-IODaBZk4H-0NRXd0zT9pctUYpYg197rw6CGP0pJj2QFzhsaonzH63tE3STX8LZ_RL7aIEvM-GFk7VZCLhyPBUxJr9K4ruZYuVHPkHPEeZfvi_cdieVNdr2kUeksvrxhOS_WI7y9uO-2lyZSShuDi0vGcqH6vDRkHeG1yPFuisPSEQsU4S4Q5oxGMTbEvstT-UboaTHUjL4c0NU6ekJ5o8OkBQuILO3_Bjs886etwBRsw";
+			//u.SaveUserSession( );
+			//Cart c = new Cart( );
+			//c = c.GetCartSession( );
+			//Database db = new Database( );
+
+			//c.list = db.GetShoppingList( u.UID );
+
+			//c.ingredients = db.GetIngredients( c.list.intRecipeID.ToString( ) );
+
+			//CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
+			//KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
+
+			//return Content( "<script language='javascript' type='text/javascript'>window.open('https://www.kroger.com/cart');location.reload();</script>" );
+
 			RecipesList recipes = new RecipesList( );
 			Database DB = new Database( );
 
@@ -29,42 +51,12 @@ namespace Reciplease.Controllers {
 			h.user = new Models.User( );
 			h.user = h.user.GetUserSession( );
 
+
 			return View( h );
 		}
 
 		[HandleError]
 		public ActionResult Search( ) {
-
-			//CartMappedToKrogerUPC cart = new CartMappedToKrogerUPC( );
-
-			//Item item = new Item( );
-			//item.upc = "0001111041700";
-			//item.quantity = 2;
-
-
-			//cart.addItem( item );
-			//item.upc = "0004900002891";
-			//item.quantity = 2;
-			//cart.addItem( item );
-
-			//item.upc = "0007283000100";
-			//item.quantity = 2;
-			//cart.addItem( item );
-
-
-			//item.upc = "0074236526480";
-			//item.quantity = 2;
-			//cart.addItem( item );
-
-
-			//item.upc = "0004310033106";
-			//item.quantity = 2;
-			//cart.addItem( item );
-
-
-
-			//KrogerAPI.AddToKrogerCart( cart.convertToJson() );
-
 
 			Models.HomeContent h = new Models.HomeContent
 			{

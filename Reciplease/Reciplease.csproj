@@ -128,6 +128,7 @@
     <Compile Include="Models\FavoritesContent.cs" />
     <Compile Include="Models\HomeContent.cs" />
     <Compile Include="Models\KrogerAPI.cs" />
+    <Compile Include="Models\KrogerSearchResults.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\RecipeAPI.cs" />

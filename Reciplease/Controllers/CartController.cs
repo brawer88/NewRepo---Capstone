@@ -47,11 +47,17 @@ namespace Reciplease.Controllers
 			user.KrogerAuthTokens = KrogerAPI.GetKrogerToken( authcode );
 			user.SaveUserSession( );
 
-			// code to add to kroger cart
-			Cart c = new Cart( );
-			c = c.GetCartSession( );
+			//// code to add to kroger cart
+			//Cart c = new Cart( );
+			//c = c.GetCartSession( );
 
-			return RedirectToAction( "index" );
+			//CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
+			//KrogerAPI.AddToKrogerCart( upcs.convertToJson() );
+			//c.EmptyCart( );
+
+			//return Content( "<script language='javascript' type='text/javascript'>window.open('https://www.kroger.com/cart');location.reload();</script>" );
+
+			return RedirectToAction( "Index" );
 		}
 
         public ActionResult AddToCart()

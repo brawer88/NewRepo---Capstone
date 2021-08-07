@@ -38,7 +38,10 @@ namespace Reciplease.Models {
 
 		// method to remove
 		public void EmptyCart( ) {
-			// will update when there is a usp to do this
+			Database db = new Database( );
+			User u = new User( );
+			u = u.GetUserSession( );
+			db.DropCart( u.UID );
 		}
 
 
@@ -146,7 +149,7 @@ namespace Reciplease.Models {
 
 	// following classes used for kroger cart
 
-	public struct Item {
+	public struct clsItem {
 		public string upc { get; set; }
 		public long quantity { get; set; }
 	}
@@ -155,11 +158,11 @@ namespace Reciplease.Models {
 	public class CartMappedToKrogerUPC {
 
 
-		public Dictionary<string, Item[]> dictItems { get; set; }
+		public Dictionary<string, clsItem[]> dictItems { get; set; }
 
 		public CartMappedToKrogerUPC( ) {
-			dictItems = new Dictionary<string, Item[]>( );
-			dictItems.Add( "items", new Item[0] );
+			dictItems = new Dictionary<string, clsItem[]>( );
+			dictItems.Add( "items", new clsItem[0] );
 		}
 
 
@@ -167,10 +170,10 @@ namespace Reciplease.Models {
 			return Newtonsoft.Json.JsonConvert.SerializeObject( dictItems );
 		}
 
-		public void addItem( Item item ) {
-			Item[] oldItems = dictItems["items"];
+		public void addItem( clsItem item ) {
+			clsItem[] oldItems = dictItems["items"];
 			int newLength = oldItems.Length + 1;
-			Item[] newItems = new Item[newLength];
+			clsItem[] newItems = new clsItem[newLength];
 
 			if ( oldItems.Length > 0 )
 			{

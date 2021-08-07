@@ -12,7 +12,7 @@ namespace Reciplease.Models {
 		const String client_id = "reciplease-cff94f4f6041dea129095d1b936180016290439862649948138";
 
 		public static string GetKrogerAuth() {
-			string scope = HttpUtility.UrlEncode( "cart.basic:write" );
+			string scope = HttpUtility.UrlEncode( "cart.basic:write product.compact" );
 			var client = new RestClient( "https://api.kroger.com/v1/connect/oauth2/authorize?scope="+ scope + "&response_type=code&client_id=" + client_id + "&redirect_uri=http://itd1.cincinnatistate.edu/cpdm-wernkeb/Cart/AuthCode" );
 			var request = new RestRequest( Method.GET );
 			request.AddHeader( "Accept", "application/json" );
@@ -25,7 +25,7 @@ namespace Reciplease.Models {
 
 		public static AuthCodes GetKrogerToken( string strAuthCode ) {
 			string AuthToken = client_id + ":" + client_secret;
-			string scope = HttpUtility.UrlEncode( "cart.basic:write" );
+			string scope = HttpUtility.UrlEncode( "cart.basic:write product.compact" );
 			AuthToken = Base64Encode( AuthToken );
 
 			var client = new RestClient( "https://api.kroger.com/v1/connect/oauth2/token" );
@@ -48,6 +48,76 @@ namespace Reciplease.Models {
 			return auths;
 		}
 
+		internal static CartMappedToKrogerUPC GetKrogerUPCS( List<Ingredient> list ) {
+			CartMappedToKrogerUPC upcs = new CartMappedToKrogerUPC( );
+
+			foreach ( Ingredient i in list )
+			{
+				clsItem item = new clsItem( );
+				item = GetItemFromKroger( i.name, i.amount, i.unit );
+				upcs.addItem( item );
+			}
+
+			return upcs;
+					   
+		}
+
+		private static clsItem GetItemFromKroger( string name, string amount, string quant ) {
+			User user = new User( );
+
+			user = user.GetUserSession( );
+
+			string accessToken = user.KrogerAuthTokens.access_token;
+
+			var client = new RestClient( "https://api.kroger.com/v1/products?filter.term=" + name );
+			var request = new RestRequest( Method.GET );
+			
+			request.AddHeader( "Accept", "application/json" );
+
+			request.AddHeader( "Authorization", "Bearer " + accessToken );
+
+			IRestResponse response = client.Execute( request );			
+
+			KrogerSearchResults mySearchItems = JsonConvert.DeserializeObject<KrogerSearchResults>( response.Content );
+
+			clsItem item = new clsItem( );
+
+			double dblPrice = 10000;
+
+			foreach (Datum d in mySearchItems.data)
+			{
+				foreach (Item i in d.items)
+				{
+					// split amount
+					string[] amounts = i.size.Split( ' ' );
+
+					// convert ingredient to kroger amount
+					double newAmount = RecipeAPI.ConvertAmounts( amounts[1], name, amount, quant );
+
+					if (i.price.regular < dblPrice)
+					{
+						if ( double.Parse( amounts[0] ) > newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = 1;
+							dblPrice = i.price.regular;
+						}
+						else if ( i.price.regular * 2 < dblPrice ) {
+							if ( double.Parse( amounts[0] ) * 2 > newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 2;
+								dblPrice = i.price.regular * 2;
+							}
+						}
+					}
+					
+				}
+			}
+
+			return item;
+
+		}
 
 		public static string Base64Encode( string plainText ) {
 			var plainTextBytes = System.Text.Encoding.UTF8.GetBytes( plainText );
@@ -68,13 +138,12 @@ namespace Reciplease.Models {
 
 		public static void AddToKrogerCart( string items ) {
 			// get user auth token
-			
-			
+
 			User user = new User( );
 			
 			user = user.GetUserSession( );
 
-			string accessToken = "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vYXBpLmtyb2dlci5jb20vdjEvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiWjRGZDNtc2tJSDg4aXJ0N0xCNWM2Zz09IiwidHlwIjoiSldUIn0.eyJhdWQiOiJyZWNpcGxlYXNlLWNmZjk0ZjRmNjA0MWRlYTEyOTA5NWQxYjkzNjE4MDAxNjI5MDQzOTg2MjY0OTk0ODEzOCIsImV4cCI6MTYyODI3MjMxMCwiaWF0IjoxNjI4MjcwNTA1LCJpc3MiOiJhcGkua3JvZ2VyLmNvbSIsInN1YiI6ImQ5NzhlOGYyLTA5Y2MtNDk5My04NWRhLTQ5Njc3YzU3ZmViNCIsInNjb3BlIjoiY2FydC5iYXNpYzp3cml0ZSIsImF1dGhBdCI6MTYyODI3MDUxMDI3NzMyOTgxMCwicGZjeCI6InVybjprcm9nZXJjbzpwcm9maWxlOnNob3BwZXI6M2Q2OTJmMDctNWZlMy05MTc1LTcxNzYtZDYzZDI0MDgyNjFhIiwiYXpwIjoicmVjaXBsZWFzZS1jZmY5NGY0ZjYwNDFkZWExMjkwOTVkMWI5MzYxODAwMTYyOTA0Mzk4NjI2NDk5NDgxMzgifQ.PiuDtiOWeMADmLQEl_-XtnKAzr0T5zMF_aaa7e8OQzx-CjtnJYMSCpLOpr1HsaB56dXJmX4SVuLTGjjqaM0i1-k26j-EQ9-RxE0y49kTuR0h_w3ulI_D9Fk6fPmmQHR0Jxv5Ygt5z0NWDtqQZLkhRUcywYlEyLOZ5nqN3FmQN_j6TE7q2tHXz8DlcLsNmAd48xfY9trsN2mRcfvW6_V4br6jfSJUDfoyTlH6n6QUvIQVG-gwO4tOXWDlDpBe1kdqJnTutv7Ff6rrHiGRLCu1TW5KtHvQrN3oB7940wngWSdFjo8gIUROjB9B1FXRmOeocSIm9JnbIdb6dZbl4f57dQ";
+			string accessToken = user.KrogerAuthTokens.access_token;
 
 			var client = new RestClient( "https://api.kroger.com/v1/cart/add" );			
 			var request = new RestRequest( Method.PUT );
@@ -83,8 +152,6 @@ namespace Reciplease.Models {
 			request.AddHeader( "Accept", "application/json" );
 			
 			request.AddHeader( "Authorization", "Bearer " + accessToken );
-
-			
 
 			IRestResponse response = client.Execute( request );
 

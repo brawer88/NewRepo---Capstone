@@ -20,37 +20,33 @@ input[type=text] {
 	@using ( Html.BeginForm( FormMethod.Post ) )
 	{
 		<div class="section">
-<<<<<<< HEAD
-<<<<<<< Updated upstream
+
 			<input type="text" id="query" name="SearchQuery" />
 			<input type="submit" name="btnSubmit" value="submit"/>
-=======
+
 			<input type="text" id="SearchQuery" name="SearchQuery" value="@Model.searchItems.query" />
 			<input id="standardSearch" type="submit" class="button" name="btnSubmit" value="submit" />
->>>>>>> Stashed changes
-=======
+
 			<input type="text" id="SearchQuery" name="SearchQuery" value=@Model.searchItems.query />
 			<input id="standardSearch" type="submit" class="button" name="btnSubmit" value="submit" />
->>>>>>> parent of 72eeb36 (Update Search.cshtml)
+
 		</div>
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
+
 			<br />
 			
 			<button onclick="AdvancedSearchToggle()" class="button">Advanced Search</button>
-=======
+
 		<button class="button" onclick="AdvancedSearchToggle()">Advanced Search</button>
->>>>>>> parent of 72eeb36 (Update Search.cshtml)
+
 
 		<div id="AdvancedSearch" style="display:none">
 
-<<<<<<< HEAD
+
 			
 			@using (Html.BeginForm(FormMethod.Post))
 			{
-				<div id="AdvancedSearch" style="display:none">
-=======
+
 		<button class="button" onclick="AdvancedSearchToggle()">Advanced Search</button>
 
 		<div id="AdvancedSearch" style="display:none">
@@ -72,26 +68,9 @@ input[type=text] {
 
 			<label for="">Dish Type:</label>
 			<input type='text' id="Type" name="Type" value="@Model.searchItems.type" />
->>>>>>> Stashed changes
-=======
+
 			<label for="intolerances">Intolerances:</label>
-			<input type='text' id="Intolerances" name="Intolerances" value=@Model.searchItems.intolerances />
-
-			<label for="diets">Diet:</label>
-			<input type='text' id="Diets" name="Diets" value=@Model.searchItems.diets />
-
-			<label for="cuisine">Cuisine:</label>
-			<input type='text' id="Cuisine" name="Cuisine" value=@Model.searchItems.cuisine />
->>>>>>> parent of 72eeb36 (Update Search.cshtml)
-
-			<label for="ingredients">Ingredient:</label>
-			<input type='text' id="Ingredients" name="Ingredients" value=@Model.searchItems.ingredients />
-
-			<label for="">Excluded Ingredient:</label>
-			<input type='text' id="ExcludedIngredients" name="ExcludedIngredients" value=@Model.searchItems.excludedIngredients />
-
-			<label for="">Dish Type:</label>
-			<input type='text' id="Type" name="Type" value=@Model.searchItems.type />
+			<input type='text' id="Intolerances" name="Intolerances" value=@Model.searchItems.intolerances />		
 
 			<br />
 			<br />

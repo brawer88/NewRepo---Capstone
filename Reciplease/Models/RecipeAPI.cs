@@ -130,5 +130,39 @@ namespace Reciplease.Models {
 			}
 			return Recipes;
 		}
+
+
+		public static double ConvertAmounts( string targetUnit, string ingredientName, string sourceAmount, string sourceUnit ) {
+
+			double amount = 0;
+			// get 
+			var client = new RestClient( "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/convert?targetUnit=" + targetUnit + "&ingredientName=" + ingredientName + "&sourceAmount=" + sourceAmount +"&sourceUnit=" + sourceUnit );
+			var request = new RestRequest( Method.GET );
+			request.AddHeader( "x-rapidapi-key", APIKEY );
+			request.AddHeader( "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" );
+			IRestResponse response = client.Execute( request );
+
+			// deserialize object
+			if ( response.StatusCode == HttpStatusCode.OK )
+			{
+				Conversion myConversion = JsonConvert.DeserializeObject<Conversion>( response.Content );
+				amount = myConversion.targetAmount;
+			}
+
+
+			return amount;
+
+		}
+		
+	}
+
+	// Conversion myDeserializedClass = JsonConvert.DeserializeObject<Conversion>(myJsonResponse); 
+	public class Conversion {
+		public double sourceAmount { get; set; }
+		public string sourceUnit { get; set; }
+		public double targetAmount { get; set; }
+		public string targetUnit { get; set; }
+		public string answer { get; set; }
+		public string type { get; set; }
 	}
 }
