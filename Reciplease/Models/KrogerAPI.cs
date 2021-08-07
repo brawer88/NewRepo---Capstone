@@ -55,7 +55,11 @@ namespace Reciplease.Models {
 			{
 				clsItem item = new clsItem( );
 				item = GetItemFromKroger( i.name, i.amount, i.unit );
-				upcs.addItem( item );
+				if (item.quantity != 0 )
+				{
+					upcs.addItem( item );
+				}
+				
 			}
 
 			return upcs;
@@ -82,7 +86,7 @@ namespace Reciplease.Models {
 
 			clsItem item = new clsItem( );
 
-			double dblPrice = 10000;
+			double dblFinalDifference = 1000;
 
 			foreach (Datum d in mySearchItems.data)
 			{
@@ -91,23 +95,43 @@ namespace Reciplease.Models {
 					// split amount
 					string[] amounts = i.size.Split( ' ' );
 
-					// convert ingredient to kroger amount
-					double newAmount = RecipeAPI.ConvertAmounts( amounts[1], name, amount, quant );
-
-					if (i.price.regular < dblPrice)
+					if (mySearchItems.data.Count == 1 )
 					{
-						if ( double.Parse( amounts[0] ) > newAmount )
+						item.upc = d.upc;
+						item.quantity = 1;
+					}
+
+					else if ( amounts.Length == 2 || amounts.Length == 3 )
+					{
+						if ( amounts.Length == 3 )
 						{
-							item.upc = d.upc;
-							item.quantity = 1;
-							dblPrice = i.price.regular;
+							amounts[1] = amounts[1] + " " + amounts[2];
 						}
-						else if ( i.price.regular * 2 < dblPrice ) {
-							if ( double.Parse( amounts[0] ) * 2 > newAmount )
+						// convert ingredient to kroger amount
+						double newAmount = RecipeAPI.ConvertAmounts( amounts[1], name, amount, quant );
+
+						double dblDifference = 0;
+						dblDifference = double.Parse( amounts[0] ) - newAmount;
+
+						if ( dblFinalDifference > dblDifference )
+						{
+							if ( double.Parse( amounts[0] ) > newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 1;
+								dblFinalDifference = dblDifference;
+							}
+							else if ( double.Parse( amounts[0] ) * 2 > newAmount )
 							{
 								item.upc = d.upc;
 								item.quantity = 2;
-								dblPrice = i.price.regular * 2;
+								dblFinalDifference = ( double.Parse( amounts[0] ) * 2 ) - newAmount;
+							}
+							else if ( double.Parse( amounts[0] ) * 3 > newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 3;
+								dblFinalDifference = ( double.Parse( amounts[0] ) * 3 ) - newAmount;
 							}
 						}
 					}

@@ -10,7 +10,7 @@ namespace Reciplease.Controllers
     public class CartController : Controller
     {
         // GET: Cart
-        public ActionResult Index()
+        public ActionResult Index(  )
         {
             CartContent cart = new CartContent( );
             Models.User u = new Models.User();
@@ -23,6 +23,17 @@ namespace Reciplease.Controllers
 			cart.cart.list = db.GetShoppingList( cart.user.UID );
 
 			cart.cart.ingredients = db.GetIngredients( cart.cart.list.intRecipeID.ToString( ) );
+
+			string id = Convert.ToString( RouteData.Values["id"] );
+			string alert = "";
+			if (id == "1")
+			{
+				alert = "alert('Not all items were found');'";
+			}
+			
+			string js = alert + " window.open('https://www.kroger.com/cart'); location.href='http://itd1.cincinnatistate.edu/CPDM-WernkeB/Cart';";
+			
+				cart.js = js;
 
 			return View(cart);
         }
@@ -46,18 +57,30 @@ namespace Reciplease.Controllers
 			user.KrogerAuthCode = authcode;
 			user.KrogerAuthTokens = KrogerAPI.GetKrogerToken( authcode );
 			user.SaveUserSession( );
+			
+			// code to add to kroger cart
+			Cart c = new Cart( );
+			c = c.GetCartSession( );
+			Database db = new Database( );
 
-			//// code to add to kroger cart
-			//Cart c = new Cart( );
-			//c = c.GetCartSession( );
+			c.list = db.GetShoppingList( user.UID );
 
-			//CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
-			//KrogerAPI.AddToKrogerCart( upcs.convertToJson() );
-			//c.EmptyCart( );
+			c.ingredients = db.GetIngredients( c.list.intRecipeID.ToString( ) );
 
-			//return Content( "<script language='javascript' type='text/javascript'>window.open('https://www.kroger.com/cart');location.reload();</script>" );
+			CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
+			KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
+			string id = "0";
+			if ( upcs.dictItems.Count != c.ingredients.Count )
+			{
+				id = "1";
+			}
+			
+			c.EmptyCart( );
 
-			return RedirectToAction( "Index" );
+
+			return RedirectToAction( "Index", new { id } );		
+			
+			
 		}
 
         public ActionResult AddToCart()
