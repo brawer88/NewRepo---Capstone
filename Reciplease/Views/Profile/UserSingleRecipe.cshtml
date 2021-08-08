@@ -31,6 +31,7 @@
 		@if ( Model.user.IsAuthenticated )
 		{
 			<a href="@Url.Action( "EditRecipe", "Profile", new { id = Model.SingleRecipe.id } )" class="button">Edit Recipe</a>
+			<br />
 			<a id="delete" class="button-red" onclick="deleteMe()" href="@Url.Action( "DeleteRecipe", "Profile", new { id = Model.SingleRecipe.id } )">Delete Recipe</a>
 		}
 		<!---Display Recipe--->

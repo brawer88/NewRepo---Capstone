@@ -158,16 +158,17 @@ else {
 			<p>Dish Types: @String.Join(", ", @Model.SingleRecipe.dishTypes)</p>
 
 			<table>
-				<br />
+				
 
 				<tr><th>Ingredient:</th><th>Amount:</th></tr>
-				<br />
-				<br />
+		
 				@foreach (Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients()) {
 	<tr><td>@ingredient.name</td>  <td>        @ingredient.amount @ingredient.unit</td></tr>
 }
 			</table>
+			
 			<hr />
+			<br />
 			<h3>Instructions:</h3>
 			<ol>
 				@foreach (String instruction in @Model.SingleRecipe.SplitInstructions()) {
