@@ -52,10 +52,10 @@ namespace Reciplease.Controllers
 
 			if ( u.KrogerAuthCode == null )
 			{
-				u.KrogerAuthCode = "Rqc73q6yyy9Bi6Ujd7xcdkDJvpfSaaZrAcyF8n82";
+				u.KrogerAuthCode = "314u7WFP19xXPDATuvehlm911NyqAEn91tdwa2Rh";
 				u.KrogerAuthTokens = new AuthCodes( );
 				u.KrogerAuthTokens.access_token = "";
-				u.KrogerAuthTokens.refresh_token = "B12URHNd4YpYkYd1RJeI7IffyVsNGV1x4ueHd8QF";
+				u.KrogerAuthTokens.refresh_token = "GLaJNpkqq35QiqUP4Cq1G3ONwPaoOsRy0qWTO5IS";
 			}
 
 
