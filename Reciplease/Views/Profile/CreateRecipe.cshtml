@@ -107,7 +107,7 @@ else
 
 					
 					<label for="instructions">*Instructions <span class=instr>(separated steps with a period to create a list of steps when viewing)</span></label>
-						<textArea name="instructions" required rows="8" cols="60" >@String.Join( "\n", Model.SingleRecipe.SplitInstructions( ) )</textArea>
+						<textArea name="instructions" required rows="8" cols="60" style="outline:solid 1px;">@String.Join( "\n", Model.SingleRecipe.SplitInstructions( ) )</textArea>
 
 					<br />
 				}
