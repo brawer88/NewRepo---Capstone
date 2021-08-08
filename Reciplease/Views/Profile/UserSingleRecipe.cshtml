@@ -89,7 +89,7 @@
         type: "GET",
         url: '@Url.Action( "DeleteRecipe", "Profile", new { id = Model.SingleRecipe.id } )',
 		async: true,
-        success: function (msg) {
+        success: function () {
 			alert("Recipe Deleted")
 
         },

@@ -117,11 +117,6 @@ namespace Reciplease.Models {
 			{
 				Item i = d.items[0];
 
-				//if (d.description == "Celtic Sea Salt Light Grey - Case of 6 - 0.5 Lb." || d.description == "Bertolli Rich Taste Extra Virgin Olive Oil" || d.description == "Celtic Sea Salt - Reseal Bag Fine Ground - Case of 6 - .25 LB" )
-				//{
-				//	continue;
-				//}
-
 				if (quant == "pinch" || quant == "pinches")
 				{
 					quant = "teaspoon";

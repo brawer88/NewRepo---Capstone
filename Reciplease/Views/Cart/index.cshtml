@@ -26,19 +26,7 @@
 }
 else
 {
-	if ( @Model.user.KrogerAuthCode != null )
-	{
-		try
-		{
-			<p>auth:  @Model.user.KrogerAuthCode</p>
-			<p>refresh:  @Model.user.KrogerAuthTokens.refresh_token</p>
-			<p>Access:  @Model.user.KrogerAuthTokens.access_token</p>
-		}
-		catch
-		{
-			<p>sommtin happened here</p>
-		}
-	}
+
 	if ( Model.cart.IsEmpty( ) == false )
 	{
 		if ( Model.jsMessage != "" )
