@@ -3,35 +3,13 @@
 @{
 	ViewBag.Title = "Search";
 }
-<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-<style>
-	body {
-		font-family: 'Montserrat';
-	}
-</style>
 
 <style>
-<<<<<<< Updated upstream
-	input[type=text] {
-		width: 40%;
-		padding: 12px 20px;
-		margin: 8px 8px;
-		box-sizing: border-box;
-	}
-=======
->>>>>>> Stashed changes
 </style>
 
 <h2>Search</h2>
 <br />
 
-<<<<<<< Updated upstream
-<div id="user-profile-data">
-	@using (Html.BeginForm(FormMethod.Post)) {
-		<div class="section">
-			<input type="text" id="query" name="SearchQuery" />
-			<input type="submit" name="btnSubmit" value="Search" />
-=======
 
 @using ( Html.BeginForm( FormMethod.Post ) )
 {
@@ -40,43 +18,9 @@
 			<input type="text" id="SearchQuery" name="SearchQuery" value="@Model.searchItems.query" />
 			<input id="standardSearch" type="submit" class="button" name="btnSubmit" value="submit" />
 
->>>>>>> Stashed changes
 		</div>
-	}
-
-	<br />
-
-<<<<<<< Updated upstream
-	<button onclick="AdvancedSearchToggle()" class="button">Advanced Search</button>
-
-	<br />
-	<br />
 
 
-	@using (Html.BeginForm(FormMethod.Post)) {
-		<div id="AdvancedSearch" style="display:none">
-
-			<label for="intolerances">Intolerances:</label>
-			<input type='text' name="hintolerances" value=@Model.searchItems.intolerances />
-
-			<label for="diets">Diet:</label>
-			<input type='text' name="hdiets" value=@Model.searchItems.diets />
-
-			<label for="cuisine">Cuisine:</label>
-			<input type='text' name="hcuisine" value=@Model.searchItems.cuisine />
-
-			<label for="ingredients">Ingredient:</label>
-			<input type='text' name="hingredients" value=@Model.searchItems.ingredients />
-
-			<label for="intolerances">Intolerances:</label>
-			<input type='text' name="hintolerances" value=@Model.searchItems.intolerances />
-
-			<label for="">Excluded Ingredient:</label>
-			<input type='text' name="hexcludedIngredients" value=@Model.searchItems.excludedIngredients />
-
-			<label for="">Dish Type:</label>
-			<input type='text' name="htype" value=@Model.searchItems.type />
-=======
 		<br />
 		
 		
@@ -90,62 +34,23 @@
 
 				<label for="cuisine">Cuisine:</label>
 				<input type='text' id="Cuisine" name="Cuisine" value="@Model.searchItems.cuisine" />
->>>>>>> Stashed changes
 
 				<label for="ingredients">Ingredient:</label>
 				<input type='text' id="Ingredients" name="Ingredients" value="@Model.searchItems.ingredients" />
 
-<<<<<<< Updated upstream
-			<input type="submit" name="btnSubmit" value="Search" />
-=======
 				<label for="">Excluded Ingredient:</label>
 				<input type='text' id="ExcludedIngredients" name="ExcludedIngredients" value="@Model.searchItems.excludedIngredients" />
->>>>>>> Stashed changes
 
 				<label for="">Dish Type:</label>
 				<input type='text' id="Type" name="Type" value="@Model.searchItems.type" />
 
-<<<<<<< Updated upstream
-		</div>
-	}
-
-=======
 
 				<br />
 				<br />
 				<br />
->>>>>>> Stashed changes
 
 			</div>
 
-<<<<<<< Updated upstream
-	@if (HttpContext.Current.Request.HttpMethod == "POST") {
-
-		@*Iterate over recipes to display them*@
-		foreach (Reciplease.Models.Result recipe in Model.SearchResults.results) {
-			<div class="row">
-				<div class="recipe-card">
-					<aside>
-						<a href="@Url.Action("Recipe", new { id = recipe.id })">
-							<span class="icon icon-play">
-								<img src="https://spoonacular.com/recipeImages/@recipe.image" alt=@recipe.title onerror="this.onerror = null; this.src = '/Content/images/no-photo.jpg'" ; />
-							</span>
-						</a>
-					</aside>
-
-					<article>
-						<h2>@recipe.title</h2>
-						<p>Ready In: @recipe.readyInMinutes minutes</p>
-						<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
-						<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
-						<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
-						<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
-					</article>
-				</div>
-			</div>
-		}
-
-=======
 
 }
 
@@ -183,12 +88,8 @@
 			{
 				using ( Html.BeginForm( FormMethod.Post ) )
 				{
->>>>>>> Stashed changes
 
-		using (Html.BeginForm(FormMethod.Post)) {
 
-<<<<<<< Updated upstream
-=======
 						<input type='text' hidden name="hquery" value=@Model.searchItems.query />
 						<input type='text' hidden name="hintolerances" value=@Model.searchItems.intolerances />
 						<input type='text' hidden name="hdiets" value=@Model.searchItems.diets />
@@ -197,32 +98,8 @@
 						<input type='text' hidden name="htype" value=@Model.searchItems.type />
 						<input type='text' hidden name="hindex" value=@Model.searchItems.index />
 						<input type="submit" name="btnSubmit" value="Next Page" />
->>>>>>> Stashed changes
 
-			<input type='text' hidden name="hquery" value=@Model.searchItems.query />
-			<input type='text' hidden name="hintolerances" value=@Model.searchItems.intolerances />
-			<input type='text' hidden name="hdiets" value=@Model.searchItems.diets />
-			<input type='text' hidden name="hcuisine" value=@Model.searchItems.cuisine />
-			<input type='text' hidden name="hingredients" value=@Model.searchItems.ingredients />
-			<input type='text' hidden name="htype" value=@Model.searchItems.type />
-			<input type='text' hidden name="hindex" value=@Model.searchItems.index />
-			<input type="submit" name="btnSubmit" value="Next Page" />
 
-<<<<<<< Updated upstream
-		}
-	}
-</div>
-<script>
-	function AdvancedSearchToggle() {
-		var AS = document.getElementById("AdvancedSearch");
-		if (AS.style.display === "none") {
-			AS.style.display = "block";
-		} else {
-			AS.style.display = "none";
-		}
-	}
-</script>
-=======
 				}
 			}
 			else
@@ -257,4 +134,3 @@
 			if ($("#SearchQuery").val() == "/") { $("#SearchQuery").val(""); };
 		});
 	</script>
->>>>>>> Stashed changes
