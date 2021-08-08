@@ -48,6 +48,31 @@ namespace Reciplease.Models {
 			return auths;
 		}
 
+		public static AuthCodes RefreshKrogerToken( string refresh ) {
+			string AuthToken = client_id + ":" + client_secret;
+			string scope = HttpUtility.UrlEncode( "cart.basic:write product.compact" );
+			AuthToken = Base64Encode( AuthToken );
+
+			var client = new RestClient( "https://api.kroger.com/v1/connect/oauth2/token" );
+			var request = new RestRequest( Method.POST );
+			request.AddParameter( "grant_type", "refresh_token" );
+			request.AddParameter( "scope", scope );
+			request.AddParameter( "refresh_token", refresh );
+			request.AddHeader( "Content-Type", "application/x-www-form-urlencoded" );
+			request.AddHeader( "Authorization", "Basic " + AuthToken );
+			IRestResponse response = client.Post( request );
+
+			AuthCodes auths = null;
+			// deserialize object
+			if ( response.StatusCode == HttpStatusCode.OK )
+			{
+				auths = JsonConvert.DeserializeObject<AuthCodes>( response.Content );
+			}
+
+			return auths;
+
+		}
+
 		internal static CartMappedToKrogerUPC GetKrogerUPCS( List<Ingredient> list ) {
 			CartMappedToKrogerUPC upcs = new CartMappedToKrogerUPC( );
 
@@ -90,53 +115,64 @@ namespace Reciplease.Models {
 
 			foreach (Datum d in mySearchItems.data)
 			{
-				foreach (Item i in d.items)
+				Item i = d.items[0];
+
+				//if (d.description == "Celtic Sea Salt Light Grey - Case of 6 - 0.5 Lb." || d.description == "Bertolli Rich Taste Extra Virgin Olive Oil" || d.description == "Celtic Sea Salt - Reseal Bag Fine Ground - Case of 6 - .25 LB" )
+				//{
+				//	continue;
+				//}
+
+				// split amount
+				string[] amounts = i.size.Split( ' ' );
+
+				if (mySearchItems.data.Count == 1 )
 				{
-					// split amount
-					string[] amounts = i.size.Split( ' ' );
-
-					if (mySearchItems.data.Count == 1 )
-					{
-						item.upc = d.upc;
-						item.quantity = 1;
-					}
-
-					else if ( amounts.Length == 2 || amounts.Length == 3 )
-					{
-						if ( amounts.Length == 3 )
-						{
-							amounts[1] = amounts[1] + " " + amounts[2];
-						}
-						// convert ingredient to kroger amount
-						double newAmount = RecipeAPI.ConvertAmounts( amounts[1], name, amount, quant );
-
-						double dblDifference = 0;
-						dblDifference = double.Parse( amounts[0] ) - newAmount;
-
-						if ( dblFinalDifference > dblDifference )
-						{
-							if ( double.Parse( amounts[0] ) > newAmount )
-							{
-								item.upc = d.upc;
-								item.quantity = 1;
-								dblFinalDifference = dblDifference;
-							}
-							else if ( double.Parse( amounts[0] ) * 2 > newAmount )
-							{
-								item.upc = d.upc;
-								item.quantity = 2;
-								dblFinalDifference = ( double.Parse( amounts[0] ) * 2 ) - newAmount;
-							}
-							else if ( double.Parse( amounts[0] ) * 3 > newAmount )
-							{
-								item.upc = d.upc;
-								item.quantity = 3;
-								dblFinalDifference = ( double.Parse( amounts[0] ) * 3 ) - newAmount;
-							}
-						}
-					}
-					
+					item.upc = d.upc;
+					item.quantity = 1;
 				}
+
+				else if ( amounts.Length == 2 || amounts.Length == 3 )
+				{
+					if ( amounts.Length == 3 )
+					{
+						amounts[1] = amounts[1] + " " + amounts[2];
+					}
+
+					if ( quant.Length == 0 )
+					{
+						quant = "piece";
+					}
+					if ( quant == "bottles")
+					{
+						quant = "ml";
+						amount = (double.Parse( amount ) * 750).ToString();
+					}
+
+					// convert ingredient to kroger amount
+					double newAmount = RecipeAPI.ConvertAmounts( quant, name, amounts[0], amounts[1] );
+
+					double dblDifference = 0;
+					dblDifference = newAmount - double.Parse(amount);
+
+					if ( dblFinalDifference > dblDifference && dblDifference > 0)
+					{
+						if ( double.Parse( amount ) <= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = 1;
+							dblFinalDifference = dblDifference;
+						}
+						else if ( double.Parse( amounts[0] ) * double.Parse(amount) >= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = (long)Math.Ceiling( double.Parse( amount ) ); ;
+							dblFinalDifference = ( double.Parse( amounts[0] ) * double.Parse( amount ) ) - newAmount;
+						}
+					}
+
+						
+				}
+					
 			}
 
 			return item;

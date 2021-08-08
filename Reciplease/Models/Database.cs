@@ -44,14 +44,13 @@ namespace Reciplease.Models {
 			{
 				SqlConnection cn = null;
 				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
-				SqlCommand cm = new SqlCommand( "uspAddNewUser", cn );
+				SqlCommand cm = new SqlCommand( "uspDropUserShoppingList", cn );
 				int intReturnValue = -1;
 
 				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int );
 
 				cm.ExecuteReader( );
-
-				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				
 				CloseDBConnection( ref cn );
 
 			

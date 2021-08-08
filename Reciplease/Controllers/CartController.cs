@@ -24,26 +24,74 @@ namespace Reciplease.Controllers
 
 			cart.cart.ingredients = db.GetIngredients( cart.cart.list.intRecipeID.ToString( ) );
 
+			cart.jsUrl = "";
+			cart.jsMessage = "";
+
 			string id = Convert.ToString( RouteData.Values["id"] );
-			string alert = "";
-			if (id == "1")
+			if ( id.Length > 0 )
 			{
-				alert = "alert('Not all items were found');'";
+				string jsMessage = "";
+				if ( id == "1" )
+				{
+					jsMessage = "Not all items were found";
+				}
+
+				string jsUrl = "http://itd1.cincinnatistate.edu/CPDM-WernkeB/Home";
+
+				cart.jsUrl = jsUrl;
+				cart.jsMessage = jsMessage;
 			}
-			
-			string js = alert + " window.open('https://www.kroger.com/cart'); location.href='http://itd1.cincinnatistate.edu/CPDM-WernkeB/Cart';";
-			
-				cart.js = js;
 
 			return View(cart);
         }
 
 
 		public ActionResult KrogerSignIn() {
+			User u = new User( );
+			u = u.GetUserSession( );
 
-			string url = KrogerAPI.GetKrogerAuth( );
+			//if ( u.KrogerAuthCode == null )
+			//{
+			//	u.KrogerAuthCode = "HFDYRcWw1QPsxEhPlEknsGlTFQDVLynms4OPEUUM";
+			//	u.KrogerAuthTokens = new AuthCodes( );
+			//	u.KrogerAuthTokens.access_token = "";
+			//	u.KrogerAuthTokens.refresh_token = "DHBbS3vqPd4WC7ToulENR3sr4L0FdUzFCRpkk2Us";
+			//}
 
-			return Redirect( url );
+
+			if (u.KrogerAuthCode == null)
+			{
+				string url = KrogerAPI.GetKrogerAuth( );
+
+				return Redirect( url );
+			}
+			else
+			{
+				u.KrogerAuthTokens = KrogerAPI.RefreshKrogerToken( u.KrogerAuthTokens.refresh_token );
+
+				// code to add to kroger cart
+				Cart c = new Cart( );
+				c = c.GetCartSession( );
+				Database db = new Database( );
+
+				c.list = db.GetShoppingList( u.UID );
+
+				c.ingredients = db.GetIngredients( c.list.intRecipeID.ToString( ) );
+
+				CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
+				KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
+				string id = "0";
+				if ( upcs.dictItems["items"].Length != c.ingredients.Count )
+				{
+					id = "1";
+				}
+				upcs = new CartMappedToKrogerUPC( );
+				c.EmptyCart( );
+
+				return RedirectToAction( "Index", new { id } );
+			}
+			
+			
 		}
 
 		public ActionResult AuthCode( ){
@@ -69,12 +117,13 @@ namespace Reciplease.Controllers
 
 			CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
 			KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
+			
 			string id = "0";
 			if ( upcs.dictItems.Count != c.ingredients.Count )
 			{
 				id = "1";
 			}
-			
+			upcs = new CartMappedToKrogerUPC( );
 			c.EmptyCart( );
 
 

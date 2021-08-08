@@ -5,6 +5,20 @@
 <h2>@ViewBag.Title</h2>
 
 <link rel="stylesheet" href="Reciplease/Reciplease/Views/Profile/Profile.css" />
+<script>
+
+	function showAlert() {
+		alert("@Model.jsMessage");
+		window.open('https://www.kroger.com/cart', target = '_blank');
+		window.location.href = "@Model.jsUrl";
+	};
+
+	function redirect() {
+		window.open('https://www.kroger.com/cart', target = '_blank');
+		window.location.href = "@Model.jsUrl";
+	};
+
+</script>
 
 @if ( !Model.user.IsAuthenticated )
 {
@@ -12,27 +26,38 @@
 }
 else
 {
+	if ( @Model.user.KrogerAuthCode != null )
+	{
+		try
+		{
+			<p>auth:  @Model.user.KrogerAuthCode</p>
+			<p>refresh:  @Model.user.KrogerAuthTokens.refresh_token</p>
+			<p>Access:  @Model.user.KrogerAuthTokens.access_token</p>
+		}
+		catch
+		{
+			<p>sommtin happened here</p>
+		}
+	}
 	if ( Model.cart.IsEmpty( ) == false )
 	{
-			<script>@Model.js.ToString()</script>
+		if ( Model.jsMessage != "" )
+		{
+			<script>showAlert();</script>
+		}
+		else if ( Model.jsUrl != "" )
+		{
+			<script>redirect();</script>
+		}
+
 
 		using ( @Html.BeginForm( "CreateRecipe", "Profile", FormMethod.Post ) )
 		{
 			<div id="content" class="p-4 p-md-5 pt-5">
 				<div class="recipe-card">
 					<p>
-						@if ( @Model.user.KrogerAuthCode != null )
-						{
-							try
-							{
-							<p>auth:  @Model.user.KrogerAuthCode</p>
-							<p>Access:  @Model.user.KrogerAuthTokens.access_token.ToString( )</p>
-						}
-						catch
-						{
-							<p>sommtin happened here</p>
-						}
-					}
+
+
 						<table>
 							<tr>
 								<th>Ingredient:</th>
@@ -51,15 +76,25 @@ else
 								</tr>
 							}
 						</table>
-						</p>
-						<br />
-						<a href="@Url.Action( "KrogerSignin", "Cart" )" class="button"> Check out </a>
-					</div>
+					</p>
+					<br />
+					<a href="@Url.Action( "KrogerSignin", "Cart" )" class="button"> Check out </a>
+				</div>
 			</div>
 		}
 	}
 	else
 	{
+		if ( Model.jsMessage != "" )
+		{
+			<script>showAlert();</script>
+		}
+		else if ( Model.jsUrl != "" )
+		{
+			<script>redirect();</script>
+		}
+
 		<p>You don't have a recipe added to the cart yet. Want to <a href="~/Home/Search">search</a> for one?</p>
 	}
 }
+

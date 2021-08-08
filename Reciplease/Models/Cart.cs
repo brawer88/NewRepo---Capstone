@@ -10,19 +10,20 @@ namespace Reciplease.Models {
 		public string RecipeName { get; set; }
 		public int Servings { get; set; }
 		public ShoppingList list { get; set; }
+		public string RecipeID { get; set; }
 
 		public List<Ingredient> ingredients { get; set; }
 
 		public Cart( ) {
 			this.ingredients = new List<Ingredient>( );
-
 		}
 
 		public void AddToCart( string strRecipeID ) {
 			Database db = new Database( );
 			User u = new User( );
 			u = u.GetUserSession( );
-				
+
+			RecipeID = strRecipeID;
 
 			db.AddToShoppingList( int.Parse( strRecipeID ), u.UID );
 
@@ -42,6 +43,7 @@ namespace Reciplease.Models {
 			User u = new User( );
 			u = u.GetUserSession( );
 			db.DropCart( u.UID );
+			this.ingredients = new List<Ingredient>( );
 		}
 
 
@@ -65,7 +67,6 @@ namespace Reciplease.Models {
 				};
 				if ( HttpContext.Current.Session["Cart"] == null )
 				{
-
 					return cart;
 				}
 				cart = (Cart)HttpContext.Current.Session["Cart"];
