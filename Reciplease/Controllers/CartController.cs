@@ -50,13 +50,13 @@ namespace Reciplease.Controllers
 			User u = new User( );
 			u = u.GetUserSession( );
 
-			//if ( u.KrogerAuthCode == null )
-			//{
-			//	u.KrogerAuthCode = "HFDYRcWw1QPsxEhPlEknsGlTFQDVLynms4OPEUUM";
-			//	u.KrogerAuthTokens = new AuthCodes( );
-			//	u.KrogerAuthTokens.access_token = "";
-			//	u.KrogerAuthTokens.refresh_token = "DHBbS3vqPd4WC7ToulENR3sr4L0FdUzFCRpkk2Us";
-			//}
+			if ( u.KrogerAuthCode == null )
+			{
+				u.KrogerAuthCode = "Rqc73q6yyy9Bi6Ujd7xcdkDJvpfSaaZrAcyF8n82";
+				u.KrogerAuthTokens = new AuthCodes( );
+				u.KrogerAuthTokens.access_token = "";
+				u.KrogerAuthTokens.refresh_token = "B12URHNd4YpYkYd1RJeI7IffyVsNGV1x4ueHd8QF";
+			}
 
 
 			if (u.KrogerAuthCode == null)
@@ -119,7 +119,7 @@ namespace Reciplease.Controllers
 			KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
 			
 			string id = "0";
-			if ( upcs.dictItems.Count != c.ingredients.Count )
+			if ( upcs.dictItems["items"].Length != c.ingredients.Count )
 			{
 				id = "1";
 			}

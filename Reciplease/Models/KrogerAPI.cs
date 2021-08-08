@@ -122,6 +122,12 @@ namespace Reciplease.Models {
 				//	continue;
 				//}
 
+				if (quant == "pinch" || quant == "pinches")
+				{
+					quant = "teaspoon";
+					amount = ( double.Parse( amount ) * .0125 ).ToString();
+				}
+
 				// split amount
 				string[] amounts = i.size.Split( ' ' );
 

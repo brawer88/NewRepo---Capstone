@@ -63,6 +63,7 @@ namespace Reciplease.Controllers
                         }
                         else
                         {
+							u.RemoveUserSession( );
 							u.Password = String.Empty;
                             u.Username = col["Username"];
                             u.ActionType = Models.User.ActionTypes.LoginFailed;
