@@ -50,13 +50,13 @@ namespace Reciplease.Controllers
 			User u = new User( );
 			u = u.GetUserSession( );
 
-			if ( u.KrogerAuthCode == null )
-			{
-				u.KrogerAuthCode = "314u7WFP19xXPDATuvehlm911NyqAEn91tdwa2Rh";
-				u.KrogerAuthTokens = new AuthCodes( );
-				u.KrogerAuthTokens.access_token = "";
-				u.KrogerAuthTokens.refresh_token = "GLaJNpkqq35QiqUP4Cq1G3ONwPaoOsRy0qWTO5IS";
-			}
+			//if ( u.KrogerAuthCode == null )
+			//{
+			//	u.KrogerAuthCode = "314u7WFP19xXPDATuvehlm911NyqAEn91tdwa2Rh";
+			//	u.KrogerAuthTokens = new AuthCodes( );
+			//	u.KrogerAuthTokens.access_token = "";
+			//	u.KrogerAuthTokens.refresh_token = "GLaJNpkqq35QiqUP4Cq1G3ONwPaoOsRy0qWTO5IS";
+			//}
 
 
 			if (u.KrogerAuthCode == null)
