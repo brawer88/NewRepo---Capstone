@@ -67,6 +67,9 @@ else
 					<a href="@Url.Action( "KrogerSignin", "Cart" )" class="button"> Check out </a>
 				</div>
 			</div>
+
+<a class="button-red" id="delete" onclick="ClearCartContents()" href="~/Profile/ClearCartContents">Clear Cart</a>
+
 		}
 	}
 	else
@@ -83,4 +86,27 @@ else
 		<p>You don't have a recipe added to the cart yet. Want to <a href="~/Home/Search">search</a> for one?</p>
 	}
 }
+
+    <script>
+    function ClearCartContents() {
+        let deleteConf = confirm("Are you sure you want to delete your shopping list?");
+
+        if (deleteConf) {
+            $.ajax({
+        type: "GET",
+        url: '@Url.Action( "ClearCartContents", "Cart")',
+        async: true,
+        success: function (msg) {
+            alert("Shopping List Deleted")
+
+        },
+        error: function () {
+            alert("Error deleting shopping list. Please contact developers.")
+        }
+    });
+        }
+
+
+    }
+</script>
 
