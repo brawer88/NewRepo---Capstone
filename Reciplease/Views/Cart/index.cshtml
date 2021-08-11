@@ -68,7 +68,7 @@ else
 				</div>
 			</div>
 
-<a class="button-red" id="delete" onclick="ClearCartContents()" href="~/Profile/ClearCartContents">Clear Cart</a>
+		<a class="button-red" id="delete" onclick="ClearCartContents()" href="~/Profile/ClearCartContents">Clear Cart</a>
 
 		}
 	}
@@ -94,7 +94,7 @@ else
         if (deleteConf) {
             $.ajax({
         type: "GET",
-        url: '@Url.Action( "ClearCartContents", "Cart")',
+        url: '@Url.Action( "ClearCartContents", "Cart", new { id = Model.user.UID } )',
         async: true,
         success: function (msg) {
             alert("Shopping List Deleted")
