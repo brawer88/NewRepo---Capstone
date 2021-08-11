@@ -96,39 +96,49 @@ namespace Reciplease.Controllers
 
 		public ActionResult AuthCode( ){
 			string authcode = string.Empty;
-		
+			string error = string.Empty;
+
 			authcode = Request["code"];
+			error = Request["error"];
 
-			User user = new User( );
-			user = user.GetUserSession( );
-
-			user.KrogerAuthCode = authcode;
-			user.KrogerAuthTokens = KrogerAPI.GetKrogerToken( authcode );
-			user.SaveUserSession( );
-			
-			// code to add to kroger cart
-			Cart c = new Cart( );
-			c = c.GetCartSession( );
-			Database db = new Database( );
-
-			c.list = db.GetShoppingList( user.UID );
-
-			c.ingredients = db.GetIngredients( c.list.intRecipeID.ToString( ) );
-
-			CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
-			KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
-			
-			string id = "0";
-			if ( upcs.dictItems["items"].Length != c.ingredients.Count )
+			if ( authcode != null )
 			{
-				id = "1";
+				User user = new User( );
+				user = user.GetUserSession( );
+
+				user.KrogerAuthCode = authcode;
+				user.KrogerAuthTokens = KrogerAPI.GetKrogerToken( authcode );
+				user.SaveUserSession( );
+
+				// code to add to kroger cart
+				Cart c = new Cart( );
+				c = c.GetCartSession( );
+				Database db = new Database( );
+
+				c.list = db.GetShoppingList( user.UID );
+
+				c.ingredients = db.GetIngredients( c.list.intRecipeID.ToString( ) );
+
+				CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
+				KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
+
+				string id = "0";
+				if ( upcs.dictItems["items"].Length != c.ingredients.Count )
+				{
+					id = "1";
+				}
+				upcs = new CartMappedToKrogerUPC( );
+				c.EmptyCart( );
+
+
+				return RedirectToAction( "Index", new { id } );
 			}
-			upcs = new CartMappedToKrogerUPC( );
-			c.EmptyCart( );
-
-
-			return RedirectToAction( "Index", new { id } );		
+			else
+			{
 			
+				return RedirectToAction( "Index" );
+				
+			}
 			
 		}
 
