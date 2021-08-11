@@ -162,10 +162,13 @@ namespace Reciplease.Controllers
             Database db = new Database();
                        
             db.DropCart(UID);
-            
 
-            return RedirectToAction("Index");
-        }
+			return Json( new
+			{
+				success = true
+			}, JsonRequestBehavior.AllowGet );
+
+		}
 
 
        

@@ -45,7 +45,6 @@ namespace Reciplease.Models {
 				SqlConnection cn = null;
 				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
 				SqlCommand cm = new SqlCommand( "uspDropUserShoppingList", cn );
-				int intReturnValue = -1;
 
 				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int );
 
