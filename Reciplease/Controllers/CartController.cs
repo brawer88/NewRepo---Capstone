@@ -154,5 +154,22 @@ namespace Reciplease.Controllers
         }
 
 
+
+        [HandleError]
+        public ActionResult ClearCartContents(int UID)
+        {
+            // code to delete cart
+            Database db = new Database();
+                       
+            db.DropCart(UID);
+            
+
+            return RedirectToAction("Index");
+        }
+
+
+       
+
+
     }
 }
