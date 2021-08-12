@@ -534,15 +534,15 @@ namespace Reciplease.Controllers
         [HandleError]
         public ActionResult LastTen()
         {
-            FavoritesContent favorites = new FavoritesContent();
+            LastTenContent last10 = new LastTenContent( );
             Models.User u = new Models.User();
             Database db = new Database();
            
-            u = u.GetUserSession();
+            last10.user = u.GetUserSession();
            
-            db.GetLastTen(favorites.user.UID);
+            db.GetLastTen(last10.user.UID);
            
-            return View("LastTen");
+            return View( last10 );
         }
 
     }
