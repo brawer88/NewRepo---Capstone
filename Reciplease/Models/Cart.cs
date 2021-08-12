@@ -7,8 +7,6 @@ using System.Web.Mvc;
 
 namespace Reciplease.Models {
 	public class Cart {
-		public string RecipeName { get; set; }
-		public int Servings { get; set; }
 		public ShoppingList list { get; set; }
 		public string RecipeID { get; set; }
 

@@ -129,6 +129,7 @@
     <Compile Include="Models\HomeContent.cs" />
     <Compile Include="Models\KrogerAPI.cs" />
     <Compile Include="Models\KrogerSearchResults.cs" />
+    <Compile Include="Models\LastTenContent.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\RecipeAPI.cs" />
@@ -246,6 +247,7 @@
     <Content Include="Views\Profile\UserRecipes.cshtml" />
     <Content Include="Views\Profile\UserSingleRecipe.cshtml" />
     <Content Include="Views\Profile\UpdateUser.cshtml" />
+    <Content Include="Views\Profile\LastTen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

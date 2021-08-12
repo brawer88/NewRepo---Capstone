@@ -3,10 +3,7 @@
 	ViewBag.Title = "Shopping Cart";
 }
 <h2>@ViewBag.Title</h2>
-
-<h3> ingredients for @Model.Recipe.title</h3>
-<h4> Serves : @Model.Recipe.servings </h4>
-
+<div class="info"><p>Please note: At this time, the Shopping Cart only supports 1 recipe at a time.</p></div>
 
 <link rel="stylesheet" href="Reciplease/Reciplease/Views/Profile/Profile.css" />
 <script>
@@ -46,7 +43,8 @@ else
 			<div id="content" class="p-4 p-md-5 pt-5">
 				<div class="recipe-card">
 					<p>
-
+						<h3> ingredients for @Model.cart.list.RecipeName</h3>
+						<h4> Serves : @Model.cart.list.RecipeServings </h4>
 
 						<table>
 							<tr>

@@ -2,6 +2,11 @@ body {
     padding-bottom: 20px;
 }
 
+.info {
+	background-color: #e7f3fe;
+	border-left: 6px solid #2196F3;
+}
+
 img {
 	width: 350px;
 	height: 350px;

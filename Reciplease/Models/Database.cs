@@ -824,7 +824,7 @@ namespace Reciplease.Models {
 				}
 				catch ( Exception ex2 )
 				{
-					System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
+					System.Diagnostics.Debug.WriteLine( "getting user favorites error: " + ex2.Message );
 				}
 				finally { CloseDBConnection( ref cn ); }
 
@@ -949,6 +949,74 @@ namespace Reciplease.Models {
 				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
 				return -1; // something went wrong
 			}
+		}
+
+		public void AddToLastTen( int intRecipeID, int intUserID ) {
+			try
+			{
+				SqlConnection cn = null;
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				SqlCommand cm = new SqlCommand( "uspFavoriteUnfavorite", cn );
+				int intReturnValue = -1;
+
+				SetParameter( ref cm, "@intUserID", intUserID, SqlDbType.Int );
+				SetParameter( ref cm, "@intRecipeID", intRecipeID, SqlDbType.BigInt );
+				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
+
+				cm.ExecuteReader( );
+
+				intReturnValue = (int)cm.Parameters["ReturnValue"].Value;
+				CloseDBConnection( ref cn );
+				
+			}
+			catch ( Exception ex )
+			{
+				System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+			}
+		}
+
+		public List<Recipe> GetLastTen( int intUserID ) {
+			Database db = new Database( );
+			DataSet ds = new DataSet( );
+			SqlConnection cn = new SqlConnection( );
+			if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+			List<Recipe> recipes = new List<Recipe>( );
+
+			SqlCommand selectCMD = new SqlCommand( "SELECT * FROM TLast10 WHERE intUserID=" + intUserID, cn );
+			SqlDataAdapter da = new SqlDataAdapter( );
+			da.SelectCommand = selectCMD;
+
+
+			try
+			{
+				da.Fill( ds );
+			}
+			catch ( Exception ex2 )
+			{
+				System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
+			}
+			finally { CloseDBConnection( ref cn ); }
+
+			if ( ds.Tables[0].Rows.Count != 0 )
+			{
+				foreach ( DataRow dr in ds.Tables[0].Rows )
+				{
+					Recipe r = new Recipe( );
+					r.id = ( (int)dr["intRecipeID"] ).ToString( );
+					r.image = (string)dr["strRecipeImage"];
+					r.title = (string)dr["strName"];
+					r.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
+					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
+					if ( r.image.Length < 5 || r.image.Equals( "/Content/images/no-photo.jpg" ) || r.image == null )
+					{
+						r.image = FailedImagePath;
+					}
+					recipes.Add( r );
+				}
+			}
+
+			return recipes;
+		
 		}
 	}
 }
