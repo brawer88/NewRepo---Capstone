@@ -530,6 +530,21 @@ namespace Reciplease.Controllers
 			return RedirectToAction( "UserRecipes" );
 		}
 
-	}
+
+        [HandleError]
+        public ActionResult LastTen()
+        {
+            FavoritesContent favorites = new FavoritesContent();
+            Models.User u = new Models.User();
+            Database db = new Database();
+           
+            u = u.GetUserSession();
+           
+            db.GetLastTen(favorites.user.UID);
+           
+            return View("LastTen");
+        }
+
+    }
 }
 
