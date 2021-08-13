@@ -94,7 +94,7 @@ namespace Reciplease.Controllers {
 			
 
 			Database DB = new Database( );
-
+			h.user.Favorites = DB.GetUserFavorites( h.user.UID );
 			h.user.Ratings = DB.GetUserRatings( h.user.UID );
 
 			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
