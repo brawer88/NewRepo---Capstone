@@ -539,6 +539,7 @@ namespace Reciplease.Controllers
             Database db = new Database();
            
             last10.user = u.GetUserSession();
+			last10.lstLastTen = db.GetLastTen( last10.user.UID );
            
             db.GetLastTen(last10.user.UID);
            

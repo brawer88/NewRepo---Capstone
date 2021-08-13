@@ -603,7 +603,14 @@ namespace Reciplease.Models {
 						r.id = ((int)dr["intRecipeID"]).ToString();
 						r.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
 						r.servings = ((int)dr["intServings"]).ToString();
-						r.image = (string)dr["strRecipeImage"];
+						try
+						{
+							r.image = (string)dr["strRecipeImage"];
+						}
+						catch (Exception e)
+						{
+							r.image = "/Content/images/no-photo.jpg";
+						}
 						r.dictRatings = GetRecipeRatings( int.Parse(r.id) );
 						if ( r.image.Length < 5 || r.image.Equals( "/Content/images/no-photo.jpg" ) )
 						{
@@ -956,7 +963,7 @@ namespace Reciplease.Models {
 			{
 				SqlConnection cn = null;
 				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
-				SqlCommand cm = new SqlCommand( "uspFavoriteUnfavorite", cn );
+				SqlCommand cm = new SqlCommand( "uspUserLast10", cn );
 				int intReturnValue = -1;
 
 				SetParameter( ref cm, "@intUserID", intUserID, SqlDbType.Int );
@@ -982,7 +989,7 @@ namespace Reciplease.Models {
 			if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
 			List<Recipe> recipes = new List<Recipe>( );
 
-			SqlCommand selectCMD = new SqlCommand( "SELECT * FROM TLast10 WHERE intUserID=" + intUserID, cn );
+			SqlCommand selectCMD = new SqlCommand( "SELECT * FROM vUserLast10 WHERE intUserID=" + intUserID, cn );
 			SqlDataAdapter da = new SqlDataAdapter( );
 			da.SelectCommand = selectCMD;
 

@@ -146,7 +146,7 @@ namespace Reciplease.Controllers
         {
 
             string RecipeID = Convert.ToString(RouteData.Values["id"]);
-
+			Database db = new Database( );
 			User u = new User( );
 			u = u.GetUserSession( );
 
@@ -154,8 +154,8 @@ namespace Reciplease.Controllers
             {
 				Cart cart = new Cart();
 				cart = cart.GetCartSession( );
-
 				cart.AddToCart( RecipeID );
+				db.AddToLastTen( int.Parse( RecipeID ), u.UID );
             }
           
 
@@ -179,10 +179,6 @@ namespace Reciplease.Controllers
 			}, JsonRequestBehavior.AllowGet );
 
 		}
-
-
-       
-
 
     }
 }
