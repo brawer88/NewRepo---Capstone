@@ -39,16 +39,17 @@ CREATE TABLE TUsers
 
 CREATE TABLE TRecipes
 (
-	 intRecipeID		INTEGER	  IDENTITY	NOT NULL
-	,strName			VARCHAR(50)			NOT NULL
-	,strDescription		VARCHAR(300)		NOT NULL
-	,strInstructions	VARCHAR(3000)		NOT NULL
-	,intReadyInMins		INTEGER				NOT NULL
-	,intServings		INTEGER				NOT NULL
+	 intRecipeID		INTEGER	IDENTITY(5000001, 1)	NOT NULL
+	,strName			VARCHAR(250)					NOT NULL
+	,strInstructions	VARCHAR(3000)					NOT NULL
+	,intReadyInMins		INTEGER				
+	,intServings		INTEGER				
 	,strCuisines		VARCHAR(255)		
 	,strDiets			VARCHAR(255)		
-	,strDishTypes		VARCHAR(255)		
-	,intUserID			INTEGER				
+	,strDishTypes		VARCHAR(255)
+	,strNutrition		VARCHAR(3000)		
+	,intUserID			INTEGER		
+	,strRecipeImage		VARCHAR(500)		
 	,CONSTRAINT TRecipes_PK PRIMARY KEY ( intRecipeID )
 )
 
@@ -57,8 +58,9 @@ CREATE TABLE TRecipeIngredients
 	 intRecipeIngredientID	INTEGER IDENTITY	NOT NULL
 	,intRecipeID			INTEGER				NOT NULL
 	,intIngredientID		INTEGER				NOT NULL
-	,intIngredientQuantity	INTEGER				NOT NULL
-	,intMeasurementUnitID	INTEGER				NOT	NULL
+	,dblIngredientQuantity	FLOAT				NOT NULL
+	--,intIngredientQuantity	INTEGER				NOT NULL
+	,strUnitOfMeasurement	VARCHAR(50)			NOT	NULL
 	,CONSTRAINT RecipeIngredient_UQ UNIQUE ( intRecipeID, intIngredientID )
 	,CONSTRAINT TRecipeIngredients_PK PRIMARY KEY ( intRecipeIngredientID )
 )
@@ -72,10 +74,10 @@ CREATE TABLE TIngredients
 
 CREATE TABLE TShoppingList
 (
-	 intShoppingListID	INTEGER			NOT NULL
-	,intUserID			INTEGER			NOT NULL
-	,intRecipeIngredientID INTEGER		NOT NULL
-	,CONSTRAINT RecipeIngredientList_UQ UNIQUE ( intUserID, intRecipeIngredientID )
+	 intShoppingListID		INTEGER			NOT NULL
+	,intUserID				INTEGER			NOT NULL
+	,intRecipeIngredientID	INTEGER			NOT NULL
+	--,CONSTRAINT RecipeIngredientList_UQ UNIQUE ( intUserID, intRecipeIngredientID )
 	,CONSTRAINT TShoppingList_PK PRIMARY KEY ( intShoppingListID )
 )
 
@@ -119,13 +121,6 @@ CREATE TABLE TLast10
 	,intUserID				INTEGER				NOT NULL
 	,intRecipeID			INTEGER				NOT NULL
 	,CONSTRAINT TLast10_PK PRIMARY KEY ( intLast10ID )
-)
-
-CREATE TABLE TMeasurementUnits
-(
-	 intMeasurementUnitID				INTEGER				NOT NULL
-	,strUnit							VARCHAR(50)			NOT NULL
-	,CONSTRAINT TUnitsOfMeasurement		PRIMARY KEY ( intMeasurementUnitID )
 )
 
 -- --------------------------------------------------------------------------------
@@ -173,10 +168,6 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TIngredients_FK
 FOREIGN KEY ( intIngredientID ) REFERENCES TIngredients ( intIngredientID )
 
--- 15
-ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TMeasurementUnits_FK
-FOREIGN KEY ( intMeasurementUnitID ) REFERENCES TMeasurementUnits ( intMeasurementUnitID )
-
 -- 7
 ALTER TABLE TRatings ADD CONSTRAINT TRatings_TTaste_FK
 FOREIGN KEY ( intTasteID ) REFERENCES TTaste ( intTasteID )
@@ -205,23 +196,11 @@ FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 ALTER TABLE TLast10 ADD CONSTRAINT TLast10_TRecipes_FK
 FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 
---------------------------------------------------------------------------------
+
+
+ --------------------------------------------------------------------------------
  --Step #3: INSERT INTO TABLES
  --------------------------------------------------------------------------------
-
--- INSERT INTO TMeasurementUnits( intMeasurementUnitID, strUnit )
--- VALUES					 (1, ' ')
---						,(2, 'Tsp')
---						,(3, 'TBSP')
---						,(4, 'Cup')
---						,(5, 'Quart')
---						,(6, 'Pint')
---						,(7, 'Gallon')
---						,(8, 'Liter')
---						,(9, 'ML')
---						,(10, 'OZ')
---						,(11, 'LB')
---						,(12, 'Grams')
 
 -- INSERT INTO TDifficulty ( intDifficultyRating )
 -- VALUES					 (1)
@@ -243,32 +222,38 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 --						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
 --						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
 
---INSERT INTO TRecipes	(strName, strDescription, strInstructions, intReadyInMins, intServings, intUserID)
---VALUES					 ('Rosemary Garlic Butter Steak', 'Ribeye Steak pan seared in a cast iron with butter allowing the rosemary and garlic to infuse into the butter and steak itself.'
---							, 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
+--INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID)
+--VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
 --							   Step 2; Once the steak is seared reduce heat to Medium - Medium High add butter to the pan and let it melt. Once the butter has melted put in 2-3 "sticks" of rosemary and 3-4 garlic cloves quartered or halved in the butter. Cook the steak an additional 3 - 5 minutes depending on how rare youd like it, while cooking spoon the melted butter over the steak.
 --							   Step 3; Enjoy :)', 25, 2, 1 )
---						,('Recipe Test 2', 'Recipe Test 2 Desc', 'Recipe Test 2 Instructions', 30, 4, 1)
---						,('Recipe Test 3', 'Recipe Test 3 Desc', 'Recipe Test 3 Instructions', 60, 4, 3)
---						,('Recipe Test 4', 'Recipe Test 4 Desc', 'Recipe Test 4 Instructions',180, 6, 4)
+--						,('Recipe Test 2', 'Recipe Test 2 Instructions', 30, 4, 1)
+--						,('Recipe Test 3', 'Recipe Test 3 Instructions', 60, 4, 3)
+--						,('Recipe Test 4', 'Recipe Test 4 Instructions',180, 6, 4)
+--						,('Recipe Test 5', 'Recipe Test 4 Instructions',180, 6, 2)
+--						,('Recipe Test 6', 'Recipe Test 4 Instructions',180, 6, 3)
+--						,('Recipe Test 7', 'Recipe Test 4 Instructions',180, 6, 2)
+--						,('Recipe Test 8', 'Recipe Test 4 Instructions',180, 6, 3)
+--						,('Recipe Test 9', 'Recipe Test 4 Instructions',180, 6, 1)
+--						,('Recipe Test 10', 'Recipe Test 4 Instructions',180, 6, 1)
+--						,('Recipe Test 11', 'Recipe Test 11 Instructions',180, 6, 1)
 
 -- INSERT INTO TRatings		(intRatingID, intUserID, intDifficultyID, intTasteID, intRecipeID)
--- VALUES					 (1, 1, 5, 5, 1)
---						,(2, 2, 2, 3, 1)
---						,(3, 3, 5, 2, 1)
---						,(4, 4, 5, 5, 1)
---						,(5, 2, 2, 3, 3)
---						,(6, 2, 5, 2, 4)
---						,(7, 1, 5, 5, 3)
+-- VALUES					 (1, 1, 5, 5, 5000001)
+--						,(2, 2, 2, 3, 5000001)
+--						,(3, 3, 5, 2, 5000001)
+--						,(4, 4, 5, 5, 5000001)
+--						,(5, 2, 2, 3, 5000003)
+--						,(6, 2, 5, 2, 5000004)
+--						,(7, 1, 5, 5, 5000004)
 
 -- INSERT INTO TUserFavorites( intUserID, intRecipeID )
--- VALUES					 (2, 2)
---						,(2, 1)
---						,(3, 1)
---						,(4, 3)
---						,(4, 1)
---						,(3, 2)
---						,(3, 3)
+-- VALUES					 (2, 5000002)
+--						,(2, 5000001)
+--						,(3, 5000001)
+--						,(4, 5000003)
+--						,(4, 5000001)
+--						,(1, 5000002)
+--						,(1, 5000003)
 
 --INSERT INTO TIngredients ( intIngredientID, strIngredientName )
 --VALUES					 (1, 'Sweet White Onion' )
@@ -289,17 +274,27 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 --						,(16, 'Lemon')
 --						,(17, 'All-Spice')
 
--- INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, intIngredientQuantity, intMeasurementUnitID )
--- VALUES					 (1, 6, 1, 1)
---						,(1, 8, 1, 2)
---						,(1, 9, 6, 2)
---						,(1, 10, 1, 4)
---						,(1, 11, 3, 1)
---						,(1, 12, 3, 1)
---						,(2, 3, 2, 7)
---						,(2, 9, 1, 8)
---						,(2, 10, 1, 9)
---						,(2, 8, 1, 10)
+-- INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, dblIngredientQuantity, strUnitOfMeasurement )
+-- VALUES					 (5000001, 6, 1.5, 'LB')
+--						,(5000001, 8, 1.75, 'TSP')
+--						,(5000001, 9, 1, 'TBSP')
+--						,(5000001, 10, 0.75, 'OZ')
+--						,(5000001, 11, 3, 'ML')
+--						,(5000001, 12, 3, 'Gram')
+--						,(5000002, 3, 2, 'Cup')
+--						,(5000002, 9, 1, 'Quart')
+--						,(5000002, 10, 1, 'Pint')
+--						,(5000002, 8, 1, 'Gallon')
+--						,(5000003, 8, 1.75, 'TSP')
+--						,(5000003, 9, 1, 'TBSP')
+--						,(5000003, 10, 0.75, 'OZ')
+--						,(5000002, 11, 3, 'ML')
+--						,(5000003, 12, 13, 'Gram')
+--						,(5000004, 3, 2, 'Cup')
+--						,(5000004, 9, 12, 'Quart')
+--						,(5000004, 10, 17, 'Pint')
+--						,(5000004, 8, 11, 'Gallon')
+
 
 --INSERT INTO TShoppingList ( intShoppingListID, intUserID, intRecipeIngredientID )
 --VALUES						 (1,1,1)
@@ -308,3 +303,16 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 --							,(4,1,4)
 --							,(5,1,5)
 --							,(6,1,6)
+--							,(7,2,8)
+
+--INSERT INTO TLast10 (intLast10ID, intUserID, intRecipeID)
+--VALUES						 (1, 1, 5000001)
+--							,(2, 1, 5000002)
+--							,(3, 1, 5000003)
+--							,(4, 1, 5000004)
+--							,(5, 1, 5000005)
+--							,(6, 1, 5000006)
+--							,(7, 1, 5000007)
+--							,(8, 1, 5000008)
+--							,(9, 1, 5000009)
+--							,(10, 1, 5000010)
