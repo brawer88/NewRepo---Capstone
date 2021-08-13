@@ -51,6 +51,7 @@ IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserR
 IF OBJECT_ID('uspUpdateRecipe')					IS NOT NULL DROP PROCEDURE uspUpdateRecipe 
 IF OBJECT_ID('uspAddToShoppingList')			IS NOT NULL DROP PROCEDURE uspAddToShoppingList 
 IF OBJECT_ID('uspDropUserShoppingList')			IS NOT NULL DROP PROCEDURE uspDropUserShoppingList 
+IF OBJECT_ID('uspLast10')						IS NOT NULL	DROP PROCEDURE uspLast10
 
                                                                                                                                                                                                                                                                                                                                                                                                
 -- --------------------------------------------------------------------------------
@@ -70,7 +71,7 @@ CREATE TABLE TUsers
 CREATE TABLE TRecipes
 (
 	 intRecipeID		INTEGER	IDENTITY(5000001, 1)	NOT NULL
-	,strName			VARCHAR(50)						NOT NULL
+	,strName			VARCHAR(250)					NOT NULL
 	,strInstructions	VARCHAR(3000)					NOT NULL
 	,intReadyInMins		INTEGER				
 	,intServings		INTEGER				
@@ -327,6 +328,8 @@ VALUES					 (1, 'Sweet White Onion' )
 --							,(6,1,6)
 --							,(7,2,8)
 
+INSERT INTO TLast10 (intLast10ID, intRecipeID, intUserID)
+VALUES				(1, 5000001, 1)
 
 
 -- --------------------------------------------------------------------------------------------
@@ -1165,6 +1168,7 @@ BEGIN TRANSACTION
 	SET strName = @strName, strInstructions = @strInstructions, strRecipeImage = @strRecipeImage, intReadyInMins = @intReadyInMins, intServings = @intServings, strCuisines = @strCuisines, strDiets = @strDiets, strDishTypes = @strDishTypes, strNutrition = @strNutrition, intUserID = @intUserID
 	WHERE intRecipeID = @intRecipeID
 
+	-- Clears Ingredients for Recipe so the edited list can be added with ASP.NET
 	DELETE FROM TRecipeIngredients
 	WHERE intRecipeID = @intRecipeID
 
@@ -1265,4 +1269,4 @@ GO
 
 -- --------------------------------------------------------------------------------------------
 
-
+-- Create Procedure uspLast10
