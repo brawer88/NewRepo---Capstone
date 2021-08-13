@@ -32,6 +32,8 @@ IF OBJECT_ID('VUserFavorites')					IS NOT NULL DROP VIEW VUserFavorites
 IF OBJECT_ID('VUserShoppingList')				IS NOT NULL DROP VIEW VUserShoppingList
 IF OBJECT_ID('VRecipeRatings')					IS NOT NULL DROP VIEW VRecipeRatings 
 IF OBJECT_ID('vUserRating')						IS NOT NULL DROP VIEW vUserRating
+IF OBJECT_ID('vUserLast10')						IS NOT NULL DROP VIEW vUserLast10
+IF OBJECT_ID('vEarliestLast10')					IS NOT NULL DROP VIEW vEarliestLast10
 
 -- ---------------------------------------------------------------------------------
 -- Drop Procedures
@@ -51,7 +53,7 @@ IF OBJECT_ID('uspDeleteUserRecipe')				IS NOT NULL DROP PROCEDURE uspDeleteUserR
 IF OBJECT_ID('uspUpdateRecipe')					IS NOT NULL DROP PROCEDURE uspUpdateRecipe 
 IF OBJECT_ID('uspAddToShoppingList')			IS NOT NULL DROP PROCEDURE uspAddToShoppingList 
 IF OBJECT_ID('uspDropUserShoppingList')			IS NOT NULL DROP PROCEDURE uspDropUserShoppingList 
-IF OBJECT_ID('uspLast10')						IS NOT NULL	DROP PROCEDURE uspLast10
+IF OBJECT_ID('uspUserLast10')					IS NOT NULL DROP PROCEDURE uspUserLast10 
 
                                                                                                                                                                                                                                                                                                                                                                                                
 -- --------------------------------------------------------------------------------
@@ -328,8 +330,17 @@ VALUES					 (1, 'Sweet White Onion' )
 --							,(6,1,6)
 --							,(7,2,8)
 
-INSERT INTO TLast10 (intLast10ID, intRecipeID, intUserID)
-VALUES				(1, 5000001, 1)
+--INSERT INTO TLast10 (intLast10ID, intUserID, intRecipeID)
+--VALUES						 (1, 1, 5000003)
+--							,(2, 1, 5000004)
+--							,(3, 1, 5000008)
+--							,(4, 1, 5000009)
+--							,(5, 1, 5000010)
+--							,(6, 1, 5000011)
+--							,(7, 1, 1012172)
+--							,(8, 1, 878183)
+--							,(9, 1, 830610)
+--							,(10, 1, 789787)
 
 
 -- --------------------------------------------------------------------------------------------
@@ -473,9 +484,141 @@ GO
 --SELECT * FROM vUserRating WHERE intRecipeID = 1
 
 GO
+
+-- --------------------------------------------------------------------------------------------
+
+Create View vUserLast10
+AS
+SELECT		 TU.intUserID
+			,TL10.intLast10ID
+			,TR.intRecipeID
+			,TR.strName
+
+FROM		TUsers as TU JOIN TLast10 as TL10
+			ON TU.intUserID = TL10.intUserID
+
+			JOIN TRecipes as TR
+			ON TR.intRecipeID = TL10.intRecipeID
+
+GO
+
+SELECT * FROM vUserLast10
+
+--------------------------------------------------------------------------------------------
+
+GO
+
+Create View vEarliestLast10
+AS
+SELECT		 TU.intUserID
+			,MIN(TL10.intLast10ID) as intLast10ID
+
+FROM		TUsers as TU JOIN TLast10 as TL10
+			ON TU.intUserID = TL10.intUserID
+
+			JOIN TRecipes as TR
+			ON TR.intRecipeID = TL10.intRecipeID
+
+GROUP BY TU.intUserID
+
+GO
+
+SELECT * FROM vEarliestLast10 WHERE intUserID = 1
 -- --------------------------------------------------------------------------------------------
 -- # PROCEDURES #
 -- --------------------------------------------------------------------------------------------
+
+GO
+Create Procedure uspUserLast10
+					 @intUserID		AS INTEGER OUTPUT
+					,@intRecipeID	AS INTEGER OUTPUT
+
+AS
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION
+
+	DECLARE @Exists as INTEGER
+	DECLARE @intLast10ID as INTEGER
+	DECLARE @Count as INTEGER
+
+		-- Returns 1 if username exists, 0 if it doesn't
+	DECLARE ifInLast10 CURSOR LOCAL FOR
+	SELECT COUNT(1) FROM TLast10 WHERE intRecipeID = @intRecipeID AND intUserID = @intUserID -- Returns 1 if exists, 0 if it doesn't
+
+	DECLARE if10Saved CURSOR LOCAL FOR
+	SELECT COUNT(*) FROM TLast10 WHERE intUserID = 1
+
+		OPEN ifInLast10
+
+		FETCH FROM ifInLast10
+		INTO @Exists
+
+		CLOSE ifInLast10
+
+		OPEN if10Saved
+
+		FETCH FROM if10Saved
+		INTO @Count
+
+		CLOSE if10Saved
+
+	IF @Exists = 1 -- if the recipe already exists in the users last10, its removed and replaced so its the 'newest' last 10
+		BEGIN
+			DELETE FROM TLast10 WHERE intRecipeID = @intRecipeID AND intUserID = @intUserID
+
+			-- Gets next Last10ID
+			SELECT @intLast10ID = MAX(intLast10ID) + 1
+			FROM Tlast10 (TABLOCKX) -- Locks table till end of transaction
+
+			-- Defaults to 1 if no ID
+			SELECT @intLast10ID = COALESCE ( @intLast10ID, 1)
+
+			INSERT INTO TLast10	(intLast10ID, intUserID, intRecipeID)
+			VALUES				(@intLast10ID, @intUserID, @intRecipeID)
+
+		END
+	ELSE IF @Exists = 0 -- if user has not favorited the favorite will be added
+		BEGIN
+			IF @Count = 10 -- if a user has 10 last10 recipes, deletes the earliest recipe (minimumID for user) and adds a new one.
+				BEGIN
+					DELETE FROM TLast10 WHERE intLast10ID = (SELECT COUNT(1) FROM vEarliestLast10 WHERE intUserID = @intUserID)
+
+					-- Gets next Last10ID
+					SELECT @intLast10ID = MAX(intLast10ID) + 1
+					FROM Tlast10 (TABLOCKX) -- Locks table till end of transaction
+
+					-- Defaults to 1 if no Users
+					SELECT @intLast10ID = COALESCE ( @intLast10ID, 1)
+
+					INSERT INTO TLast10	(intLast10ID, intUserID, intRecipeID)
+					VALUES				(@intLast10ID, @intUserID, @intRecipeID)
+			
+				END
+			ELSE IF @Count < 10 -- If user has less than 10 last10 recipes, a new one will be added with next ID
+				BEGIN
+					-- Gets next Last10ID
+					SELECT @intLast10ID = MAX(intLast10ID) + 1
+					FROM Tlast10 (TABLOCKX) -- Locks table till end of transaction
+
+					-- Defaults to 1 if no Users
+					SELECT @intLast10ID = COALESCE ( @intLast10ID, 1)
+
+					INSERT INTO TLast10	(intLast10ID, intUserID, intRecipeID)
+					VALUES				(@intLast10ID, @intUserID, @intRecipeID)
+			
+				END
+		END
+COMMIT TRANSACTION	
+
+GO
+
+SELECT * FROM vUserLast10
+EXECUTE uspUserLast10 1, 5000008
+SELECT * FROM vUserLast10
+
+-- --------------------------------------------------------------------------------------------
+GO
 
 Create Procedure uspAddNewUser -- Adds new user to DB
 		 @intUserID			AS INTEGER OUTPUT
@@ -1267,6 +1410,4 @@ GO
 --SELECT * FROM TShoppingList
 --GO
 
--- --------------------------------------------------------------------------------------------
 
--- Create Procedure uspLast10
