@@ -255,73 +255,6 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
 						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
 
-<<<<<<< Updated upstream
---INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID, strRecipeImage)
---VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
---							   Step 2; Once the steak is seared reduce heat to Medium - Medium High add butter to the pan and let it melt. Once the butter has melted put in 2-3 "sticks" of rosemary and 3-4 garlic cloves quartered or halved in the butter. Cook the steak an additional 3 - 5 minutes depending on how rare youd like it, while cooking spoon the melted butter over the steak.
---							   Step 3; Enjoy :)', 25, 2, 1, '')
---						,('Recipe Test 2', 'Recipe Test 2 Instructions', 30, 4, 1, '')
---						,('Recipe Test 3', 'Recipe Test 3 Instructions', 60, 4, 3, '')
---						,('Recipe Test 4', 'Recipe Test 4 Instructions',180, 6, 4, '')
-
- --INSERT INTO TRatings		(intRatingID, intUserID, intDifficultyID, intTasteID, intRecipeID)
- --VALUES					 (1, 1, 5, 5, 5000001)
-	--					,(2, 2, 2, 3, 5000001)
-	--					,(3, 3, 5, 2, 5000001)
-	--					,(4, 4, 5, 5, 5000001)
-	--					,(5, 2, 2, 3, 5000003)
-	--					,(6, 2, 5, 2, 5000004)
-	--					,(7, 1, 5, 5, 5000004)
-
- --INSERT INTO TUserFavorites( intUserID, intRecipeID )
- --VALUES					 (2, 5000002)
-	--					,(2, 5000001)
-	--					,(3, 5000001)
-	--					,(4, 5000003)
-	--					,(4, 5000001)
-	--					,(1, 5000002)
-	--					,(1, 5000003)
-
---INSERT INTO TIngredients ( intIngredientID, strIngredientName )
---VALUES					 (1, 'Sweet White Onion' )
---						,(2, 'Red Onion')
---						,(3, 'Chicken Breast Bone-In')
---						,(4, 'Chicken Breast Boneless')
---						,(5, 'Chicken Thigh')
---						,(6, 'Ribeye')
---						,(7, 'Cabbage')
---						,(8, 'Butter')
---						,(9, 'Salt')
---						,(10, 'Peper')
---						,(11, 'Garlic Clove')
---						,(12, 'Rosemary')
---						,(13, 'Potatoe')
---						,(14, 'Celery')
---						,(15, 'Red-Snapper')
---						,(16, 'Lemon')
---						,(17, 'All-Spice')
-
- --INSERT INTO TRecipeIngredients (intRecipeID, intIngredientID, dblIngredientQuantity, strUnitOfMeasurement )
- --VALUES					 (5000001, 6, 1.5, 'LB')
-	--					,(5000001, 8, 1.75, 'TSP')
-	--					,(5000001, 9, 1, 'TBSP')
-	--					,(5000001, 10, 0.75, 'OZ')
-	--					,(5000001, 11, 3, 'ML')
-	--					,(5000001, 12, 3, 'Gram')
-	--					,(5000002, 3, 2, 'Cup')
-	--					,(5000002, 9, 1, 'Quart')
-	--					,(5000002, 10, 1, 'Pint')
-	--					,(5000002, 8, 1, 'Gallon')
-	--					,(5000003, 8, 1.75, 'TSP')
-	--					,(5000003, 9, 1, 'TBSP')
-	--					,(5000003, 10, 0.75, 'OZ')
-	--					,(5000002, 11, 3, 'ML')
-	--					,(5000003, 12, 13, 'Gram')
-	--					,(5000004, 3, 2, 'Cup')
-	--					,(5000004, 9, 12, 'Quart')
-	--					,(5000004, 10, 17, 'Pint')
-	--					,(5000004, 8, 11, 'Gallon')
-=======
 INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID)
 VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
 							   Step 2; Once the steak is seared reduce heat to Medium - Medium High add butter to the pan and let it melt. Once the butter has melted put in 2-3 "sticks" of rosemary and 3-4 garlic cloves quartered or halved in the butter. Cook the steak an additional 3 - 5 minutes depending on how rare youd like it, while cooking spoon the melted butter over the steak.
@@ -394,7 +327,7 @@ VALUES					 (1, 'Sweet White Onion' )
 						,(5000004, 9, 12, 'Quart')
 						,(5000004, 10, 17, 'Pint')
 						,(5000004, 8, 11, 'Gallon')
->>>>>>> Stashed changes
+
 
 --INSERT INTO TShoppingList ( intShoppingListID, intUserID, intRecipeIngredientID )
 --VALUES						 (1,1,1)
@@ -690,18 +623,15 @@ COMMIT TRANSACTION
 
 GO
 
-<<<<<<< Updated upstream
---SELECT * FROM vUserLast10
---EXECUTE uspUserLast10 1, 5000008
---SELECT * FROM vUserLast10
-=======
---SELECT * FROM TRecipes
---SELECT * FROM vUserLast10
---EXECUTE uspUserLast10 2, 5000003
 
---SELECT * FROM vUserLast10
+SELECT * FROM vUserLast10 WHERE intUserID = 1
+EXECUTE uspUserLast10 1, 5000008
+SELECT * FROM vUserLast10 WHERE intUserID = 1
 
->>>>>>> Stashed changes
+SELECT * FROM vUserLast10 WHERE intUserID = 2
+EXECUTE uspUserLast10 2, 5000003
+SELECT * FROM vUserLast10 WHERE intUserID = 2
+
 
 -- --------------------------------------------------------------------------------------------
 GO
