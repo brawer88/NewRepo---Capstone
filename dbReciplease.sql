@@ -493,6 +493,8 @@ SELECT		 TU.intUserID
 			,TL10.intLast10ID
 			,TR.intRecipeID
 			,TR.strName
+			,TR.intReadyInMins
+			,TR.strRecipeImage
 
 FROM		TUsers as TU JOIN TLast10 as TL10
 			ON TU.intUserID = TL10.intUserID
