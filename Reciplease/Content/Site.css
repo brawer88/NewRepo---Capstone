@@ -183,8 +183,7 @@ th {
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
-textarea {
+select {
     max-width: 280px;
 }
 /*//////////////////////////////////////////////////////////////////
@@ -267,8 +266,9 @@ input[type=text] {
 }
 
 textarea {
-  outline: none;
-  border: none;
+	outline: none;
+	border: none;
+	border-radius: 4px;
 }
 
 textarea:focus, input:focus {
