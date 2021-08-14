@@ -249,11 +249,11 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 --						,(4)
 --						,(5)
 
--- INSERT INTO TUsers		(strFirstName, strLastName, strEmail, strPassword, strUserName)
--- VALUES					 ('Isaak', 'Galle', 'isaakgalle@gmail.com', 'reciplease1', 'Falcawn')
---						,('Brandon', 'Wernke', 'brandon.wernke@gmail.com', 'reciplease2', 'Brawer')
---						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
---						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
+ INSERT INTO TUsers		(strFirstName, strLastName, strEmail, strPassword, strUserName)
+ VALUES					 ('Isaak', 'Galle', 'isaakgalle@gmail.com', 'reciplease1', 'Falcawn')
+						,('Brandon', 'Wernke', 'brandon.wernke@gmail.com', 'reciplease2', 'Brawer')
+						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
+						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
 
 --INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID)
 --VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
@@ -510,6 +510,8 @@ FROM		TUsers as TU JOIN TLast10 as TL10
 			JOIN TRecipes as TR
 			ON TR.intRecipeID = TL10.intRecipeID
 
+GROUP BY TL10.intLast10ID
+
 GO
 
 SELECT * FROM vUserLast10
@@ -557,7 +559,7 @@ BEGIN TRANSACTION
 	SELECT COUNT(1) FROM TLast10 WHERE intRecipeID = @intRecipeID AND intUserID = @intUserID -- Returns 1 if exists, 0 if it doesn't
 
 	DECLARE if10Saved CURSOR LOCAL FOR
-	SELECT COUNT(*) FROM TLast10 WHERE intUserID = 1
+	SELECT COUNT(*) FROM TLast10 WHERE intUserID = @intUserID
 
 		OPEN ifInLast10
 
@@ -590,9 +592,10 @@ BEGIN TRANSACTION
 		END
 	ELSE IF @Exists = 0 -- if user has not favorited the favorite will be added
 		BEGIN
+			PRINT @Count
 			IF @Count = 10 -- if a user has 10 last10 recipes, deletes the earliest recipe (minimumID for user) and adds a new one.
 				BEGIN
-					DELETE FROM TLast10 WHERE intLast10ID = (SELECT COUNT(1) FROM vEarliestLast10 WHERE intUserID = @intUserID)
+					DELETE FROM TLast10 WHERE intLast10ID = (SELECT intLast10ID FROM vEarliestLast10 WHERE intUserID = @intUserID)
 
 					-- Gets next Last10ID
 					SELECT @intLast10ID = MAX(intLast10ID) + 1
@@ -629,8 +632,10 @@ GO
 --SELECT * FROM vUserLast10 WHERE intUserID = 1
 
 --SELECT * FROM vUserLast10 WHERE intUserID = 2
---EXECUTE uspUserLast10 2, 5000003
+--EXECUTE uspUserLast10 2, 245370
 --SELECT * FROM vUserLast10 WHERE intUserID = 2
+--SELECT * FROM TRecipes
+--DELETE FROM TLast10 WHERE intRecipeID = 245370
 
 
 -- --------------------------------------------------------------------------------------------
