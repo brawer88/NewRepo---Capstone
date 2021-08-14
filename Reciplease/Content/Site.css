@@ -149,8 +149,9 @@ th {
 
 .topnav a.icon {
 	background: #829CD0;
-	display: block;
-	position: absolute;
+	display: inline-block;
+	float: left;
+	position: relative;
 	right: 0;
 	top: 0;
 }

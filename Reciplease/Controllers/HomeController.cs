@@ -15,8 +15,14 @@ namespace Reciplease.Controllers {
 		public ActionResult Index( ) {
 			RecipesList recipes = new RecipesList( );
 			Database DB = new Database( );
+			
 
 			recipes.recipes = DB.GetTopDifficultyRatedRecipes( );
+
+			if ( recipes.recipes.Count < 5 )
+			{
+				recipes = RecipeAPI.Get5RandomAPIRecipes( );
+			}
 
 			Models.HomeContent h = new Models.HomeContent
 			{
