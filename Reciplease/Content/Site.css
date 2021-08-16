@@ -1,5 +1,7 @@
 body {
-    padding-bottom: 20px;
+	padding-bottom: 20px;
+	padding-top: 110px;
+	margin: 0px;
 }
 
 .info {
@@ -131,10 +133,12 @@ th {
 }
 .topnav {
 	background-color: #829CD0;
-	position: sticky;
-	position: -webkit-sticky;
-	top: 0px;
 	width: 100%;
+	height: auto;
+	position: fixed;
+	top: 0px;
+	margin: 0px;
+	padding: 0px;
 }
 
 
