@@ -130,9 +130,10 @@ th {
 	}
 }
 .topnav {
-	overflow: hidden;
 	background-color: #829CD0;
-	position: fixed;
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0px;
 	width: 100%;
 }
 
@@ -154,9 +155,7 @@ th {
 	background: #829CD0;
 	display: inline-block;
 	float: left;
-	position: relative;
 	right: 0;
-	top: 0;
 }
 
 .topnav a:hover {
@@ -168,7 +167,6 @@ th {
 	height: 100vh;
 	width: 200px;
 	float: left;
-	position: relative;
 		}
 
 /* Set padding to keep content from hitting the edges */

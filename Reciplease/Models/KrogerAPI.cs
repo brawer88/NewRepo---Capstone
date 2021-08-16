@@ -167,43 +167,43 @@ namespace Reciplease.Models {
 						else if ( double.Parse( amounts[0] ) * 2 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)double.Parse(amounts[0]) * 2;
+							item.quantity = 2;
 							dblFinalDifference = double.Parse( amounts[0] ) * 2;
 						}
 						else if ( double.Parse( amounts[0] ) * 3 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)double.Parse( amounts[0] ) * 3;
+							item.quantity = 3;
 							dblFinalDifference = double.Parse( amounts[0] ) * 3;
 						}
 						else if ( double.Parse( amounts[0] ) * 4 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)double.Parse( amounts[0] ) * 4;
+							item.quantity = 4;
 							dblFinalDifference = double.Parse( amounts[0] ) * 4;
 						}
 						else if ( double.Parse( amounts[0] ) * 5 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)double.Parse( amounts[0] ) * 5;
+							item.quantity = 5;
 							dblFinalDifference = double.Parse( amounts[0] ) * 5;
 						}
 						else if ( double.Parse( amounts[0] ) * 6 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)double.Parse( amounts[0] ) * 6;
+							item.quantity = 6;
 							dblFinalDifference = double.Parse( amounts[0] ) * 6;
 						}
 						else if ( double.Parse( amounts[0] ) * 7 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)double.Parse( amounts[0] ) * 7;
+							item.quantity = 7;
 							dblFinalDifference = double.Parse( amounts[0] ) * 7;
 						}
 						else if ( double.Parse( amounts[0] ) * 8 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)double.Parse( amounts[0] ) * 8;
+							item.quantity = 8;
 							dblFinalDifference = double.Parse( amounts[0] ) * 8;
 						}
 					}

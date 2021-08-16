@@ -15,12 +15,12 @@ using System.Web;
 namespace Reciplease.Models {
 	public class User {
 		public int UID = 0;
-		public string Username = string.Empty;
-		public string FirstName = string.Empty;
-		public string LastName = string.Empty;
-		public string Password = string.Empty;
+		public string Username { get; set; }
+		public string FirstName { get; set; }
+		public string LastName { get; set; }
+		public string Password { get; set; }
 		public ActionTypes ActionType = ActionTypes.NoType;
-		public string Email = string.Empty;
+		public string Email { get; set; }
 		public List<Rating> Ratings;
 		public string KrogerAuthCode { get; set; }
 		public AuthCodes KrogerAuthTokens { get; set; }
@@ -122,10 +122,18 @@ namespace Reciplease.Models {
 				{ //insert new user
 					this.ActionType = db.InsertUser( this );
 				}
-				else
-				{
-					this.ActionType = db.UpdateUser( this );
-				}
+
+				return this.ActionType;
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
+		public User.ActionTypes Save( int UID, string Username, string Password, string Email, string FirstName, string LastName ) {
+			try
+			{
+				Database db = new Database( );
+				
+				this.ActionType = db.UpdateUser( UID, Username, Password, Email, FirstName, LastName );
 				return this.ActionType;
 			}
 			catch ( Exception ex ) { throw new Exception( ex.Message ); }

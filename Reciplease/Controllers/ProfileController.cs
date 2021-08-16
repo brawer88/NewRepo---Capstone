@@ -446,14 +446,13 @@ namespace Reciplease.Controllers
 			{
 				User u = new User( );
 
-
 				u = u.GetUserSession( );
 
-				u.FirstName = collfrmAttr["FirstName"];
-				u.LastName = collfrmAttr["LastName"];
-				u.Email = collfrmAttr["Email"];
-				u.Username = collfrmAttr["Username"];
-				u.Password = collfrmAttr["Password"];
+				string FirstName = collfrmAttr["FirstName"];
+				string LastName = collfrmAttr["LastName"];
+				string Email = collfrmAttr["Email"];
+				string Username = collfrmAttr["Username"];
+				string Password = collfrmAttr["Password"];
 
 				if ( u.FirstName.Length == 0 || u.LastName.Length == 0 || u.Email.Length == 0 || u.Username.Length == 0 || u.Password.Length == 0 )
 				{
@@ -464,11 +463,12 @@ namespace Reciplease.Controllers
 				{
 					if ( collfrmAttr["btnSubmit"] == "update" )
 					{ //update button pressed
-						u.ActionType = u.Save( );
+						u.ActionType = u.Save(  u.UID,  Username,  Password,  Email,  FirstName, LastName );
 						if( u.ActionType == Models.User.ActionTypes.UpdateSuccessful )
 						{
 							u.SaveUserSession( );
 						}
+
 					}
 
 					return View( u );

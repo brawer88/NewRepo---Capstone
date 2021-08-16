@@ -432,7 +432,7 @@ namespace Reciplease.Models {
 			}
 		}
 
-		public User.ActionTypes UpdateUser( User u ) {
+		public User.ActionTypes UpdateUser( int UID, string Username, string Password, string Email, string FirstName, string LastName ) {
 			try
 			{
 				SqlConnection cn = null;
@@ -440,12 +440,12 @@ namespace Reciplease.Models {
 				SqlCommand cm = new SqlCommand( "uspUpdateUser", cn );
 				int intReturnValue = -1;
 
-				SetParameter( ref cm, "@intUserID", u.UID, SqlDbType.Int );
-				SetParameter( ref cm, "@strUsername", u.Username, SqlDbType.NVarChar );
-				SetParameter( ref cm, "@strPassword", u.Password, SqlDbType.NVarChar );
-				SetParameter( ref cm, "@strEmail", u.Email, SqlDbType.NVarChar );
-				SetParameter( ref cm, "@strFirstName", u.FirstName, SqlDbType.NVarChar );
-				SetParameter( ref cm, "@strLastName", u.LastName, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@intUserID", UID, SqlDbType.Int );
+				SetParameter( ref cm, "@strUsername", Username, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strPassword", Password, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strEmail", Email, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strFirstName", FirstName, SqlDbType.NVarChar );
+				SetParameter( ref cm, "@strLastName", LastName, SqlDbType.NVarChar );
 				SetParameter( ref cm, "ReturnValue", 0, SqlDbType.TinyInt, Direction: ParameterDirection.ReturnValue );
 
 				cm.ExecuteReader( );
