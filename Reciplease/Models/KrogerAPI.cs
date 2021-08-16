@@ -155,7 +155,8 @@ namespace Reciplease.Models {
 					double dblDifference = 0;
 					dblDifference = newAmount - double.Parse(amount);
 
-					if ( dblFinalDifference > dblDifference && dblDifference > 0)
+					//if ( dblFinalDifference > dblDifference && dblDifference > -.005)
+					if ( dblFinalDifference > dblDifference)
 					{
 						if ( double.Parse( amount ) <= newAmount )
 						{
@@ -163,11 +164,47 @@ namespace Reciplease.Models {
 							item.quantity = 1;
 							dblFinalDifference = dblDifference;
 						}
-						else if ( double.Parse( amounts[0] ) * double.Parse(amount) >= newAmount )
+						else if ( double.Parse( amounts[0] ) * 2 >= newAmount )
 						{
 							item.upc = d.upc;
-							item.quantity = (long)Math.Ceiling( double.Parse( amount ) ); ;
-							dblFinalDifference = ( double.Parse( amounts[0] ) * double.Parse( amount ) ) - newAmount;
+							item.quantity = (long)double.Parse(amounts[0]) * 2;
+							dblFinalDifference = double.Parse( amounts[0] ) * 2;
+						}
+						else if ( double.Parse( amounts[0] ) * 3 >= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = (long)double.Parse( amounts[0] ) * 3;
+							dblFinalDifference = double.Parse( amounts[0] ) * 3;
+						}
+						else if ( double.Parse( amounts[0] ) * 4 >= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = (long)double.Parse( amounts[0] ) * 4;
+							dblFinalDifference = double.Parse( amounts[0] ) * 4;
+						}
+						else if ( double.Parse( amounts[0] ) * 5 >= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = (long)double.Parse( amounts[0] ) * 5;
+							dblFinalDifference = double.Parse( amounts[0] ) * 5;
+						}
+						else if ( double.Parse( amounts[0] ) * 6 >= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = (long)double.Parse( amounts[0] ) * 6;
+							dblFinalDifference = double.Parse( amounts[0] ) * 6;
+						}
+						else if ( double.Parse( amounts[0] ) * 7 >= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = (long)double.Parse( amounts[0] ) * 7;
+							dblFinalDifference = double.Parse( amounts[0] ) * 7;
+						}
+						else if ( double.Parse( amounts[0] ) * 8 >= newAmount )
+						{
+							item.upc = d.upc;
+							item.quantity = (long)double.Parse( amounts[0] ) * 8;
+							dblFinalDifference = double.Parse( amounts[0] ) * 8;
 						}
 					}
 

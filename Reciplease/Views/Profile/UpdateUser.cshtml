@@ -17,35 +17,56 @@
 <br />
 @if ( @Model.IsAuthenticated == true )
 {
-	<div id="user-profile-data">
-		@using ( @Html.BeginForm( "UpdateUser", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+<div id="user-profile-data">
+	@using ( @Html.BeginForm( "UpdateUser", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+	{
+		if ( Model.ActionType == Reciplease.Models.User.ActionTypes.DuplicateEmail )
 		{
-			<div class="card">
-				<div class="container">
-					<div>@Html.LabelFor( model => model.FirstName )</div>
-					<div>@Html.TextBoxFor( model => model.FirstName, new { @autofocus = "autofocus" } )</div>
-					<br />
-					<div>@Html.LabelFor( model => model.LastName )</div>
-					<div>@Html.TextBoxFor( model => model.LastName )</div>
-					<br />
-					<div>@Html.LabelFor( model => model.Email )</div>
-					<div>@Html.TextBoxFor( model => model.Email )</div>
-<br />
-					<div>@Html.LabelFor( model => model.Username )</div>
-					<div>@Html.TextBoxFor( model => model.Username )</div>
-<br />
-					<div>@Html.LabelFor( model => model.Password )</div>
-					<div>@Html.TextBoxFor( model => model.Password, new { type = "password" } )</div>
-				</div>
+			<div id="content-locked">
+				<i class=" fad fa-exclamation-triangle fa-2x"></i>
+				<span>Email is already in use. Please try again.</span>
 			</div>
-<br />
-			<div class="card">
+		}
+		if ( Model.ActionType == Reciplease.Models.User.ActionTypes.DuplicateUsername )
+		{
+			<div id="content-locked">
+				<i class=" fad fa-exclamation-triangle fa-2x"></i>
+				<span>Username is already used. Please try again.</span>
+			</div>
+		}
+		if ( Model.ActionType == Reciplease.Models.User.ActionTypes.RequiredFieldsMissing )
+		{
+			<div id="content-locked">
+				<i class=" fad fa-exclamation-triangle fa-2x"></i>
+				<span>All fields are required.</span>
+			</div>
+		}
+		<div class="card">
+			<div class="container">
+				<div>@Html.LabelFor( model => model.FirstName )</div>
+				<div>@Html.TextBoxFor( model => model.FirstName, new { @autofocus = "autofocus" } )</div>
 				<br />
-				<button class="button-action" id="btnUpdate" name="btnSubmit" value="update" onclick="updateMe()" style="font-size:20px; font-weight:bold; "><i class='far fa-save'></i> Update</button>
+				<div>@Html.LabelFor( model => model.LastName )</div>
+				<div>@Html.TextBoxFor( model => model.LastName )</div>
+				<br />
+				<div>@Html.LabelFor( model => model.Email )</div>
+				<div>@Html.TextBoxFor( model => model.Email )</div>
+				<br />
+				<div>@Html.LabelFor( model => model.Username )</div>
+				<div>@Html.TextBoxFor( model => model.Username )</div>
+				<br />
+				<div>@Html.LabelFor( model => model.Password )</div>
+				<div>@Html.TextBoxFor( model => model.Password, new { type = "password" } )</div>
+			</div>
+		</div>
+		<br />
+		<div class="card">
+			<br />
+			<button class="button-action" id="btnUpdate" name="btnSubmit" value="update" onclick="updateMe()" style="font-size:20px; font-weight:bold; "><i class='far fa-save'></i> Update</button>
 			<br />
 		</div>
-		}
-	</div>
+	}
+</div>
 	<div id="snackbar">Some text some message..</div>
 
 	if ( Model.ActionType == Reciplease.Models.User.ActionTypes.UpdateSuccessful )

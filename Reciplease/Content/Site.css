@@ -128,12 +128,15 @@ th {
 		bottom: 0;
 		opacity: 0;
 	}
-} 
+}
 .topnav {
 	overflow: hidden;
 	background-color: #829CD0;
-	position: relative;
+	position: fixed;
+	width: 100%;
 }
+
+
 
 .topnav #myLinks {
 	display: none;

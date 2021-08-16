@@ -464,9 +464,11 @@ namespace Reciplease.Controllers
 				{
 					if ( collfrmAttr["btnSubmit"] == "update" )
 					{ //update button pressed
-						u.Save( );
-						u.SaveUserSession( );
-						u.ActionType = Models.User.ActionTypes.UpdateSuccessful;
+						u.ActionType = u.Save( );
+						if( u.ActionType == Models.User.ActionTypes.UpdateSuccessful )
+						{
+							u.SaveUserSession( );
+						}
 					}
 
 					return View( u );
@@ -540,6 +542,8 @@ namespace Reciplease.Controllers
            
             last10.user = u.GetUserSession();
 			last10.lstLastTen = db.GetLastTen( last10.user.UID );
+
+			last10.lstLastTen.Reverse( );
            
             db.GetLastTen(last10.user.UID);
            

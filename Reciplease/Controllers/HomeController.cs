@@ -15,19 +15,29 @@ namespace Reciplease.Controllers {
 		public ActionResult Index( ) {
 			RecipesList recipes = new RecipesList( );
 			Database DB = new Database( );
-			
+
+			User u = new User( );
+			u = u.GetUserSession( );
 
 			recipes.recipes = DB.GetTopDifficultyRatedRecipes( );
 
 			if ( recipes.recipes.Count < 5 )
 			{
-				recipes = RecipeAPI.Get5RandomAPIRecipes( );
+				RecipesList newRecipes;
+				newRecipes = RecipeAPI.Get5RandomAPIRecipes( );
+
+				if ( newRecipes != null )
+				{
+					recipes = newRecipes;
+				}
+		
 			}
 
 			Models.HomeContent h = new Models.HomeContent
 			{
 				// get recipes to display
-				RecipesToDisplay = recipes
+				RecipesToDisplay = recipes,
+				user = u
 				
 			};
 
@@ -118,6 +128,10 @@ namespace Reciplease.Controllers {
 				{
 					if ( ingredient.name != null )
 					{
+						if ( ingredient.id == null )
+						{
+							ingredient.id = "0";
+						}
 						// now save ingredients
 						int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
 

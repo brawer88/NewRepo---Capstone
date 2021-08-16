@@ -12,33 +12,40 @@
 @*Iterate over recipes to display them*@
 @if ( @Model.user.IsAuthenticated == true )
 {
-	foreach ( Reciplease.Models.Recipe recipe in Model.lstLastTen )
+	if ( Model.lstLastTen.Count > 0 )
 	{
-		<div class="row">
-			<div class="recipe-card">
+		foreach ( Reciplease.Models.Recipe recipe in Model.lstLastTen )
+		{
+			<div class="row">
+				<div class="recipe-card">
 
-				<aside>
-					<a href="@Url.Action("Recipe", "Home", new { id = recipe.id })" class="button">
-						<span class="icon icon-play">
-							<img src=@recipe.image alt=@recipe.title ; />
-						</span>
-					</a>
-				</aside>
+					<aside>
+						<a href="@Url.Action( "Recipe", "Home", new { id = recipe.id } )" class="button">
+							<span class="icon icon-play">
+								<img src=@recipe.image alt=@recipe.title ; />
+							</span>
+						</a>
+					</aside>
 
-				<article>
-					<h2>@recipe.title</h2>
-					<p>Ready In: @recipe.readyInMinutes minutes</p>
-					<p>Servings: @recipe.servings</p>
-					<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
-					<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
-					<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
-					<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
+					<article>
+						<h2>@recipe.title</h2>
+						<p>Ready In: @recipe.readyInMinutes minutes</p>
+						<p>Servings: @recipe.servings</p>
+						<p>Difficulty Average: @recipe.dictRatings["AverageDifficulty"]</p>
+						<p>Difficulty Count: @recipe.dictRatings["DifficultyCount"]</p>
+						<p>Taste Average: @recipe.dictRatings["AverageTaste"]</p>
+						<p>Taste Count: @recipe.dictRatings["TasteCount"]</p>
 
 
-				</article>
+					</article>
 
+				</div>
 			</div>
-		</div>
+		}
+	}
+	else
+	{
+		<p>You haven't added any recipes to your cart yet. Want to <a class="button" href="~/Home/Search">search</a> one?</p>
 	}
 }
 else

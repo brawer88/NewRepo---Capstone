@@ -36,7 +36,8 @@ namespace Reciplease.Controllers
 					jsMessage = "Not all items were found";
 				}
 
-				string jsUrl = "http://itd1.cincinnatistate.edu/CPDM-WernkeB/Home";
+				string jsUrl = "http://itd1.cincinnatistate.edu/CPDM-WernkeB/Home/Recipe/" + cart.cart.list.intRecipeID.ToString( );
+				cart.cart.EmptyCart( );
 
 				cart.jsUrl = jsUrl;
 				cart.jsMessage = jsMessage;
@@ -52,10 +53,10 @@ namespace Reciplease.Controllers
 
 			//if ( u.KrogerAuthCode == null )
 			//{
-			//	u.KrogerAuthCode = "314u7WFP19xXPDATuvehlm911NyqAEn91tdwa2Rh";
+			//	u.KrogerAuthCode = "cu3ZVoJczJti3bA7LvUPqkadBer9c7ls3wI6n3Ip";
 			//	u.KrogerAuthTokens = new AuthCodes( );
 			//	u.KrogerAuthTokens.access_token = "";
-			//	u.KrogerAuthTokens.refresh_token = "GLaJNpkqq35QiqUP4Cq1G3ONwPaoOsRy0qWTO5IS";
+			//	u.KrogerAuthTokens.refresh_token = "3c2XK9kye9rEk9eLWIaj111H1rb12SJuyAjZt1ho";
 			//}
 
 
@@ -86,7 +87,6 @@ namespace Reciplease.Controllers
 					id = "1";
 				}
 				upcs = new CartMappedToKrogerUPC( );
-				c.EmptyCart( );
 
 				return RedirectToAction( "Index", new { id } );
 			}
@@ -128,7 +128,7 @@ namespace Reciplease.Controllers
 					id = "1";
 				}
 				upcs = new CartMappedToKrogerUPC( );
-				c.EmptyCart( );
+				//c.EmptyCart( );
 
 
 				return RedirectToAction( "Index", new { id } );
