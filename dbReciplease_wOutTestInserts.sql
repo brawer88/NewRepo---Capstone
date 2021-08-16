@@ -11,17 +11,17 @@ SET NOCOUNT ON;		-- Report only errors
 -- --------------------------------------------------------------------------------
 -- Drop Tables
 -- --------------------------------------------------------------------------------
-IF OBJECT_ID('TUserFavorites')					IS NOT NULL DROP TABLE TUserFavorites
-IF OBJECT_ID('TShoppingList')					IS NOT NULL DROP TABLE TShoppingList
-IF OBJECT_ID('TRecipeIngredients')				IS NOT NULL DROP TABLE TRecipeIngredients
-IF OBJECT_ID('TRatings')						IS NOT NULL DROP TABLE TRatings
-IF OBJECT_ID('TMeasurementUnits')				IS NOT NULL DROP TABLE TMeasurementUnits
-IF OBJECT_ID('TLast10')							IS NOT NULL DROP TABLE TLast10
-IF OBJECT_ID('TRecipes')						IS NOT NULL DROP TABLE TRecipes
-IF OBJECT_ID('TUsers')							IS NOT NULL DROP TABLE TUsers
-IF OBJECT_ID('TTaste')							IS NOT NULL DROP TABLE TTaste
-IF OBJECT_ID('TDifficulty')						IS NOT NULL DROP TABLE TDifficulty
-IF OBJECT_ID('TIngredients')					IS NOT NULL DROP TABLE TIngredients
+--IF OBJECT_ID('TUserFavorites')					IS NOT NULL DROP TABLE TUserFavorites
+--IF OBJECT_ID('TShoppingList')					IS NOT NULL DROP TABLE TShoppingList
+--IF OBJECT_ID('TRecipeIngredients')				IS NOT NULL DROP TABLE TRecipeIngredients
+--IF OBJECT_ID('TRatings')						IS NOT NULL DROP TABLE TRatings
+--IF OBJECT_ID('TMeasurementUnits')				IS NOT NULL DROP TABLE TMeasurementUnits
+--IF OBJECT_ID('TLast10')							IS NOT NULL DROP TABLE TLast10
+--IF OBJECT_ID('TRecipes')						IS NOT NULL DROP TABLE TRecipes
+--IF OBJECT_ID('TUsers')							IS NOT NULL DROP TABLE TUsers
+--IF OBJECT_ID('TTaste')							IS NOT NULL DROP TABLE TTaste
+--IF OBJECT_ID('TDifficulty')						IS NOT NULL DROP TABLE TDifficulty
+--IF OBJECT_ID('TIngredients')					IS NOT NULL DROP TABLE TIngredients
 
 -- ---------------------------------------------------------------------------------
 -- Drop Views
@@ -59,102 +59,102 @@ IF OBJECT_ID('uspUserLast10')					IS NOT NULL DROP PROCEDURE uspUserLast10
 -- --------------------------------------------------------------------------------
 -- Step #1: Create Tables
 -- --------------------------------------------------------------------------------
-CREATE TABLE TUsers
-(
-	 intUserID			INTEGER	IDENTITY	NOT NULL
-	,strFirstName		VARCHAR(50)			NOT NULL
-	,strLastName		VARCHAR(50)			NOT NULL 
-	,strEmail			VARCHAR(50)			NOT NULL
-	,strPassword		VARCHAR(50)			NOT NULL
-	,strUserName		VARCHAR(50)			NOT NULL
-	,CONSTRAINT TUsers_PK PRIMARY KEY ( intUserID )
-)
+--CREATE TABLE TUsers
+--(
+--	 intUserID			INTEGER	IDENTITY	NOT NULL
+--	,strFirstName		VARCHAR(50)			NOT NULL
+--	,strLastName		VARCHAR(50)			NOT NULL 
+--	,strEmail			VARCHAR(50)			NOT NULL
+--	,strPassword		VARCHAR(50)			NOT NULL
+--	,strUserName		VARCHAR(50)			NOT NULL
+--	,CONSTRAINT TUsers_PK PRIMARY KEY ( intUserID )
+--)
 
-CREATE TABLE TRecipes
-(
-	 intRecipeID		INTEGER	IDENTITY(5000001, 1)	NOT NULL
-	,strName			VARCHAR(250)					NOT NULL
-	,strInstructions	VARCHAR(3000)					NOT NULL
-	,intReadyInMins		INTEGER				
-	,intServings		INTEGER				
-	,strCuisines		VARCHAR(255)		
-	,strDiets			VARCHAR(255)		
-	,strDishTypes		VARCHAR(255)
-	,strNutrition		VARCHAR(3000)		
-	,intUserID			INTEGER		
-	,strRecipeImage		VARCHAR(500)		
-	,CONSTRAINT TRecipes_PK PRIMARY KEY ( intRecipeID )
-)
+--CREATE TABLE TRecipes
+--(
+--	 intRecipeID		INTEGER	IDENTITY(5000000, 1)	NOT NULL
+--	,strName			VARCHAR(250)					NOT NULL
+--	,strInstructions	VARCHAR(3000)					NOT NULL
+--	,intReadyInMins		INTEGER				
+--	,intServings		INTEGER				
+--	,strCuisines		VARCHAR(255)		
+--	,strDiets			VARCHAR(255)		
+--	,strDishTypes		VARCHAR(255)
+--	,strNutrition		VARCHAR(3000)		
+--	,intUserID			INTEGER		
+--	,strRecipeImage		VARCHAR(500)		
+--	,CONSTRAINT TRecipes_PK PRIMARY KEY ( intRecipeID )
+--)
 
-CREATE TABLE TRecipeIngredients
-(
-	 intRecipeIngredientID	INTEGER IDENTITY	NOT NULL
-	,intRecipeID			INTEGER				NOT NULL
-	,intIngredientID		INTEGER				NOT NULL
-	,dblIngredientQuantity	FLOAT				NOT NULL
-	--,intIngredientQuantity	INTEGER				NOT NULL
-	,strUnitOfMeasurement	VARCHAR(50)			NOT	NULL
-	,CONSTRAINT RecipeIngredient_UQ UNIQUE ( intRecipeID, intIngredientID )
-	,CONSTRAINT TRecipeIngredients_PK PRIMARY KEY ( intRecipeIngredientID )
-)
+--CREATE TABLE TRecipeIngredients
+--(
+--	 intRecipeIngredientID	INTEGER IDENTITY	NOT NULL
+--	,intRecipeID			INTEGER				NOT NULL
+--	,intIngredientID		INTEGER				NOT NULL
+--	,dblIngredientQuantity	FLOAT				NOT NULL
+--	--,intIngredientQuantity	INTEGER				NOT NULL
+--	,strUnitOfMeasurement	VARCHAR(50)			NOT	NULL
+--	,CONSTRAINT RecipeIngredient_UQ UNIQUE ( intRecipeID, intIngredientID )
+--	,CONSTRAINT TRecipeIngredients_PK PRIMARY KEY ( intRecipeIngredientID )
+--)
 
-CREATE TABLE TIngredients
-(
-	 intIngredientID	INTEGER				NOT NULL
-	,strIngredientName	VARCHAR(50)			NOT NULL
-	,CONSTRAINT TIngredients_PK PRIMARY KEY ( intIngredientID )
-)
+--CREATE TABLE TIngredients
+--(
+--	 intIngredientID	INTEGER				NOT NULL
+--	,strIngredientName	VARCHAR(50)			NOT NULL
+--	,CONSTRAINT TIngredients_PK PRIMARY KEY ( intIngredientID )
+--)
 
-CREATE TABLE TShoppingList
-(
-	 intShoppingListID		INTEGER			NOT NULL
-	,intUserID				INTEGER			NOT NULL
-	,intRecipeIngredientID	INTEGER			NOT NULL
-	--,CONSTRAINT RecipeIngredientList_UQ UNIQUE ( intUserID, intRecipeIngredientID )
-	,CONSTRAINT TShoppingList_PK PRIMARY KEY ( intShoppingListID )
-)
+--CREATE TABLE TShoppingList
+--(
+--	 intShoppingListID		INTEGER			NOT NULL
+--	,intUserID				INTEGER			NOT NULL
+--	,intRecipeIngredientID	INTEGER			NOT NULL
+--	--,CONSTRAINT RecipeIngredientList_UQ UNIQUE ( intUserID, intRecipeIngredientID )
+--	,CONSTRAINT TShoppingList_PK PRIMARY KEY ( intShoppingListID )
+--)
 
-CREATE TABLE TUserFavorites
-(
-	 intUserFavoriteID	INTEGER IDENTITY	NOT NULL
-	,intUserID			INTEGER				NOT NULL
-	,intRecipeID		INTEGER				NOT NULL
-	,CONSTRAINT UserID_RecipeID_UQ UNIQUE ( intUserID, intRecipeID )
-	,CONSTRAINT TUserFavorites_PK PRIMARY KEY ( intUserFavoriteID )
-)
+--CREATE TABLE TUserFavorites
+--(
+--	 intUserFavoriteID	INTEGER IDENTITY	NOT NULL
+--	,intUserID			INTEGER				NOT NULL
+--	,intRecipeID		INTEGER				NOT NULL
+--	,CONSTRAINT UserID_RecipeID_UQ UNIQUE ( intUserID, intRecipeID )
+--	,CONSTRAINT TUserFavorites_PK PRIMARY KEY ( intUserFavoriteID )
+--)
 
-CREATE TABLE TRatings
-(
-	 intRatingID		INTEGER				NOT NULL
-	,intUserID			INTEGER				NOT NULL
-	,intDifficultyID	INTEGER				NOT NULL
-	,intTasteID			INTEGER				NOT NULL
-	,intRecipeID		INTEGER				NOT NULL
-	,CONSTRAINT RecipeUser_UQ UNIQUE ( intRecipeID, intUserID )
-	,CONSTRAINT TRatings_PK PRIMARY KEY ( intRatingID )
-)
+--CREATE TABLE TRatings
+--(
+--	 intRatingID		INTEGER				NOT NULL
+--	,intUserID			INTEGER				NOT NULL
+--	,intDifficultyID	INTEGER				NOT NULL
+--	,intTasteID			INTEGER				NOT NULL
+--	,intRecipeID		INTEGER				NOT NULL
+--	,CONSTRAINT RecipeUser_UQ UNIQUE ( intRecipeID, intUserID )
+--	,CONSTRAINT TRatings_PK PRIMARY KEY ( intRatingID )
+--)
 
-CREATE TABLE TTaste
-(
-	 intTasteID			INTEGER	IDENTITY	NOT NULL
-	,intTasteRating		INTEGER				NOT NULL
-	,CONSTRAINT TTaste_PK PRIMARY KEY ( intTasteID )
-)
+--CREATE TABLE TTaste
+--(
+--	 intTasteID			INTEGER	IDENTITY	NOT NULL
+--	,intTasteRating		INTEGER				NOT NULL
+--	,CONSTRAINT TTaste_PK PRIMARY KEY ( intTasteID )
+--)
 
-CREATE TABLE TDifficulty
-(
-	 intDifficultyID		INTEGER	IDENTITY NOT NULL
-	,intDifficultyRating	INTEGER			 NOT NULL
-	,CONSTRAINT TDifficulty_PK PRIMARY KEY ( intDifficultyID )
-)
+--CREATE TABLE TDifficulty
+--(
+--	 intDifficultyID		INTEGER	IDENTITY NOT NULL
+--	,intDifficultyRating	INTEGER			 NOT NULL
+--	,CONSTRAINT TDifficulty_PK PRIMARY KEY ( intDifficultyID )
+--)
 
-CREATE TABLE TLast10
-(
-	 intLast10ID			INTEGER				NOT NULL
-	,intUserID				INTEGER				NOT NULL
-	,intRecipeID			INTEGER				NOT NULL
-	,CONSTRAINT TLast10_PK PRIMARY KEY ( intLast10ID )
-)
+--CREATE TABLE TLast10
+--(
+--	 intLast10ID			INTEGER				NOT NULL
+--	,intUserID				INTEGER				NOT NULL
+--	,intRecipeID			INTEGER				NOT NULL
+--	,CONSTRAINT TLast10_PK PRIMARY KEY ( intLast10ID )
+--)
 
 -- --------------------------------------------------------------------------------
 -- Step #2: Identify and Create Foreign Keys
@@ -180,54 +180,54 @@ CREATE TABLE TLast10
 
 
 ---- 1
-ALTER TABLE TUserFavorites ADD CONSTRAINT TUserFavorites_TUsers_FK
-FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
+--ALTER TABLE TUserFavorites ADD CONSTRAINT TUserFavorites_TUsers_FK
+--FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 
--- 2
-ALTER TABLE TUserFavorites ADD CONSTRAINT TUserFavorites_TRecipes_FK
-FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
+---- 2
+--ALTER TABLE TUserFavorites ADD CONSTRAINT TUserFavorites_TRecipes_FK
+--FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 
-ALTER TABLE TShoppingList ADD CONSTRAINT TShoppingList_TUsers_FK
-FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
+--ALTER TABLE TShoppingList ADD CONSTRAINT TShoppingList_TUsers_FK
+--FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 
-ALTER TABLE TShoppingList ADD CONSTRAINT TShoppingList_TRecipeIngredients_FK
-FOREIGN KEY ( intRecipeIngredientID ) REFERENCES TRecipeIngredients ( intRecipeIngredientID )
+--ALTER TABLE TShoppingList ADD CONSTRAINT TShoppingList_TRecipeIngredients_FK
+--FOREIGN KEY ( intRecipeIngredientID ) REFERENCES TRecipeIngredients ( intRecipeIngredientID )
 
--- 3
-ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TRecipes_FK
-FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
+---- 3
+--ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TRecipes_FK
+--FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 
--- 4
-ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TIngredients_FK
-FOREIGN KEY ( intIngredientID ) REFERENCES TIngredients ( intIngredientID )
+---- 4
+--ALTER TABLE TRecipeIngredients ADD CONSTRAINT TRecipeIngredients_TIngredients_FK
+--FOREIGN KEY ( intIngredientID ) REFERENCES TIngredients ( intIngredientID )
 
--- 7
-ALTER TABLE TRatings ADD CONSTRAINT TRatings_TTaste_FK
-FOREIGN KEY ( intTasteID ) REFERENCES TTaste ( intTasteID )
+---- 7
+--ALTER TABLE TRatings ADD CONSTRAINT TRatings_TTaste_FK
+--FOREIGN KEY ( intTasteID ) REFERENCES TTaste ( intTasteID )
 
--- 8
-ALTER TABLE TRatings ADD CONSTRAINT TRatings_TDifficulty_FK
-FOREIGN KEY ( intDifficultyID ) REFERENCES TDifficulty ( intDifficultyID )
+---- 8
+--ALTER TABLE TRatings ADD CONSTRAINT TRatings_TDifficulty_FK
+--FOREIGN KEY ( intDifficultyID ) REFERENCES TDifficulty ( intDifficultyID )
 
--- 9
-ALTER TABLE TRatings ADD CONSTRAINT TRatings_TUsers_FK
-FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
+---- 9
+--ALTER TABLE TRatings ADD CONSTRAINT TRatings_TUsers_FK
+--FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 
--- 10
-ALTER TABLE TRatings ADD CONSTRAINT TRatings_TRecipe_FK
-FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
+---- 10
+--ALTER TABLE TRatings ADD CONSTRAINT TRatings_TRecipe_FK
+--FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 
--- 12
-ALTER TABLE TLast10 ADD CONSTRAINT TLast10_TUsers_FK
-FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
+---- 12
+--ALTER TABLE TLast10 ADD CONSTRAINT TLast10_TUsers_FK
+--FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 
--- 13
-ALTER TABLE TUsers ADD CONSTRAINT TRecipes_TUsers_FK
-FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
+---- 13
+--ALTER TABLE TUsers ADD CONSTRAINT TRecipes_TUsers_FK
+--FOREIGN KEY ( intUserID ) REFERENCES TUsers ( intUserID )
 
--- 14
-ALTER TABLE TLast10 ADD CONSTRAINT TLast10_TRecipes_FK
-FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
+---- 14
+--ALTER TABLE TLast10 ADD CONSTRAINT TLast10_TRecipes_FK
+--FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
 
 
 
@@ -235,40 +235,40 @@ FOREIGN KEY ( intRecipeID ) REFERENCES TRecipes ( intRecipeID )
  --Step #3: INSERT INTO TABLES
  --------------------------------------------------------------------------------
 
- INSERT INTO TDifficulty ( intDifficultyRating )
- VALUES					 (1)
-						,(2)
-						,(3)
-						,(4)
-						,(5)
+-- INSERT INTO TDifficulty ( intDifficultyRating )
+-- VALUES					 (1)
+--						,(2)
+--						,(3)
+--						,(4)
+--						,(5)
 
- INSERT INTO TTaste ( intTasteRating )
- VALUES					 (1)
-						,(2)
-						,(3)
-						,(4)
-						,(5)
+-- INSERT INTO TTaste ( intTasteRating )
+-- VALUES					 (1)
+--						,(2)
+--						,(3)
+--						,(4)
+--						,(5)
 
- INSERT INTO TUsers		(strFirstName, strLastName, strEmail, strPassword, strUserName)
- VALUES					 ('Isaak', 'Galle', 'isaakgalle@gmail.com', 'reciplease1', 'Falcawn')
-						,('Brandon', 'Wernke', 'brandon.wernke@gmail.com', 'reciplease2', 'Brawer')
-						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
-						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
+-- INSERT INTO TUsers		(strFirstName, strLastName, strEmail, strPassword, strUserName)
+-- VALUES					 ('Isaak', 'Galle', 'isaakgalle@gmail.com', 'reciplease1', 'Falcawn')
+--						,('Brandon', 'Wernke', 'brandon.wernke@gmail.com', 'reciplease2', 'Brawer')
+--						,('Kaitlin', 'Cordell', 'Kaitlin.cordell@gmail.com', 'reciplease3', 'asapneko')
+--						,('Omonigho', 'Odairi', 'obodairi@cincinnatistate.edu', 'reciplease4', 'Omoh')
 
 --INSERT INTO TRecipes	(strName, strInstructions, intReadyInMins, intServings, intUserID)
 --VALUES					 ('Rosemary Garlic Butter Steak', 'Step 1: Let steak rest to room temperature and pat dry before cooking to get a proper sear. Allow pan to get hot at a Medium High - High heat. Sear each side including the "rim" of the steak, about 2-3mins a side until golden brown.
 --							   Step 2; Once the steak is seared reduce heat to Medium - Medium High add butter to the pan and let it melt. Once the butter has melted put in 2-3 "sticks" of rosemary and 3-4 garlic cloves quartered or halved in the butter. Cook the steak an additional 3 - 5 minutes depending on how rare youd like it, while cooking spoon the melted butter over the steak.
 --							   Step 3; Enjoy :)', 25, 2, 1 )
---						,('Recipe Test 2', 'Recipe Test 2 Instructions', 30, 4, 1)
---						,('Recipe Test 3', 'Recipe Test 3 Instructions', 60, 4, 3)
---						,('Recipe Test 4', 'Recipe Test 4 Instructions',180, 6, 4)
---						,('Recipe Test 5', 'Recipe Test 4 Instructions',180, 6, 2)
---						,('Recipe Test 6', 'Recipe Test 4 Instructions',180, 6, 3)
---						,('Recipe Test 7', 'Recipe Test 4 Instructions',180, 6, 2)
---						,('Recipe Test 8', 'Recipe Test 4 Instructions',180, 6, 3)
---						,('Recipe Test 9', 'Recipe Test 4 Instructions',180, 6, 1)
---						,('Recipe Test 10', 'Recipe Test 4 Instructions',180, 6, 1)
---						,('Recipe Test 11', 'Recipe Test 11 Instructions',180, 6, 1)
+						--,('Recipe Test 2', 'Recipe Test 2 Instructions', 30, 4, 1)
+						--,('Recipe Test 3', 'Recipe Test 3 Instructions', 60, 4, 3)
+						--,('Recipe Test 4', 'Recipe Test 4 Instructions',180, 6, 4)
+						--,('Recipe Test 5', 'Recipe Test 4 Instructions',180, 6, 2)
+						--,('Recipe Test 6', 'Recipe Test 4 Instructions',180, 6, 3)
+						--,('Recipe Test 7', 'Recipe Test 4 Instructions',180, 6, 2)
+						--,('Recipe Test 8', 'Recipe Test 4 Instructions',180, 6, 3)
+						--,('Recipe Test 9', 'Recipe Test 4 Instructions',180, 6, 1)
+						--,('Recipe Test 10', 'Recipe Test 4 Instructions',180, 6, 1)
+						--,('Recipe Test 11', 'Recipe Test 11 Instructions',180, 6, 1)
 
 -- INSERT INTO TRatings		(intRatingID, intUserID, intDifficultyID, intTasteID, intRecipeID)
 -- VALUES					 (1, 1, 5, 5, 5000001)
@@ -375,7 +375,7 @@ FROM	TRecipes as TR JOIN TRecipeIngredients as TRI
 
 GO
 
-SELECT * FROM VRecipeIngredients
+--SELECT * FROM VRecipeIngredients WHERE intRecipeID = 5000002
 
 GO
 
@@ -397,7 +397,7 @@ FROM	TUsers as TU JOIN TUserFavorites as TUF
 
 GO
 
-SELECT * FROM VUserFavorites
+--SELECT * FROM VUserFavorites
 
 GO
 
@@ -434,7 +434,7 @@ FROM	TUsers as TU JOIN TShoppingList TSL
 
 GO
 
-SELECT * FROM VUserShoppingList WHERE intUserID = 1
+--SELECT * FROM VUserShoppingList WHERE intUserID = 1
 
 GO
 
@@ -462,7 +462,7 @@ GROUP BY TR.intRecipeID, TR.strName
 
 GO
 
-SELECT * FROM VRecipeRatings
+--SELECT * FROM VRecipeRatings
 
 GO
 
@@ -503,6 +503,7 @@ SELECT		 TU.intUserID
 			,TR.strName
 			,TR.intReadyInMins
 			,TR.strRecipeImage
+			,TR.intServings
 
 FROM		TUsers as TU JOIN TLast10 as TL10
 			ON TU.intUserID = TL10.intUserID
@@ -510,11 +511,11 @@ FROM		TUsers as TU JOIN TLast10 as TL10
 			JOIN TRecipes as TR
 			ON TR.intRecipeID = TL10.intRecipeID
 
-GROUP BY TL10.intLast10ID
+GROUP BY TL10.intLast10ID, TU.intUserID, TR.intRecipeID, TR.strName, TR.intReadyInMins, TR.strRecipeImage, TR.intServings
 
 GO
 
-SELECT * FROM vUserLast10
+--SELECT * FROM vUserLast10
 
 --------------------------------------------------------------------------------------------
 
@@ -535,7 +536,7 @@ GROUP BY TU.intUserID
 
 GO
 
-SELECT * FROM vEarliestLast10 WHERE intUserID = 1
+--SELECT * FROM vEarliestLast10 WHERE intUserID = 1
 -- --------------------------------------------------------------------------------------------
 -- # PROCEDURES #
 -- --------------------------------------------------------------------------------------------
@@ -852,7 +853,7 @@ BEGIN TRANSACTION
 
 		CLOSE ifEmailExists	
 	
-	IF @UserNameExists = 0 AND @EmailExists = 0
+	IF @UserNameExists = 0 AND @EmailExists = 0 -- if neither exist it creates a new user.
 		BEGIN
 			UPDATE TUsers  
 			SET strFirstName = @strFirstName, strLastName = @strLastName, strEmail = @strEmail, strPassword = @strPassword, strUserName = @strUsername
@@ -1086,7 +1087,21 @@ BEGIN TRANSACTION
 			RETURN @NameExists -- Finds correct ID for Ingredeient and returns the ID, will return 0 if ID exists and Name Does not.
 		END
 
-	ELSE IF @IDExists = 0 -- Ingredient doesn't exist, adds to DB
+	ELSE IF @IDExists = 1 AND @NameExists = 0 -- IF ID exists it returns the ID, since all ID's are from the API it should always be the right ingredient.
+
+	BEGIN
+		COMMIT
+		RETURN @intIngredientID
+	END
+
+	ELSE IF @IDExists = 0 AND @NameExists > 0 -- if ID doesn't exist but the Ingredient Name does, it grabs the ID where the Name = Name
+		
+		BEGIN
+			COMMIT
+			RETURN @NameExists
+		END
+
+	ELSE -- Ingredient doesn't exist, adds to DB
 
 		BEGIN
 						-- Gets next ingredientID
@@ -1110,10 +1125,12 @@ COMMIT TRANSACTION
 GO
 --SELECT * FROM TIngredients
 --DECLARE @IngredientID as Int
---EXECUTE @IngredientID = uspAddIngredient 12, 'Pork'
+--EXECUTE @IngredientID = uspAddIngredient 12, 'brandy'
+----DELETE FROM TIngredients where intIngredientID = 12
+--DELETE FROM TRecipes WHERE intRecipeID = 245952
 --SELECT * FROM TIngredients
 --PRINT @IngredientID
---GO
+GO
 
 -- --------------------------------------------------------------------------------------------
 
@@ -1254,6 +1271,8 @@ BEGIN TRANSACTION
 	DELETE FROM TUserFavorites WHERE intRecipeID = @intRecipeID
 	-- Deletes all instance of ratings for the removed recipe
 	DELETE FROM TRatings WHERE intRecipeID = @intRecipeID
+	-- Deletes all instances of Last10 where RecipeID exists.
+	DELETE FROM TLast10 WHERE intRecipeID = @intRecipeID
 	-- Deletes Recipe where RecipeID and UserID match.
 	DELETE FROM TRecipes WHERE intRecipeID = @intRecipeID AND intUserID = @intUserID
 
@@ -1264,7 +1283,8 @@ GO
 --SELECT * FROM VUserFavorites
 --SELECT * FROM TShoppingList
 --SELECT * FROM VRecipeIngredients
---EXECUTE uspDeleteUserRecipe 1, 5000001
+--EXECUTE uspDeleteUserRecipe NULL, 245952
+--DELETE FROM TRecipes WHERE intRecipeID = 245952
 --SELECT * FROM VUserFavorites
 --SELECT * FROM TShoppingList
 --SELECT * FROM VRecipeIngredients
