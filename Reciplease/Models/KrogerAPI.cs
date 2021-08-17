@@ -126,6 +126,27 @@ namespace Reciplease.Models {
 				// split amount
 				string[] amounts = i.size.Split( ' ' );
 
+				if (amounts[0].Contains('-'))
+				{
+					string[] newAmount = amounts[0].Split( '-' );
+
+					amounts[0] = (double.Parse(newAmount[0]) * double.Parse(newAmount[1])).ToString();
+				}
+				
+				if ( amounts[0].Contains( '/' ) )
+				{
+					string[] newAmount = amounts[0].Split( '/' );
+
+					amounts[0] = ( double.Parse( newAmount[0] ) / double.Parse( newAmount[1] ) ).ToString( );
+				}
+
+				if ( amounts[0].Contains( '\\' ) )
+				{
+					string[] newAmount = amounts[0].Split( '\\' );
+
+					amounts[0] = ( double.Parse( newAmount[0] ) / double.Parse( newAmount[1] ) ).ToString( );
+				}
+
 				if (mySearchItems.data.Count == 1 )
 				{
 					item.upc = d.upc;

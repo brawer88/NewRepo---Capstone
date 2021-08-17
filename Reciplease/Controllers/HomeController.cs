@@ -115,6 +115,11 @@ namespace Reciplease.Controllers {
 
 			string strRecipeID = Convert.ToString( RouteData.Values["id"] );
 
+			if (strRecipeID == "0")
+			{
+				return RedirectToAction( "index" );
+			}
+
 			// check if recipe id exists
 			if ( DB.RecipeExists( strRecipeID ) == false )
 			{

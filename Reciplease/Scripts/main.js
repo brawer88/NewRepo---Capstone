@@ -42,6 +42,7 @@ function rateRecipe(UID, RecipeID, intDifficultyRating, intTasteRating) { // rat
 		$.ajax({
 			type: "POST",
 			url: "../../Home/RateRecipe",
+			async: false,
 			data: ajaxData,
 			success: function (returnData) {
 				var i;
@@ -57,7 +58,7 @@ function rateRecipe(UID, RecipeID, intDifficultyRating, intTasteRating) { // rat
 				}
 			},
 			error: function (xhr) {
-				debugger;
+				alert("Error rating recipe" + RecipeID + ". Please contact developers.")
 			}
 		});
 	}

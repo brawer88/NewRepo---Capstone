@@ -4,15 +4,17 @@
 }
 <h2>@ViewBag.Title</h2>
 <div class="info"><p>Please note: At this time, the Shopping Cart only supports 1 recipe at a time.</p></div>
-
-@*<p>@Model.user.KrogerAuthCode</p>
-<p>@Model.user.KrogerAuthTokens.refresh_token</p>*@
+@*@if ( @Model.user.KrogerAuthCode != null )
+{
+	<p>@Model.user.KrogerAuthCode</p>
+	<p>@Model.user.KrogerAuthTokens.refresh_token</p>
+}*@
 
 <link rel="stylesheet" href="Reciplease/Reciplease/Views/Profile/Profile.css" />
 <script>
 
 	function showAlert() {
-		alert("@Model.jsMessage");
+		alert("@Model.jsMessage \nPlease review all items in your cart to ensure proper selection.");
 		newwindow = window.open("https://www.kroger.com/cart", '_blank');
 		if (window.focus) {
 			newwindow.focus()
@@ -23,7 +25,7 @@
 		
 
 	function redirect() {
-		alert("Successfully sent to Kroger!");
+		alert("Successfully sent to Kroger!\nPlease review all items in your cart to ensure proper selection.");
 		newwindow = window.open("https://www.kroger.com/cart", '_blank');
 		if (window.focus) {
 			newwindow.focus()
