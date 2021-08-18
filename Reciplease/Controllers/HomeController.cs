@@ -19,9 +19,17 @@ namespace Reciplease.Controllers {
 			User u = new User( );
 			u = u.GetUserSession( );
 
-			recipes.recipes = DB.GetTopDifficultyRatedRecipes( );
+			string Show = Convert.ToString( RouteData.Values["id"] );
 
-			if ( recipes.recipes.Count < 5 )
+			if (Show == "taste")
+			{
+				recipes.recipes = DB.GetTopTasteRatedRecipes( );
+			}
+			else if (Show == "difficulty")
+			{
+				recipes.recipes = DB.GetTopDifficultyRatedRecipes( );
+			}
+			else if ( Show == "random" )
 			{
 				RecipesList newRecipes;
 				newRecipes = RecipeAPI.Get5RandomAPIRecipes( );
@@ -30,8 +38,16 @@ namespace Reciplease.Controllers {
 				{
 					recipes = newRecipes;
 				}
-		
 			}
+			else
+			{
+				RecipesList newRecipes;
+				newRecipes = RecipeAPI.Get5RandomAPIRecipes( );
+				
+				recipes = newRecipes;
+			}
+
+			
 
 			Models.HomeContent h = new Models.HomeContent
 			{
@@ -121,35 +137,43 @@ namespace Reciplease.Controllers {
 			}
 
 			// check if recipe id exists
-			if ( DB.RecipeExists( strRecipeID ) == false )
+			try
 			{
-				// get recipes to display
-				h.SingleRecipe = RecipeAPI.GetRecipeById( strRecipeID );
-				// save recipe
-				int intSavedID = DB.SaveRecipe( h.SingleRecipe.title, h.SingleRecipe.instructions, int.Parse( h.SingleRecipe.readyInMinutes ), h.SingleRecipe.image, int.Parse( h.SingleRecipe.servings ),
-					String.Join( ", ", h.SingleRecipe.cuisines ), String.Join( ", ", h.SingleRecipe.diets ), String.Join( ", ", h.SingleRecipe.dishTypes ), JsonConvert.SerializeObject( h.SingleRecipe.nutrition ), -1, int.Parse( h.SingleRecipe.id ) );
-
-				foreach ( Ingredient ingredient in h.SingleRecipe.extendedIngredients )
+				if ( DB.RecipeExists( strRecipeID ) == false )
 				{
-					if ( ingredient.name != null )
+					// get recipes to display
+					h.SingleRecipe = RecipeAPI.GetRecipeById( strRecipeID );
+					if ( h.SingleRecipe.id != null )
 					{
-						if ( ingredient.id == null )
+						// save recipe
+						int intSavedID = DB.SaveRecipe( h.SingleRecipe.title, h.SingleRecipe.instructions, int.Parse( h.SingleRecipe.readyInMinutes ), h.SingleRecipe.image, int.Parse( h.SingleRecipe.servings ),
+							String.Join( ", ", h.SingleRecipe.cuisines ), String.Join( ", ", h.SingleRecipe.diets ), String.Join( ", ", h.SingleRecipe.dishTypes ), JsonConvert.SerializeObject( h.SingleRecipe.nutrition ), -1, int.Parse( h.SingleRecipe.id ) );
+						foreach ( Ingredient ingredient in h.SingleRecipe.extendedIngredients )
 						{
-							ingredient.id = "0";
-						}
-						// now save ingredients
-						int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
+							if ( ingredient.name != null )
+							{
+								if ( ingredient.id == null )
+								{
+									ingredient.id = "0";
+								}
+								// now save ingredients
+								int IngredientID = DB.SaveIngredient( int.Parse( ingredient.id ), ingredient.name );
 
-						DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+								DB.AddRecipeIngredients( intSavedID, IngredientID, double.Parse( ingredient.amount ), ingredient.unit );
+							}
+						}
+
 					}
 				}
-
-
+				else
+				{
+					// load from db
+					h.SingleRecipe = DB.LoadRecipe( strRecipeID );
+				}
 			}
-			else
+			catch (Exception)
 			{
-				// load from db
-				h.SingleRecipe = DB.LoadRecipe( strRecipeID );
+				h.SingleRecipe = new Models.Recipe();
 			}
 
 			return View( h );
@@ -206,6 +230,40 @@ namespace Reciplease.Controllers {
 			}
 
 		}
+
+
+		public ActionResult Lucky() {
+
+			// get random number
+			Random rand = new Random( );
+			int intRand = 0;
+			bool found = false;
+
+			while (found == false)
+			{
+				intRand = rand.Next( 1, 1020000 );
+				found = LuckyNumberCheck( intRand );
+			}
+			
+			return RedirectToAction( "Recipe", new { id = intRand } );
+		}
+
+		public bool LuckyNumberCheck( int num ) {
+			// check if instructions exist
+			Recipe r = RecipeAPI.GetRecipeById( num.ToString( ) );
+			bool blnFound = true;
+			if ( r.id == null )
+			{
+				blnFound = false;
+			}
+			else if ( r.instructions == null )
+			{
+				blnFound = false;
+			}
+
+			return blnFound;
+		}
+
 
 		[HandleError]
 		public ActionResult About( ) {

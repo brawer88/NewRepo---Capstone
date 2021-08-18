@@ -105,6 +105,14 @@ namespace Reciplease.Models {
 				cleanedInstructions = _htmlRegex.Replace( cleanedInstructions, String.Empty );
 				string[] ainstructions = Regex.Split( cleanedInstructions, pattern );
 
+				// check for empty line
+				if(ainstructions[ainstructions.Length - 1].Length == 0)
+				{
+					var cleaned = new List<String>( ainstructions );
+					cleaned.RemoveAt( ainstructions.Length - 1 );
+					ainstructions = cleaned.ToArray( );
+				}
+
 				return ainstructions;
 			}
 			else

@@ -112,126 +112,143 @@ namespace Reciplease.Models {
 			clsItem item = new clsItem( );
 
 			double dblFinalDifference = 1000;
-
-			foreach (Datum d in mySearchItems.data)
+			if ( mySearchItems.data != null )
 			{
-				Item i = d.items[0];
-
-				if (quant == "pinch" || quant == "pinches")
+				foreach ( Datum d in mySearchItems.data )
 				{
-					quant = "teaspoon";
-					amount = ( double.Parse( amount ) * .0125 ).ToString();
-				}
+					Item i = d.items[0];
 
-				// split amount
-				string[] amounts = i.size.Split( ' ' );
-
-				if (amounts[0].Contains('-'))
-				{
-					string[] newAmount = amounts[0].Split( '-' );
-
-					amounts[0] = (double.Parse(newAmount[0]) * double.Parse(newAmount[1])).ToString();
-				}
-				
-				if ( amounts[0].Contains( '/' ) )
-				{
-					string[] newAmount = amounts[0].Split( '/' );
-
-					amounts[0] = ( double.Parse( newAmount[0] ) / double.Parse( newAmount[1] ) ).ToString( );
-				}
-
-				if ( amounts[0].Contains( '\\' ) )
-				{
-					string[] newAmount = amounts[0].Split( '\\' );
-
-					amounts[0] = ( double.Parse( newAmount[0] ) / double.Parse( newAmount[1] ) ).ToString( );
-				}
-
-				if (mySearchItems.data.Count == 1 )
-				{
-					item.upc = d.upc;
-					item.quantity = 1;
-				}
-
-				else if ( amounts.Length == 2 || amounts.Length == 3 )
-				{
-					if ( amounts.Length == 3 )
+					if ( quant == "pinch" || quant == "pinches" )
 					{
-						amounts[1] = amounts[1] + " " + amounts[2];
+						quant = "teaspoon";
+						amount = ( double.Parse( amount ) * .0125 ).ToString( );
 					}
 
-					if ( quant.Length == 0 )
+					// split amount
+					string[] amounts = i.size.Split( ' ' );
+
+					if ( amounts[0].Contains( '-' ) )
 					{
-						quant = "piece";
+						string[] newAmount = amounts[0].Split( '-' );
+
+						if ( double.TryParse( newAmount[1], out _ ) )
+						{
+							amounts[0] = ( double.Parse( newAmount[0] ) * double.Parse( newAmount[1] ) ).ToString( );
+						}
+						else
+						{
+							amounts = newAmount;
+						}
+
 					}
-					if ( quant == "bottles")
+
+					if ( amounts[0].Contains( '/' ) )
 					{
-						quant = "ml";
-						amount = (double.Parse( amount ) * 750).ToString();
+						string[] newAmount = amounts[0].Split( '/' );
+
+						amounts[0] = ( double.Parse( newAmount[0] ) / double.Parse( newAmount[1] ) ).ToString( );
 					}
 
-					// convert ingredient to kroger amount
-					double newAmount = RecipeAPI.ConvertAmounts( quant, name, amounts[0], amounts[1] );
-
-					double dblDifference = 0;
-					dblDifference = newAmount - double.Parse(amount);
-
-					//if ( dblFinalDifference > dblDifference && dblDifference > -.005)
-					if ( dblFinalDifference > dblDifference)
+					if ( amounts[0].Contains( '\\' ) )
 					{
-						if ( double.Parse( amount ) <= newAmount )
+						string[] newAmount = amounts[0].Split( '\\' );
+
+						amounts[0] = ( double.Parse( newAmount[0] ) / double.Parse( newAmount[1] ) ).ToString( );
+					}
+					if ( amounts.Length > 1 )
+					{
+						if ( amounts[1].Equals( "gal" ) )
 						{
-							item.upc = d.upc;
-							item.quantity = 1;
-							dblFinalDifference = dblDifference;
-						}
-						else if ( double.Parse( amounts[0] ) * 2 >= newAmount )
-						{
-							item.upc = d.upc;
-							item.quantity = 2;
-							dblFinalDifference = double.Parse( amounts[0] ) * 2;
-						}
-						else if ( double.Parse( amounts[0] ) * 3 >= newAmount )
-						{
-							item.upc = d.upc;
-							item.quantity = 3;
-							dblFinalDifference = double.Parse( amounts[0] ) * 3;
-						}
-						else if ( double.Parse( amounts[0] ) * 4 >= newAmount )
-						{
-							item.upc = d.upc;
-							item.quantity = 4;
-							dblFinalDifference = double.Parse( amounts[0] ) * 4;
-						}
-						else if ( double.Parse( amounts[0] ) * 5 >= newAmount )
-						{
-							item.upc = d.upc;
-							item.quantity = 5;
-							dblFinalDifference = double.Parse( amounts[0] ) * 5;
-						}
-						else if ( double.Parse( amounts[0] ) * 6 >= newAmount )
-						{
-							item.upc = d.upc;
-							item.quantity = 6;
-							dblFinalDifference = double.Parse( amounts[0] ) * 6;
-						}
-						else if ( double.Parse( amounts[0] ) * 7 >= newAmount )
-						{
-							item.upc = d.upc;
-							item.quantity = 7;
-							dblFinalDifference = double.Parse( amounts[0] ) * 7;
-						}
-						else if ( double.Parse( amounts[0] ) * 8 >= newAmount )
-						{
-							item.upc = d.upc;
-							item.quantity = 8;
-							dblFinalDifference = double.Parse( amounts[0] ) * 8;
+							amounts[1] = "gallon";
 						}
 					}
 
-						
+					if ( mySearchItems.data.Count == 1 )
+					{
+						item.upc = d.upc;
+						item.quantity = 1;
+					}
+
+					else if ( amounts.Length == 2 || amounts.Length == 3 )
+					{
+						if ( amounts.Length == 3 )
+						{
+							amounts[1] = amounts[1] + " " + amounts[2];
+						}
+
+						if ( quant.Length == 0 )
+						{
+							quant = "piece";
+						}
+						if ( quant == "bottles" )
+						{
+							quant = "ml";
+							amount = ( double.Parse( amount ) * 750 ).ToString( );
+						}
+
+						// convert ingredient to kroger amount
+						double newAmount = RecipeAPI.ConvertAmounts( quant, name, amounts[0], amounts[1] );
+
+						double dblDifference = 0;
+						dblDifference = newAmount - double.Parse( amount );
+
+						//if ( dblFinalDifference > dblDifference && dblDifference > -.005)
+						if ( dblFinalDifference > dblDifference )
+						{
+							if ( double.Parse( amount ) <= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 1;
+								dblFinalDifference = dblDifference;
+							}
+							else if ( double.Parse( amounts[0] ) * 2 >= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 2;
+								dblFinalDifference = double.Parse( amounts[0] ) * 2;
+							}
+							else if ( double.Parse( amounts[0] ) * 3 >= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 3;
+								dblFinalDifference = double.Parse( amounts[0] ) * 3;
+							}
+							else if ( double.Parse( amounts[0] ) * 4 >= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 4;
+								dblFinalDifference = double.Parse( amounts[0] ) * 4;
+							}
+							else if ( double.Parse( amounts[0] ) * 5 >= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 5;
+								dblFinalDifference = double.Parse( amounts[0] ) * 5;
+							}
+							else if ( double.Parse( amounts[0] ) * 6 >= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 6;
+								dblFinalDifference = double.Parse( amounts[0] ) * 6;
+							}
+							else if ( double.Parse( amounts[0] ) * 7 >= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 7;
+								dblFinalDifference = double.Parse( amounts[0] ) * 7;
+							}
+							else if ( double.Parse( amounts[0] ) * 8 >= newAmount )
+							{
+								item.upc = d.upc;
+								item.quantity = 8;
+								dblFinalDifference = double.Parse( amounts[0] ) * 8;
+							}
+						}
+
+
+					}
+
 				}
-					
 			}
 
 			return item;

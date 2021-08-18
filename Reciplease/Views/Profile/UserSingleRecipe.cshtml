@@ -35,32 +35,38 @@
 			<a id="delete" class="button-red" onclick="deleteMe()" href="@Url.Action( "DeleteRecipe", "Profile", new { id = Model.SingleRecipe.id } )">Delete Recipe</a>
 		}
 		<!---Display Recipe--->
-		<article>
+			<article>
 
+				<a id="share" class="button" onclick="copyToClipboard(@Model.SingleRecipe.id)">Copy Recipe Link</a>
 
-
-			<h2>@Model.SingleRecipe.title</h2>
-			<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
-			<p>Servings : @Model.SingleRecipe.servings </p>
-
-			<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
-			<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
-			<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
-			<table>
-				<tr><th>Ingredient:</th><th>Amount:</th></tr>
-				@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
+				<h2>@Model.SingleRecipe.title</h2>
+				@if ( Model.SingleRecipe.image != null )
 				{
-					<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
+					<br />
+					<img src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
+					<br />
 				}
-			</table>
-			<p>Instructions:</p>
-			<ol>
-				@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
-				{
-					<li>@instruction</li>
-				}
-			</ol>
-		</article>
+				<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
+				<p>Servings : @Model.SingleRecipe.servings </p>
+
+				<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
+				<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
+				<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
+				<table>
+					<tr><th>Ingredient:</th><th>Amount:</th></tr>
+					@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
+					{
+						<tr><td>@ingredient.name	</td><td>@ingredient.amount @ingredient.unit</td></tr>
+					}
+				</table>
+				<p>Instructions:</p>
+				<ol>
+					@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
+					{
+						<li>@instruction</li>
+					}
+				</ol>
+			</article>
 					       <a href="@Url.Action("AddToCart", "Cart", new { id = Model.SingleRecipe.id })" class="button">
                        				Add to shopping cart </a>
 		</article>
@@ -103,3 +109,4 @@
 
 	}
 </script>
+

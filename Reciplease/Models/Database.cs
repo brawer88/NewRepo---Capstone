@@ -579,7 +579,7 @@ namespace Reciplease.Models {
 
 
 
-				SqlCommand selectCMD = new SqlCommand( " SELECT TOP 5 TRA.AverageTaste, TRE.intRecipeID, TRE.strName,  TRE.intReadyInMins, TRE.intServings, TRE.strRecipeImage FROM VRecipeRatings as TRA JOIN TRecipes as TRE ON TRA.intRecipeID = TRE.intRecipeID ORDER BY AverageTaste DESC", cn );
+				SqlCommand selectCMD = new SqlCommand( " SELECT TOP 5 TRA.AverageDifficulty, TRE.intRecipeID, TRE.strName,  TRE.intReadyInMins, TRE.intServings, TRE.strRecipeImage FROM VRecipeRatings as TRA JOIN TRecipes as TRE ON TRA.intRecipeID = TRE.intRecipeID ORDER BY AverageDifficulty DESC", cn );
 				SqlDataAdapter da = new SqlDataAdapter( );
 				da.SelectCommand = selectCMD;
 
@@ -612,6 +612,64 @@ namespace Reciplease.Models {
 							r.image = "/Content/images/no-photo.jpg";
 						}
 						r.dictRatings = GetRecipeRatings( int.Parse(r.id) );
+						if ( r.image.Length < 5 || r.image.Equals( "/Content/images/no-photo.jpg" ) )
+						{
+							r.image = FailedImagePath;
+						}
+
+						recipes.Add( r );
+					}
+				}
+				return recipes;
+			}
+			catch ( Exception ex ) { throw new Exception( ex.Message ); }
+		}
+
+
+		public List<Recipe> GetTopTasteRatedRecipes( ) {
+			try
+			{
+				DataSet ds = new DataSet( );
+				SqlConnection cn = new SqlConnection( );
+
+				if ( !GetDBConnection( ref cn ) ) throw new Exception( "Database did not connect" );
+				List<Recipe> recipes = new List<Recipe>( );
+
+
+
+				SqlCommand selectCMD = new SqlCommand( " SELECT TOP 5 TRA.AverageTaste, TRE.intRecipeID, TRE.strName,  TRE.intReadyInMins, TRE.intServings, TRE.strRecipeImage FROM VRecipeRatings as TRA JOIN TRecipes as TRE ON TRA.intRecipeID = TRE.intRecipeID ORDER BY AverageTaste DESC", cn );
+				SqlDataAdapter da = new SqlDataAdapter( );
+				da.SelectCommand = selectCMD;
+
+
+				try
+				{
+					da.Fill( ds );
+				}
+				catch ( Exception ex2 )
+				{
+					System.Diagnostics.Debug.WriteLine( "getting user ratings error: " + ex2.Message );
+				}
+				finally { CloseDBConnection( ref cn ); }
+
+				if ( ds.Tables[0].Rows.Count != 0 )
+				{
+					foreach ( DataRow dr in ds.Tables[0].Rows )
+					{
+						Recipe r = new Recipe( );
+						r.title = (string)dr["strName"];
+						r.id = ( (int)dr["intRecipeID"] ).ToString( );
+						r.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
+						r.servings = ( (int)dr["intServings"] ).ToString( );
+						try
+						{
+							r.image = (string)dr["strRecipeImage"];
+						}
+						catch ( Exception e )
+						{
+							r.image = "/Content/images/no-photo.jpg";
+						}
+						r.dictRatings = GetRecipeRatings( int.Parse( r.id ) );
 						if ( r.image.Length < 5 || r.image.Equals( "/Content/images/no-photo.jpg" ) )
 						{
 							r.image = FailedImagePath;

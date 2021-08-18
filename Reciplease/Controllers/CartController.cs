@@ -53,10 +53,10 @@ namespace Reciplease.Controllers
 
 			//if ( u.KrogerAuthCode == null )
 			//{
-			//	u.KrogerAuthCode = "vtZahklQFg1inaoJQbxiCT18OM44yxtyPw7b6PBA";
+			//	u.KrogerAuthCode = "CxbeU6oJFkswLBa1IwM3TZ3iUANLXb7CuPPOCtkx";
 			//	u.KrogerAuthTokens = new AuthCodes( );
 			//	u.KrogerAuthTokens.access_token = "";
-			//	u.KrogerAuthTokens.refresh_token = "Mvfttur5loDebWYQr1Ei9iO4fJJD8ZT3LiDpRvzn";
+			//	u.KrogerAuthTokens.refresh_token = "01OE0UdYpaRBVV741gvG2sbHjPfGrUgyqivMCTG2";
 			//}
 
 

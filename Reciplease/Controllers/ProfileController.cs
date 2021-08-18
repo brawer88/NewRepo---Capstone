@@ -205,7 +205,12 @@ namespace Reciplease.Controllers
 				string dishTypes = "-1";
 				recipe.readyInMinutes = "-1";
 				recipe.servings = "-1";
+				recipe.image = col["image"];
 
+				if ( recipe.image == null )
+				{
+					recipe.image = "/Content/images/no-photo.jpg";
+				}
 
 				// example of getting data from the page in a post method
 				recipe.title = col["RecipeName"];
@@ -246,7 +251,7 @@ namespace Reciplease.Controllers
 				}
 				
                 Database db = new Database();
-                int intSavedID = db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), "/Content/images/no-photo.jpg", int.Parse(recipe.servings), cuisines, diets, dishTypes, "-1", recipeContent.user.UID, -1);
+                int intSavedID = db.SaveRecipe(recipe.title, recipe.instructions, int.Parse(recipe.readyInMinutes), recipe.image, int.Parse(recipe.servings), cuisines, diets, dishTypes, "-1", recipeContent.user.UID, -1);
 				foreach ( Ingredient ingredient in recipe.extendedIngredients )
 				{
 					// now save ingredients

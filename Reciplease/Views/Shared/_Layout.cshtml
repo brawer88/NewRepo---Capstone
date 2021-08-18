@@ -7,6 +7,7 @@
 	@Styles.Render( "~/Content/css" )
 	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
 	@Scripts.Render( "~/bundles/modernizr" )
 	@Scripts.Render( "~/bundles/jquery" )
 	@Scripts.Render( "~/Scripts/bootstrap.bundle.js" )
@@ -18,16 +19,16 @@
 		<a href="javascript:void(0);" class="icon" onclick="myFunction()">
 			<i class="fa fa-bars"></i>
 		</a>
-		<a href="~/Home/Index"><span class="fa fa-home mr-3"></span> Homepage</a>
+		<a style="display:inline-block" href="~/Home/Index"><span class="fa fa-home mr-3"></span> Homepage</a>
+		<a style="float:right;display:inline-block" href="@Url.Action("Lucky", "Home" )"><span class="fas fa-dice"></span>I'm Feeling Lucky!</a>
 
 		<div id="myLinks">
 			<a href="~/Home/Search"><span class="fa fa-search mr-3"></span>  Search</a>
-
 			@if ( Session["CurrentUser"] != null )
 			{
 				<a href="~/Profile/UserRecipes"><span class="fa fa-user mr-3"></span>  My Recipes</a>
-				<a href="~/Profile/Favorites"><span class="fa fa-paper-plane-o mr-3"></span>  Favorites</a>
-				<a href="~/Profile/LastTen"><span class="fa fa-paper-plane-o mr-3"></span>  Last 10 Recipes</a>
+				<a href="~/Profile/Favorites"><span class="fas fa-paper-plane"></span>  Favorites</a>
+				<a href="~/Profile/LastTen"><span class="fas fa-paper-plane"></span>  Last 10 Recipes</a>
 				<a href="~/Cart/index"><span class="fa fa-shopping-cart mr-3"></span>  My Cart</a>
 				<a href="~/Profile/index"><span class="fa fa-user mr-3"></span>  My Account</a>
 				<a href="~/Profile/SignOut"><span class="fa fa-user mr-3"></span>  Sign-Out</a>

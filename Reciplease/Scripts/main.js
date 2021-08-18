@@ -66,3 +66,13 @@ function rateRecipe(UID, RecipeID, intDifficultyRating, intTasteRating) { // rat
 		showError(err);
 	}
 }
+
+function copyToClipboard(text) {
+	var inputc = document.body.appendChild(document.createElement("input"));
+	inputc.value = "http://itd1.cincinnatistate.edu/CPDM-WernkeB/Home/Recipe/" + text;
+	inputc.focus();
+	inputc.select();
+	document.execCommand('copy');
+	inputc.parentNode.removeChild(inputc);
+	alert("URL Copied.");
+}

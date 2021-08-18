@@ -21,6 +21,7 @@ else
 
 				@if ( Model.SingleRecipe != null )
 				{
+					<input type="text" name="image" value="@Model.SingleRecipe.image" hidden />
 					<p>
 						<label for="RecipeName">*Recipe Title</label>
 						<input type="text" name="RecipeName" value="@Model.SingleRecipe.title" required />
