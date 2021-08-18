@@ -31,6 +31,24 @@ namespace Reciplease.Models {
 		public Dictionary<String, int> dictRatings { get; set; }
 
 
+		public static string ToTitleCase( string title ) {
+			string ret = "";
+
+			var temp = title.Split( );
+
+			for (int i = 0; i < temp.Length; i ++ )
+			{
+				if ( temp[i] != "and" )
+				{
+					temp[i] = Char.ToUpper( temp[i][0] ) + temp[i].Substring( 1 );
+				}
+			}
+
+			ret = String.Join( " ", temp );
+
+			return ret;
+		}
+
 		// return sorted and fractionized ingredients
 		public List<Ingredient> GetFractionizedIngredients( ) {
 			List<Ingredient> ingredients = new List<Ingredient>( );
@@ -170,6 +188,5 @@ namespace Reciplease.Models {
 		Unknown = 5,
 		RequiredFieldsMissing = 6
 	}
-
 
 }

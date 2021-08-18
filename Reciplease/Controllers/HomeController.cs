@@ -248,7 +248,7 @@ namespace Reciplease.Controllers {
 			return RedirectToAction( "Recipe", new { id = intRand } );
 		}
 
-		public bool LuckyNumberCheck( int num ) {
+		private bool LuckyNumberCheck( int num ) {
 			// check if instructions exist
 			Recipe r = RecipeAPI.GetRecipeById( num.ToString( ) );
 			bool blnFound = true;

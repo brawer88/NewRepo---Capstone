@@ -180,6 +180,7 @@ namespace Reciplease.Models {
 					{
 						recipe.id = strRecipeID;
 						recipe.title = (string)dr["strName"];
+						recipe.title = Recipe.ToTitleCase( recipe.title );
 						recipe.image = (string)dr["strRecipeImage"];
 						recipe.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
 						recipe.servings = ( (int)dr["intServings"] ).ToString( );
@@ -304,6 +305,7 @@ namespace Reciplease.Models {
 					ingredient.name = (string)dr["strIngredientName"];
 					list.AddIngredient( ingredient );
 					list.RecipeName = (string)dr["strName"];
+					list.RecipeName = Recipe.ToTitleCase( list.RecipeName );
 					list.intRecipeID = (int)dr["intRecipeID"];
 					list.RecipeServings = ((int)dr["intServings"]).ToString();
 				}
@@ -616,7 +618,7 @@ namespace Reciplease.Models {
 						{
 							r.image = FailedImagePath;
 						}
-
+						r.title = Recipe.ToTitleCase( r.title );
 						recipes.Add( r );
 					}
 				}
@@ -658,6 +660,7 @@ namespace Reciplease.Models {
 					{
 						Recipe r = new Recipe( );
 						r.title = (string)dr["strName"];
+						r.title = Recipe.ToTitleCase( r.title );
 						r.id = ( (int)dr["intRecipeID"] ).ToString( );
 						r.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
 						r.servings = ( (int)dr["intServings"] ).ToString( );
@@ -901,6 +904,7 @@ namespace Reciplease.Models {
 						r.id = ((int)dr["intRecipeID"]).ToString();
 						r.image = (string)dr["strRecipeImage"];
 						r.title = (string)dr["strName"];
+						r.title = Recipe.ToTitleCase( r.title );
 						r.readyInMinutes = ((int)dr["intReadyInMins"]).ToString();
 						r.dictRatings = db.GetRecipeRatings( int.Parse(r.id) );
 						if ( r.image.Length < 5 || r.image.Equals( "/Content/images/no-photo.jpg" ) || r.image == null)
@@ -951,6 +955,7 @@ namespace Reciplease.Models {
 						r.id = ( (int)dr["intRecipeID"] ).ToString( );
 						r.image = (string)dr["strRecipeImage"];
 						r.title = (string)dr["strName"];
+						r.title = Recipe.ToTitleCase( r.title );
 						r.servings = ( (int)dr["intServings"] ).ToString( );
 						r.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
 						r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
@@ -1070,6 +1075,7 @@ namespace Reciplease.Models {
 					r.id = ( (int)dr["intRecipeID"] ).ToString( );
 					r.image = (string)dr["strRecipeImage"];
 					r.title = (string)dr["strName"];
+					r.title = Recipe.ToTitleCase( r.title );
 					r.servings = ((int)dr["intServings"]).ToString();
 					r.readyInMinutes = ( (int)dr["intReadyInMins"] ).ToString( );
 					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );

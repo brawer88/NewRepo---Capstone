@@ -37,6 +37,7 @@ namespace Reciplease.Models {
 						r.image = Database.FailedImagePath;
 					}
 					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
+					r.title = Recipe.ToTitleCase(r.title);
 				}
 			}
 
@@ -66,6 +67,7 @@ namespace Reciplease.Models {
 					clsRecipe.image = Database.FailedImagePath;
 				}
 				clsRecipe.dictRatings = db.GetRecipeRatings( int.Parse( clsRecipe.id ) );
+				clsRecipe.title = Recipe.ToTitleCase( clsRecipe.title );
 			}
 			
 
@@ -121,6 +123,7 @@ namespace Reciplease.Models {
 						r.image = Database.FailedImagePath;
 					}
 					r.dictRatings = db.GetRecipeRatings( int.Parse( r.id ) );
+					r.title = Recipe.ToTitleCase( r.title );
 				}
 
 			}
