@@ -41,10 +41,13 @@ namespace Reciplease.Controllers {
 			}
 			else
 			{
-				RecipesList newRecipes;
-				newRecipes = RecipeAPI.Get5RandomAPIRecipes( );
-				
-				recipes = newRecipes;
+				/*too costly to use*/
+				//RecipesList newRecipes;
+				//newRecipes = RecipeAPI.Get5RandomAPIRecipes( );
+
+				//recipes = newRecipes; 
+
+				recipes.recipes = DB.GetTopTasteRatedRecipes( );
 			}
 
 			
@@ -280,3 +283,4 @@ namespace Reciplease.Controllers {
 
 	}
 }
+ 

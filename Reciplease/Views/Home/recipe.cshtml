@@ -137,86 +137,89 @@
 
 	@if ( Model.SingleRecipe.id != null )
 	{
-		<div class="recipe-card">
-			@if ( Model.user.IsAuthenticated )
+	<div class="recipe-card">
+		@if ( Model.user.IsAuthenticated )
+		{
+			if ( Model.user.IsAFavorite( Model.SingleRecipe.id ) )
 			{
-				if ( Model.user.IsAFavorite( Model.SingleRecipe.id ) )
-				{
-					<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="UnFavorite" /> }
-				else
-				{
-					<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="Favorite" />}
-			}
-
-			<article>
-				<h2>@Model.SingleRecipe.title</h2>
-				<br />
-				<img src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
-				<br />
-				<br />
-				<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
-				<p>Servings : @Model.SingleRecipe.servings </p>
-
-				<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
-				<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
-				<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
-
-				<table>
-
-
-					<tr><th>Ingredient:</th><th>Amount:</th></tr>
-
-					@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
-					{
-						<tr><td>@ingredient.name</td>  <td>        @ingredient.amount @ingredient.unit</td></tr>
-					}
-				</table>
-
-				<hr />
-				<br />
-				<h3>Instructions:</h3>
-				<ol>
-					@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
-					{
-						<li>@instruction</li>
-					}
-				</ol>
-
-
-				<div id="nutritionDiv" style="display:none">
-					@try
-					{
-
-						var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
-						foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
-						{
-							nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
-						}
-						nutritionTable += "</table>";
-
-						WriteLiteral( nutritionTable );
-					}
-					catch ( Exception e )
-					{
-						<p> No Nutrition Data Available </p>}
-				</div>
-				<button class="button" id="btnNutrition" onclick="showNutrition()">Show Nutrition</button>
-
-			</article>
-			@if ( Model.user.IsAuthenticated )
+				<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="UnFavorite" /> }
+			else
 			{
+				<input type="button" class="button" id="togglefavorite" onclick="toggle()" value="Favorite" />}
+		}
+
+		<article>
+			<h2>@Model.SingleRecipe.title</h2>
+			<br />
+			<img src=@Model.SingleRecipe.image alt=@Model.SingleRecipe.title />
+			<br />
+			<br />
+			<p>Ready in : @Model.SingleRecipe.readyInMinutes minutes</p>
+			<p>Servings : @Model.SingleRecipe.servings </p>
+
+			<p>Cuisines: @String.Join( ", ", @Model.SingleRecipe.cuisines )</p>
+			<p>Diets: @String.Join( ", ", @Model.SingleRecipe.diets )</p>
+			<p>Dish Types: @String.Join( ", ", @Model.SingleRecipe.dishTypes )</p>
+
+			<table>
+
+
+				<tr><th>Ingredient:</th><th>Amount:</th></tr>
+
+				@foreach ( Reciplease.Models.Ingredient ingredient in Model.SingleRecipe.GetFractionizedIngredients( ) )
+				{
+					<tr><td>@ingredient.name</td>  <td>        @ingredient.amount @ingredient.unit</td></tr>
+				}
+			</table>
+
+			<hr />
+			<br />
+			<h3>Instructions:</h3>
+			<ol>
+				@foreach ( String instruction in @Model.SingleRecipe.SplitInstructions( ) )
+				{
+					<li>@instruction</li>
+				}
+			</ol>
+
+
+			<div id="nutritionDiv" style="display:none">
+				@try
+				{
+
+					var nutritionTable = "<table><tr><th>Nutrient:</th><th>Amount:</th><th>Percent of Daily Value</th></tr>";
+					foreach ( Reciplease.Models.Nutrient nutrient in Model.SingleRecipe.nutrition.nutrients )
+					{
+						nutritionTable += "<tr><td>" + @nutrient.Name + "</td><td>" + @nutrient.Amount + " " + @nutrient.Unit + "</td><td>" + @nutrient.PercentOfDailyNeeds + "%</td></tr>";
+					}
+					nutritionTable += "</table>";
+
+					WriteLiteral( nutritionTable );
+				}
+				catch ( Exception e )
+				{
+					<p> No Nutrition Data Available </p>}
+			</div>
+			<button class="button" id="btnNutrition" onclick="showNutrition()">Show Nutrition</button>
+
+		</article>
+		@if ( Model.user.IsAuthenticated )
+		{
 			<a href="@Url.Action( "AddToCart", "Cart", new { id = Model.SingleRecipe.id } )" class="button">
 				Add to shopping cart
-			</a>}
-
-			@*-End add to cart button-*@
+			</a>@*-End add to cart button-*@
 			<a href="@Url.Action("CreateRecipe", "Profile", new { id = Model.SingleRecipe.id })" class="button">
 				Edit Recipe
 			</a>
 			@*-End Display Recipe-*@
+		}
 
-			<a id="share" class="button" onclick="copyToClipboard(@Model.SingleRecipe.id)">Copy Recipe Link</a>
 
+
+		<a id="share" class="button" onclick="copyToClipboard(@Model.SingleRecipe.id)">Copy Recipe Link</a>
+
+		@if ( Model.user.IsAuthenticated )
+		{
 			<br>
 			@*-Rating System-*@
 			<form id="Form1" method="post">
@@ -272,54 +275,56 @@
 
 
 
-			@if ( Model.user.IsAuthenticated )
-			{
-				<button class="button" onclick="RateToggle()">Rate</button>
-				<div id="popupForm" style="display:none">
-					<form id="Form1" method="post">
-						<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-						<style>
-							.checked {
-								color: orange;
-							}
-						</style>
-						@{
+			<button class="button" onclick="RateToggle()">Rate</button>
+			<div id="popupForm" style="display:none">
+				<form id="Form1" method="post">
+					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+					<style>
+						.checked {
+							color: orange;
+						}
+					</style>
+					@{
 
-							foreach ( Reciplease.Models.Rating r in Model.user.Ratings )
+						foreach ( Reciplease.Models.Rating r in Model.user.Ratings )
+						{
+							if ( r.intRecipeID == int.Parse( Model.SingleRecipe.id ) )
 							{
-								if ( r.intRecipeID == int.Parse( Model.SingleRecipe.id ) )
-								{
-									DifficultyRate = r.intDifficultyRating;
-									TasteRate = r.intTasteRating;
-								}
+								DifficultyRate = r.intDifficultyRating;
+								TasteRate = r.intTasteRating;
 							}
-
-							<p><b>Difficulty</b></p>
-							<div class="slidecontainer">
-								<input type="range" min="1" max="5" value=@DifficultyRate class="slider" id="DifficultyRate">
-								<p id="outputDifficulty"></p>
-							</div>
-
-							<p><b>Taste</b></p>
-							<div class="slidecontainer">
-								<input type="range" min="1" max="5" value=@TasteRate class="slider" id="TasteRate">
-								<p id="outputTaste"></p>
-							</div>
-
 						}
 
-						<button onclick="rateRecipe(@Model.user.UID, @Model.SingleRecipe.id, $('#DifficultyRate').val(), $('#TasteRate').val());" class="btn">Submit</button>
-						<br>
-						<br>
-						<button type="submit" hidden class="btn">Submit</button>
+						<p><b>Difficulty</b></p>
+						<div class="slidecontainer">
+							<input type="range" min="1" max="5" value=@DifficultyRate class="slider" id="DifficultyRate">
+							<p id="outputDifficulty"></p>
+						</div>
+
+						<p><b>Taste</b></p>
+						<div class="slidecontainer">
+							<input type="range" min="1" max="5" value=@TasteRate class="slider" id="TasteRate">
+							<p id="outputTaste"></p>
+						</div>
+
+					}
+
+					<button onclick="rateRecipe(@Model.user.UID, @Model.SingleRecipe.id, $('#DifficultyRate').val(), $('#TasteRate').val());" class="btn">Submit</button>
+					<br>
+					<br>
+					<button type="submit" hidden class="btn">Submit</button>
 
 
-					</form>
-				</div>
-			}
-			<div id="snackbar">Some text some message..</div>
+				</form>
+			</div>
+						}
+						else
+						{
+							<p><a href="~/Profile/SignUp"><span class="fa fa-user mr-3"></span>  Sign-Up</a> for more features! </p>
+						}
+		<div id="snackbar">Some text some message..</div>
 
-		</div>
+	</div>
 	}
 	else
 	{

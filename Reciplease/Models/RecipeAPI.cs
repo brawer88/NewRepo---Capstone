@@ -9,7 +9,7 @@ using System.Web;
 
 namespace Reciplease.Models {
 	public class RecipeAPI {
-		const string APIKEY = "42b1ebc198msh0a6b9caf8b93dc9p1e52ccjsn888e76e0bd8a";
+		const string APIKEY = "e71d5307e4msh3a80c1271c7c3f7p1804ecjsn41d73c72744c";
 
 		// Gets 5 random recipes from the api, this is very costly as it counts as 5 requests in the api
 		public static RecipesList Get5RandomAPIRecipes( ) {

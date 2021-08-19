@@ -474,6 +474,7 @@ namespace Reciplease.Controllers
 							u.LastName = LastName;
 							u.Email = Email;
 							u.Password = Password;
+							u.Username = Username;
 							u.SaveUserSession( );
 						}
 
