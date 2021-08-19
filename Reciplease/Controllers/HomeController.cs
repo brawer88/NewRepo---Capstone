@@ -93,7 +93,6 @@ namespace Reciplease.Controllers {
 			{
 				searchItems.query = col["hquery"] == null ? col["SearchQuery"] : col["hquery"];
 				searchItems.cuisine = col["hcuisine"] == null ? col["Cuisine"] : col["hcuisine"];
-				searchItems.ingredients = col["hingredients"] == null ? col["Ingredients"] : col["hingredients"];
 				searchItems.diets = col["hdiets"] == null ? col["Diets"] : col["hdiets"];
 				searchItems.excludedIngredients = col["hexcludedIngredients"] == null ? col["ExcludedIngredients"] : col["hexcludedIngredients"];
 				searchItems.intolerances = col["hintolerances"] == null ? col["Intolerances"] : col["hintolerances"];
@@ -105,7 +104,7 @@ namespace Reciplease.Controllers {
 				{
 					searchItems = searchItems,
 					// get recipes to display
-					SearchResults = RecipeAPI.RecipeSearch( searchItems.query, searchItems.cuisine, searchItems.ingredients,
+					SearchResults = RecipeAPI.RecipeSearch( searchItems.query, searchItems.cuisine,
 															searchItems.diets, searchItems.excludedIngredients, searchItems.intolerances, searchItems.type, searchItems.index )
 				
 				};

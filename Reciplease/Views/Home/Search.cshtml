@@ -35,9 +35,6 @@
 				<label for="cuisine">Cuisine:</label>
 				<input type='text' id="Cuisine" name="Cuisine" value="@Model.searchItems.cuisine" />
 
-				<label for="ingredients">Ingredient:</label>
-				<input type='text' id="Ingredients" name="Ingredients" value="@Model.searchItems.ingredients" />
-
 				<label for="">Excluded Ingredient:</label>
 				<input type='text' id="ExcludedIngredients" name="ExcludedIngredients" value="@Model.searchItems.excludedIngredients" />
 
@@ -94,7 +91,6 @@
 						<input type='text' hidden name="hintolerances" value=@Model.searchItems.intolerances />
 						<input type='text' hidden name="hdiets" value=@Model.searchItems.diets />
 						<input type='text' hidden name="hcuisine" value=@Model.searchItems.cuisine />
-						<input type='text' hidden name="hingredients" value=@Model.searchItems.ingredients />
 						<input type='text' hidden name="htype" value=@Model.searchItems.type />
 						<input type='text' hidden name="hindex" value=@Model.searchItems.index />
 						<input type="submit" name="btnSubmit" value="Next Page" />
@@ -115,7 +111,6 @@
 				if ($("#Intolerances").val() == "/") { $("#Intolerances").val(""); };
 				if ($("#Diets").val() == "/") { $("#Diets").val(""); };
 				if ($("#Cuisine").val() == "/") { $("#Cuisine").val(""); };
-				if ($("#Ingredients").val() == "/") { $("#Ingredients").val(""); };
 				if ($("#Type").val() == "/") { $("#Type").val(""); };
 				if ($("#ExcludedIngredients").val() == "/") { $("#ExcludedIngredients").val(""); };
 				AS.style.display = "block";
@@ -123,7 +118,6 @@
 				$("#Intolerances").val("");
 				$("#Diets").val("");
 				$("#Cuisine").val("");
-				$("#Ingredients").val("");
 				$("#Type").val("");
 				$("#ExcludedIngredients").val("");
 				AS.style.display = "none";

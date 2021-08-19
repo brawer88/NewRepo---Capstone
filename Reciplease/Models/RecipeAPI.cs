@@ -76,7 +76,7 @@ namespace Reciplease.Models {
 		}
 
 
-		public static SearchResultsList RecipeSearch( string SearchQuery, string cuisine = "", string ingredients = "", string diets = "", string excludedIngredients ="", string intolerances = "", string type = "", int index = 0) {
+		public static SearchResultsList RecipeSearch( string SearchQuery, string cuisine = "", string diets = "", string excludedIngredients ="", string intolerances = "", string type = "", int index = 0) {
 			SearchResultsList Recipes = new SearchResultsList( );
 			Regex RegexComma = new Regex( "," );
 			Regex RegexSpace = new Regex( " " );
@@ -86,8 +86,6 @@ namespace Reciplease.Models {
 			if ( SearchQuery != null ) SearchQuery = RegexSpace.Replace( SearchQuery, "%20" );
 			if ( cuisine != null ) cuisine = RegexComma.Replace( cuisine, "%2C%20" );
 			if ( cuisine != null ) cuisine = RegexSpace.Replace( cuisine, "%20" );
-			if ( ingredients != null ) ingredients = RegexComma.Replace( ingredients, "%2C%20" );
-			if ( ingredients != null ) ingredients = RegexSpace.Replace( ingredients, "%20" );
 			if ( excludedIngredients != null ) excludedIngredients = RegexComma.Replace( excludedIngredients, "%2C%20" );
 			if ( excludedIngredients != null ) excludedIngredients = RegexSpace.Replace( excludedIngredients, "%20" );
 			if ( intolerances != null ) intolerances = RegexComma.Replace( intolerances, "%2C%20" );

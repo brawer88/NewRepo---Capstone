@@ -451,7 +451,7 @@ namespace Reciplease.Controllers
 				User u = new User( );
 
 				u = u.GetUserSession( );
-
+				
 				string FirstName = collfrmAttr["FirstName"];
 				string LastName = collfrmAttr["LastName"];
 				string Email = collfrmAttr["Email"];
@@ -470,6 +470,10 @@ namespace Reciplease.Controllers
 						u.ActionType = u.Save(  u.UID,  Username,  Password,  Email,  FirstName, LastName );
 						if( u.ActionType == Models.User.ActionTypes.UpdateSuccessful )
 						{
+							u.FirstName = FirstName;
+							u.LastName = LastName;
+							u.Email = Email;
+							u.Password = Password;
 							u.SaveUserSession( );
 						}
 
