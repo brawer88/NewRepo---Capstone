@@ -1283,8 +1283,8 @@ GO
 --SELECT * FROM VUserFavorites
 --SELECT * FROM TShoppingList
 --SELECT * FROM VRecipeIngredients
---EXECUTE uspDeleteUserRecipe NULL, 245952
---DELETE FROM TRecipes WHERE intRecipeID = 245952
+--EXECUTE uspDeleteUserRecipe NULL, 249325
+--DELETE FROM TRecipes WHERE intRecipeID = 249325
 --SELECT * FROM VUserFavorites
 --SELECT * FROM TShoppingList
 --SELECT * FROM VRecipeIngredients
