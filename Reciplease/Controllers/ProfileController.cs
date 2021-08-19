@@ -26,7 +26,6 @@ namespace Reciplease.Controllers
         {
             Models.User u = new Models.User();
 			u.previousPage = System.Web.HttpContext.Current.Request.UrlReferrer.ToString();
-			u.SaveUserSession( );
             return View(u);
         }
 
@@ -217,7 +216,7 @@ namespace Reciplease.Controllers
                 recipe.instructions = col["instructions"]; // required
 				if ( col["diets"].Length > 0 )
 				{
-					diets = col["diets"]; // optional default to "-1"
+					diets = (col["diets"]); // optional default to "-1"
 				}
 				if ( col["cuisines"].Length > 0 )
 				{

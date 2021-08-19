@@ -53,10 +53,10 @@ namespace Reciplease.Controllers
 
 			//if ( u.KrogerAuthCode == null )
 			//{
-			//	u.KrogerAuthCode = "CxbeU6oJFkswLBa1IwM3TZ3iUANLXb7CuPPOCtkx";
+			//	u.KrogerAuthCode = "h2BluF1T0kOMiYof2Z46Da9NtCCOsMbCRWxQlr7D";
 			//	u.KrogerAuthTokens = new AuthCodes( );
 			//	u.KrogerAuthTokens.access_token = "";
-			//	u.KrogerAuthTokens.refresh_token = "01OE0UdYpaRBVV741gvG2sbHjPfGrUgyqivMCTG2";
+			//	u.KrogerAuthTokens.refresh_token = "cnwkrHaKJjLje8HKbXWXJT4yPTr0kUgosBNaIq6h";
 			//}
 
 
@@ -74,15 +74,23 @@ namespace Reciplease.Controllers
 				Cart c = new Cart( );
 				c = c.GetCartSession( );
 				Database db = new Database( );
-
+				string id = "0";
 				c.list = db.GetShoppingList( u.UID );
 
 				c.ingredients = db.GetIngredients( c.list.intRecipeID.ToString( ) );
 
 				CartMappedToKrogerUPC upcs = KrogerAPI.GetKrogerUPCS( c.ingredients );
-				KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
-				string id = "0";
-				if ( upcs.dictItems["items"].Length != c.ingredients.Count )
+				if ( upcs.dictItems["items"] != null )
+				{
+					KrogerAPI.AddToKrogerCart( upcs.convertToJson( ) );
+					
+					if ( upcs.dictItems["items"].Length != c.ingredients.Count )
+					{
+						id = "1";
+					}
+
+				}
+				else
 				{
 					id = "1";
 				}

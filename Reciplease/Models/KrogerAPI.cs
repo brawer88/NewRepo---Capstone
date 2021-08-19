@@ -173,7 +173,18 @@ namespace Reciplease.Models {
 					{
 						if ( amounts.Length == 3 )
 						{
-							amounts[1] = amounts[1] + " " + amounts[2];
+							if ( amounts[0] == "case" )
+							{
+								string[] newAmounts = amounts[1].Split( );
+								amounts[0] = amounts[2];
+								amounts[1] = "piece";
+
+							}
+							else
+							{
+								amounts[1] = amounts[1] + " " + amounts[2];
+							}
+							
 						}
 
 						if ( quant.Length == 0 )
